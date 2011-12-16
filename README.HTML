@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>CaptureTheData! readme</title>
+    <style type="text/css">
+        body { 
+			font-family: Arial, Helvetica, sans-serif; 
+		}
+        #container { 
+			margin: 0 auto 0 auto; 
+			width: 750px; 
+		}
+		h1 {
+			border-bottom: 3px #000 solid;
+		}
+		h2 {
+			border-bottom: 2px #AAA solid;
+		}
+    </style>
+</head>
+<body>
+  <div id="container">
+	<h1>CaptureTheData!</h1>
+	<h2>License</h2>
+	<p>Copyright (c) 2011, Bobbie Smulders
+	<p>Contact: mail@bsmulders.com</p>
+	<p>License: GPLv3</p>
+	
+	<h2>Project goal</h2>
+	
+	<p>The goal of this project is to create a cheap and modular vehicle data logger using cheap and readily available sensors. These sensors can be bluetooth cellphones, Wiimotes, GPS receivers and more. They have in common in that they are all Bluetooth enabled, readily available, don't need to be soldered / modified and have a price of less than €15,00.</p>
+	
+	<p>The logging application can run on any PC or embedded device. After the data is logged, it can be viewed with a web-application that allows the user to create a virtual dashboard with various gauges and information panels and analyze the data they just recorded.</p>
+	
+	<p>Currently supported devices:</p>
+	<ul>
+		<li>Bluetooth/Serial GPS receiver</li>
+		<ul>
+			<li>UTC</li>
+			<li>Speed</li>
+			<li>Latitude</li>
+			<li>Longitude</li>
+			<li>Direction</li>
+			<li>Declination</li>
+		</ul>
+		<li>Bluetooth/Serial Cellphone</li>
+		<ul>
+			<li>Cell-tower signal strength</li>
+		</ul>
+	</ul>
+	
+	<p>Planned devices for the future:</p>
+	<ul>
+		<li>Bluetooth/Serial OBD-II device</li>
+		<ul>
+			<li>Battery voltage</li>
+			<li>Speed</li>
+			<li>RPM</li>
+			<li>Engine load</li>
+			<li>Coolant temperature</li>
+			<li>Throttle position</li>
+		</ul>
+		<li>Nintendo Wiimote</li>
+		<ul>
+			<li>Three-axis accelerometer</li>
+		</ul>
+	</ul>
+	
+	<h2>Project components</h2>
+		
+	<h3>ctdlogger</h3>
+	
+	<p>Data logger, parser and report generator (written in C).</p>
+	
+	<p>This part logs data from several (bluetooth) sensors. It stores the raw data in a SQLite3 database. It can also parse the information into human readable data and generate measurement reports for a trip.</p>
+	
+	<h3>ctdservice</h3>
+	
+	<p>REST(ish) Web-service (written in PHP).</p>
+	
+	<p>The web-service publishes the data from the SQLite3 database. You can get a summary of all trips, get detailed trip information, get information about the sensors used in the trip and get the sensor measurements for every 1/10th of a second in the trip.</p>
+	
+	<h3>ctdapp</h3>
+	
+	<p>Web-application (written in JavaScript, using ExtJS 4)</p>
+	
+	<p>The web-application access the web-service and displays the sensor measurements. It is possible to enable and disable various gauges and information panels. A trip can be played in realtime, 10x speed or manually controlled.</p>
+	
+	<h2>Usage</h2>
+	
+	<h3>ctdlogger</h3>
+	
+	<p>Call the make-file (/ctdlogger/build/Makefile) to build the project.</p>
+	
+	<p>Commands to operate the application:</p>
+	
+	<table width="100%">
+		<tr>
+			<th>Description</th>
+			<th>Command</th>
+			<th>Example</th>
+		</tr>
+		<tr>
+			<td>Create a new trip</td>
+			<td>./ctd create</td>
+			<td>./ctd create</td>
+		</tr>
+		<tr>
+			<td>Start GSM logging</td>
+			<td>./ctd gsm {tripid}</td>
+			<td>./ctd gsm 1</td>
+		</tr>
+		<tr>
+			<td>Start GPS logging</td>
+			<td>./ctd gps {tripid}</td>
+			<td>./ctd gps 1</td>
+		</tr>
+		<tr>
+			<td>Parse raw serial data</td>
+			<td>./ctd parse {tripid}</td>
+			<td>./ctd parse 1</td>
+		</tr>
+		<tr>
+			<td>Generate reports</td>
+			<td>./ctd reports {tripid}</td>
+			<td>./ctd reports 1</td>
+		</tr>
+	</table>
+	
+	<p>In a normal application flow you would:</p>
+	<ul>
+		<li>Create a trip, save the returned ID somewhere</li>
+		<li>Start both the GSM and GPS logging in two separate processes</li>
+		<li>Cancel the logging when you are finished (CTRL+C)</li>
+		<li>Parse the raw serial data to human understandable data</li>
+		<li>Generate trip reports with all logging values for every 1/10th of a second in this trip</li>
+	</ul>
+	
+	<p>Bash scripts to automate this process may be available in the future.</p>
+		
+	<h3>ctdservice</h3>
+
+	<p>Put the ctdservice directory on a PHP and SQLite3 enabled Apache server.</p>
+	<p>Don't forget the .htaccess file that might be hidden by your OS.</p>
+
+	<p>Access the web-service by browsing to http://yourserver/ctdservice/trips</p>
+	 
+	<p>Other entry-points are:</p>
+	<ul>
+		<li>/trips/{tripid}</li>
+		<li>/trips/{tripid}/{sensorname[gsm|gps]}</li>
+		<li>/trips/{tripid}/{sensorname[gsm|gps]}/{timestamp}.{milliseconds}</li>
+	</ul>
+	
+	<h3>ctdapp</h3>
+	
+	<p>Put the ctdapp directory on a web-server, or open the index.html file in your browser. Don't forget to enable CORS* on your web-server if	you want to run the application locally or on a different server that the web-service is running on. Access the web-application by browsing to http://yourserver/ctdapp/</p>
+	
+	<p>Select the trip you want to analyze and enable widgets by clicking the buttons on the widgets field. You can move, resize, maximize (most) widgets to your liking.</p>
+
+	<p>* CORS: Cross-Origin Resource Sharing. More information can be found at:</p> 
+	<p><a href="http://www.w3.org/TR/cors">http://www.w3.org/TR/cors</a></p>
+	<p><a href="http://enable-cors.org">http://enable-cors.org</a></p>
+  </div>
+</body>
+</html>

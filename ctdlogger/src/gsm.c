@@ -31,7 +31,7 @@ int log_gsm(int tripid) {
 
 	// AT-Commands to send to the phone
 	char atcommands[1][12] = {"AT+CSQ\r\n"};
-	char atcommands_length = 1;
+	char atcommands_count = 1;
 
 	// Open database connection
 	retval = sqlite3_open(DATABASE_PATH,&handle);
@@ -54,8 +54,8 @@ int log_gsm(int tripid) {
 
 	// Gather serial data
 	while (1) {
-		for (int i = 0; i < atcommands_length; i++) {
-			fputs(atcommands[0], file);
+		for (int i = 0; i < atcommands_count; i++) {
+			fputs(atcommands[i], file);
 			usleep(500*1000);
 			while (fgetc(file) != '\n');
 			fgets(line, sizeof line, file);
