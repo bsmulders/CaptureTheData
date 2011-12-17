@@ -1,12 +1,13 @@
-INCDIR=../include
-SRCDIR=../src
-OBJDIR=../obj
-LIBDIR=../lib
-SQLDIR =../database
+INCDIR= include
+SRCDIR= src
+OBJDIR= obj
+LIBDIR= lib
+SQLDIR = database
+BLDDIR = build
 
 # Link command:
-ctd : $(OBJDIR)/common.o $(OBJDIR)/ctd.o $(OBJDIR)/gps.o $(OBJDIR)/gsm.o $(OBJDIR)/obd.o $(OBJDIR)/trip.o
-	gcc -l sqlite3 $(OBJDIR)/common.o $(OBJDIR)/ctd.o $(OBJDIR)/gps.o $(OBJDIR)/gsm.o $(OBJDIR)/obd.o $(OBJDIR)/trip.o $(LIBDIR)/nmealib/lib/libnmea.a -o ctd
+$(BLDDIR)ctd : $(OBJDIR)/common.o $(OBJDIR)/ctd.o $(OBJDIR)/gps.o $(OBJDIR)/gsm.o $(OBJDIR)/obd.o $(OBJDIR)/trip.o
+	gcc -l sqlite3 $(OBJDIR)/common.o $(OBJDIR)/ctd.o $(OBJDIR)/gps.o $(OBJDIR)/gsm.o $(OBJDIR)/obd.o $(OBJDIR)/trip.o $(LIBDIR)/nmealib/lib/libnmea.a -o $(BLDDIR)/ctd
 
 # Compilation commands:
 $(OBJDIR)/common.o : $(SRCDIR)/common.c $(INCDIR)/common.h
@@ -22,7 +23,7 @@ $(OBJDIR)/gsm.o : $(SRCDIR)/gsm.c $(INCDIR)/gsm.h $(INCDIR)/ctd.h $(INCDIR)/comm
 	gcc -I $(INCDIR) -std=c99 -c $(SRCDIR)/gsm.c -o $(OBJDIR)/gsm.o
 
 $(OBJDIR)/obd.o : $(SRCDIR)/obd.c $(INCDIR)/obd.h
-	gcc -I $(INCDIR) -c $(SRCDIR)/obd.c -o $(OBJDIR)/obd.o
+	gcc -I $(INCDIR) -std=c99 -c $(SRCDIR)/obd.c -o $(OBJDIR)/obd.o
 
 $(OBJDIR)/trip.o : $(SRCDIR)/trip.c $(INCDIR)/trip.h $(INCDIR)/gsm.h $(INCDIR)/gps.h $(INCDIR)/ctd.h
 	gcc -I $(INCDIR) -c $(SRCDIR)/trip.c -o $(OBJDIR)/trip.o
@@ -33,4 +34,4 @@ $(LIBDIR)/nmealib/lib/libnmea.a : $(LIBDIR)/nmealib/include/nmea/nmea.h
 # Make commands
 clean: 
 	rm -f $(OBJDIR)/*.o
-	rm -f ctd
+	rm -f $(BLDDIR)/ctd
