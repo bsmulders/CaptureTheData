@@ -71,12 +71,14 @@ Ext.define('CTD.controller.Widget', {
 				|| gpsRecord.get('Longitude') != lng) {
 			lat = gpsRecord.get('Latitude');
 			lng = gpsRecord.get('Longitude');
-
-			var query = Ext.ComponentQuery.query('.gmappanel');
-			for ( var i in query) {
-				var item = query[i];
-				item.addMarker(new google.maps.LatLng(lat, lng),
-						new google.maps.Marker(lat, lng), true, true, null);
+			
+			if (lat != '' && lng != '') {
+				var query = Ext.ComponentQuery.query('.gmappanel');
+				for ( var i in query) {
+					var item = query[i];
+					item.addMarker(new google.maps.LatLng(lat, lng),
+							new google.maps.Marker(lat, lng), true, true, null);
+				}
 			}
 		}
 	},
