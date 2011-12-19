@@ -12,21 +12,21 @@ The goal of this project is to create a cheap and modular vehicle data logger us
 
 The logging application can run on any PC or embedded device. After the data is logged, it can be viewed using a web-application. This application allows the user to select a trip and watch the recorded data in real-time using configurable gauges and information panels.
 
-Currently supported devices:
+Currently supported devices and features:
 
-* Bluetooth/Serial GPS receiver
+* Bluetooth/Serial GPS receiver *(NMEA based)*
    * UTC
    * Speed
    * Latitude
    * Longitude
    * Direction
    * Declination
-* Bluetooth/Serial Cellphone
+* Bluetooth/Serial Cellphone *(Hayes command set based)*
    * Cell-tower signal strength
 
 Planned devices for the future:
 
-* Bluetooth/Serial OBD-II device
+* Bluetooth/Serial OBD-II device *(ELM327 based)*
    * Battery voltage
    * Speed
    * RPM
