@@ -98,11 +98,11 @@ Commands to operate the application:
 
 In a normal application flow you would:
 
-* Create a trip, save the returned ID somewhere
-* Start both the GSM and GPS logging in two separate processes
-* Cancel the logging when you are finished (CTRL+C)
-* Parse the raw serial data to human understandable data
-* Generate trip reports with all logging values for every 1/10th of a second in this trip
+1. Create a trip, save the returned ID somewhere
+2. Start both the GSM and GPS logging in two separate processes
+3. Cancel the logging when you are finished (CTRL+C)
+4. Parse the raw serial data to human understandable data
+5. Generate trip reports with all logging values for every 1/10th of a second in this trip
 
 Bash scripts to automate this process may be available in the future.  
 Please note that generating the reports can take a while. Generating reports for 30 minutes of recorded data can take up to a few minutes.
