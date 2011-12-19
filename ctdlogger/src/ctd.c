@@ -23,7 +23,7 @@ This file may be used under the terms of the GNU General Public License version 
 
 int main(int argc, char** args) {
 	if (args[1] == NULL) {
-		printf("No arguments given. Use create, gsm {tripid}, gps {tripid}, parse {tripid}, report {tripid}\n");
+		printf("No arguments given. Use create, gsm {tripid}, gps {tripid}, obd {tripid}, parse {tripid}, report {tripid}\n");
 		return -1;
 	}
 	else if (strcmp(args[1], "parse") == 0) {
@@ -80,8 +80,16 @@ int main(int argc, char** args) {
 		
 		return log_gps(atoi(args[2]));
 	} 
+	else if (strcmp(args[1], "obd") == 0) {
+		if (args[2] == NULL) {
+			printf("Please enter a trip id\n");
+			return -1;
+		}
+		
+		return log_obd(atoi(args[2]));
+	} 
 	else {
-		printf("Wrong arguments given. Use create, gsm {tripid}, gps {tripid}, parse {tripid}, report {tripid}\n");
+		printf("Wrong arguments given. Use create, gsm {tripid}, gps {tripid}, obd {tripid}, parse {tripid}, report {tripid}\n");
 		return -1;
 	}
 }

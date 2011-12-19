@@ -16,6 +16,7 @@ This file may be used under the terms of the GNU General Public License version 
 
 #define GSM_PORT "/dev/tty.T610-SerialPort1"
 #define GPS_PORT "/dev/tty.BTGPS-BluetoothSerialPo"
+#define OBD_PORT "/dev/tty.CHX-DevB"
 #define DATABASE_PATH "ctd.sqlite"
 
 #endif

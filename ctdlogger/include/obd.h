@@ -14,4 +14,8 @@ This file may be used under the terms of the GNU General Public License version 
 #ifndef __CTD_OBD_H__
 #define __CTD_OBD_H__
 
+int log_obd(int tripid);
+int parse_obd(int tripid);
+int generate_obd_report(int tripid);
+
 #endif
