@@ -59,9 +59,10 @@ int main(int argc, char** args) {
 
 		if (tripid > 0) {
 			printf("Created a new trip: %d\n", tripid);
+			return tripid;
 		}
 
-		return 0;
+		return -1;
 	} 
 	else if (strcmp(args[1], "gsm") == 0) {
 		if (args[2] == NULL) {
