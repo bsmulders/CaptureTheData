@@ -30,8 +30,9 @@ int log_gsm(int tripid) {
 	FILE *file;
 
 	// AT-Commands to send to the phone
-	char atcommands[1][12] = {"AT+CSQ\r\n"};
-	char atcommands_count = 1;
+	char atcommands[1][12];
+	sprintf(atcommands[0], "%s\r\n", GSM_CELL_SIGNAL_QUALITY);
+	int atcommands_count = 1;
 
 	// Open database connection
 	retval = sqlite3_open(DATABASE_PATH,&handle);

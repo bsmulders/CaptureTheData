@@ -14,6 +14,8 @@ This file may be used under the terms of the GNU General Public License version 
 #ifndef __CTD_GSM_H__
 #define __CTD_GSM_H__
 
+#define GSM_CELL_SIGNAL_QUALITY	"AT+CSQ"
+
 int log_gsm(int tripid);
 int parse_gsm(int tripid);
 int generate_gsm_report(int tripid);
