@@ -36,6 +36,8 @@ int main(int argc, char** args) {
 			return -1;
 		if (parse_gsm(atoi(args[2])) < 0) 
 			return -1;
+		if (parse_obd(atoi(args[2])) < 0) 
+			return -1;
 		if (parse_trip(atoi(args[2])) < 0) 
 			return -1;
 

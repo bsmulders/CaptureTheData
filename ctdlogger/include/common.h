@@ -15,5 +15,8 @@ This file may be used under the terms of the GNU General Public License version 
 #define __CTD_COMMON_H__
 
 double current_time_with_ms();
+char xtod(char c);
+int hextodec(char *hex);
+int xstrtoi(char *hex);
 
 #endif

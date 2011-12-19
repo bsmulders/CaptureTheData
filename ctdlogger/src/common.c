@@ -20,3 +20,20 @@ double current_time_with_ms() {
 	gettimeofday(&tim, NULL);
 	return tim.tv_sec + (tim.tv_usec/1000000.0);
 }
+
+// http://bytes.com/topic/c/answers/562961-hex-string-integer-convertor
+char xtod(char c) {
+	if (c>='0' && c<='9') return c-'0';
+	if (c>='A' && c<='F') return c-'A'+10;
+	if (c>='a' && c<='f') return c-'a'+10;
+	return c=0;        // not Hex digit
+}
+
+int hextodec(char *hex) {
+    if (*hex==0) return 0;
+    return  hextodec(hex-1)*16 +  xtod(*hex) ; 
+}
+ 
+int xstrtoi(char *hex) {
+    return hextodec(hex+strlen(hex)-1);
+}

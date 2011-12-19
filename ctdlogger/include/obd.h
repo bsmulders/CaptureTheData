@@ -14,8 +14,21 @@ This file may be used under the terms of the GNU General Public License version 
 #ifndef __CTD_OBD_H__
 #define __CTD_OBD_H__
 
+#define OBD_FUEL_SYSTEM_STATUS			0x03
+#define OBD_CALCULATED_ENGINE_LOAD 		0x04
+#define OBD_ENGINE_COOLANT_TEMPERATURE 	0x05
+#define OBD_FUEL_PRESSURE				0x0A
+#define OBD_INTAKE_MAP					0x0B
+#define OBD_ENGINE_RPM 					0x0C
+#define OBD_VEHICLE_SPEED				0x0D
+#define OBD_TIMING_ADVANCE				0x0E
+#define OBD_INTAKE_AIR_TEMPERATURE		0x0F
+#define OBD_MAF_AIR_FLOW_RATE			0x10
+#define OBD_THROTTLE_POSITION			0x11
+
 int log_obd(int tripid);
 int parse_obd(int tripid);
 int generate_obd_report(int tripid);
+int calculate_pid_value(int pid, int a, int b, int c, int d);
 
 #endif
