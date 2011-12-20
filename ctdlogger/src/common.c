@@ -14,6 +14,7 @@ This file may be used under the terms of the GNU General Public License version 
 #include "common.h"
 
 #include <sys/time.h>
+#include <string.h>
 
 double current_time_with_ms() {
 	struct timeval tim;
