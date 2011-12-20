@@ -38,6 +38,21 @@ Ext.define('CTD.controller.Widget', {
 			'widgetpicker button[action=gMaps]' : {
 				click : this.onGmapsClick
 			},
+			'widgetpicker button[action=obdSpeed]' : {
+				click: this.onObdSpeedClick
+			},
+			'widgetpicker button[action=obdRpm]' : {
+				click: this.onObdRpmClick
+			},
+			'widgetpicker button[action=obdThrottle]' : {
+				click: this.onObdThrottleClick
+			},
+			'widgetpicker button[action=obdCoolantTemperature]' : {
+				click: this.onObdCoolantTemperatureClick
+			},
+			'widgetpicker button[action=obdEngineLoad]' : {
+				click: this.onObdEngineLoadClick
+			},
 		});
 
 		this.getGpsReportsStore().addListener('datachanged',
@@ -63,7 +78,27 @@ Ext.define('CTD.controller.Widget', {
 	onGmapsClick : function(button, event) {
 		Ext.create('CTD.view.GmapsWindow').show();
 	},
-
+	
+	onObdSpeedClick : function(button, event) {
+		Ext.create('CTD.view.ObdSpeedWindow').show();
+	},
+	
+	onObdRpmClick : function(button, event) {
+		Ext.create('CTD.view.ObdRpmWindow').show();
+	},
+	
+	onObdThrottleClick : function(button, event) {
+		Ext.create('CTD.view.ObdThrottleWindow').show();
+	},
+	
+	onObdCoolantTemperatureClick : function(button, event) {
+		Ext.create('CTD.view.ObdCoolantTemperatureWindow').show();
+	},
+	
+	onObdEngineLoadClick : function(button, event) {
+		Ext.create('CTD.view.ObdEngineLoadWindow').show();
+	},
+	
 	onGpsReportsChange : function() {
 		var gpsRecord = this.getGpsReportsStore().first();
 

@@ -15,7 +15,7 @@ var lat, lng;
 
 Ext.define('CTD.controller.Trip', {
 	extend : 'Ext.app.Controller',
-	stores : [ 'Trips', 'TimeControl', 'GpsReports', 'GsmReports' ],
+	stores : [ 'Trips', 'TimeControl', 'GpsReports', 'GsmReports', 'ObdReports' ],
 	controllers : [ 'TimeControl' ],
 
 	init : function() {
@@ -87,6 +87,15 @@ Ext.define('CTD.controller.Trip', {
 					+ "."
 					+ timeRecord.get('TimeStampSub');
 			this.getGpsReportsStore().load();
+			
+			
+			this.getObdReportsStore().getProxy().url = tripRecord
+					.get('Sensors').obd.URI
+					+ "/"
+					+ timeRecord.get('TimeStamp')
+					+ "."
+					+ timeRecord.get('TimeStampSub');
+			this.getObdReportsStore().load();
 		}
 	},
 });
