@@ -124,7 +124,7 @@ int parse_obd(int tripid) {
 			int pid = xstrtoi(pidraw);
 			
 			char * avalraw = (char *) malloc(3);
-			strncpy(avalraw, rawdata+4, 2);
+			strncpy(avalraw, rawdata+10, 2);
 			int aval = xstrtoi(avalraw);
 			
 			char * bvalraw = (char *) malloc(3);
@@ -132,7 +132,7 @@ int parse_obd(int tripid) {
 			int bval = xstrtoi(bvalraw);
 			
 			char * cvalraw = (char *) malloc(3);
-			strncpy(cvalraw, rawdata+10, 2);
+			strncpy(cvalraw, rawdata+4, 2);
 			int cval = xstrtoi(cvalraw);
 			
 			char * dvalraw = (char *) malloc(3);			
@@ -152,8 +152,6 @@ int parse_obd(int tripid) {
 			if(retval) {
 				printf("OBD Parsing: Updating data in DB Failed: %d\n", retval);
 				return -1;
-			} else {
-				printf("Updateded");
 			}
 		}
 		else if(retval == SQLITE_DONE) {
