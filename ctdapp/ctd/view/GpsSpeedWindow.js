@@ -15,7 +15,7 @@ Ext.define('CTD.view.GpsSpeedWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.gpsspeedwindow',
 	requires : 'CTD.store.GpsReports',
-	width : 220,
+	width : 240,
 	height : 170,
 	minWidth : 220,
 	minHeight : 170,
