@@ -30,11 +30,11 @@ int log_obd(int tripid) {
 
 	// PIDs to send to the OBD unit
 	char pids[5][7];
-	sprintf(pids[0], "01%02x", OBD_CALCULATED_ENGINE_LOAD);
-	sprintf(pids[1], "01%02x", OBD_ENGINE_COOLANT_TEMPERATURE);
-	sprintf(pids[2], "01%02x", OBD_ENGINE_RPM);
-	sprintf(pids[3], "01%02x", OBD_VEHICLE_SPEED);
-	sprintf(pids[4], "01%02x", OBD_THROTTLE_POSITION);	
+	sprintf(pids[0], "01%02x\r\n", OBD_CALCULATED_ENGINE_LOAD);
+	sprintf(pids[1], "01%02x\r\n", OBD_ENGINE_COOLANT_TEMPERATURE);
+	sprintf(pids[2], "01%02x\r\n", OBD_ENGINE_RPM);
+	sprintf(pids[3], "01%02x\r\n", OBD_VEHICLE_SPEED);
+	sprintf(pids[4], "01%02x\r\n", OBD_THROTTLE_POSITION);	
 	int pids_count = 5;
 
 	// Open database connection
