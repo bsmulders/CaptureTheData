@@ -15,7 +15,7 @@ Ext.define('CTD.view.WidgetPicker', {
 	extend : 'Ext.panel.Panel',
 	alias : 'widget.widgetpicker',
 	defaults : {
-		width : 105,
+		width : 135,
 		height : 105,
 		margin : 9,
 	},
@@ -27,14 +27,17 @@ Ext.define('CTD.view.WidgetPicker', {
 		text : 'GSM<hr />Signal Strength',
 		action : 'gsmSignalStrength',
 	}, {
-		text : 'GPS<hr/>Speed',
-		action : 'gpsSpeed',
-	}, {
 		text : 'GPS<hr/>Info',
 		action : 'gpsInfo',
 	}, {
+		text : 'GPS<hr/>Speed',
+		action : 'gpsSpeed',
+	}, {
 		text : 'GPS<hr />Google Maps',
 		action : 'gMaps',
+	}, {
+		text : 'OBD<hr />Info',
+		action : 'obdInfo',
 	}, {
 		text : 'OBD<hr />Speed',
 		action : 'obdSpeed',
