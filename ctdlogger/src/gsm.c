@@ -153,6 +153,16 @@ int generate_gsm_report(int tripid) {
 		printf("GSM Report: Database connection failed: %d\n", retval);
 		return -1;
 	}	
+	
+	// Remove old reports
+	char removequery [100];
+	sprintf(removequery, "DELETE FROM GsmReport WHERE Trip_ID = %d", tripid);
+	retval = sqlite3_exec(handle,removequery,0,0,0);
+	if(retval) {
+		printf("GSM Report: Removing data from DB Failed: %d\n", retval);
+		printf("Query: %s\n", removequery);
+		return -1;
+	}
 
 	// Get starttime / endtime
 	int starttime, endtime;

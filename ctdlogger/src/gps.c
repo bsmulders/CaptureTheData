@@ -161,6 +161,16 @@ int generate_gps_report(int tripid) {
 	if(retval) {
 		printf("GPS Report: Database connection failed: %d\n", retval);
 		return -1;
+	}
+	
+	// Remove old reports
+	char removequery [100];
+	sprintf(removequery, "DELETE FROM GpsReport WHERE Trip_ID = %d", tripid);
+	retval = sqlite3_exec(handle,removequery,0,0,0);
+	if(retval) {
+		printf("GPS Report: Removing data from DB Failed: %d\n", retval);
+		printf("Query: %s\n", removequery);
+		return -1;
 	}	
 
 	// Get starttime / endtime
