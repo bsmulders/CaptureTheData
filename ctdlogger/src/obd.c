@@ -74,7 +74,7 @@ int log_obd(int tripid) {
 			sprintf(query, "INSERT INTO ObdData ( 'Trip_ID', 'TimeStamp', 'RawData' ) VALUES ( %d, %f, '%s')", tripid, timestamp, line);
 			do {
 				retval = sqlite3_exec(handle,query,0,0,0);
-			} while (retval == 5);
+			} while (retval == SQLITE_BUSY);
 		}
 	}
 
