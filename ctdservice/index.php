@@ -13,6 +13,7 @@ This file may be used under the terms of the GNU General Public License version 
 */
 
 $db = new SQLite3('ctd.sqlite');
+$sensors = array("gsm"=>"GsmReport", "gps"=>"GpsReport", "obd"=>"ObdReport");
 
 $uri = strtok($HTTP_SERVER_VARS['REQUEST_URI'], '?');
 $host = $HTTP_SERVER_VARS['HTTP_HOST'];
@@ -23,9 +24,7 @@ if (count($urlparts) == 3 && $urlparts[1] == "ctdservice" && $urlparts[2] == "")
 	echo "Homepage<br />";
 }
 // Requested all trips
-else if (count($urlparts) == 3 && $urlparts[1] == "ctdservice" && $urlparts[2] == "trips") {
-	//echo "Requested all trips<br />";
-	
+else if (count($urlparts) == 3 && $urlparts[1] == "ctdservice" && $urlparts[2] == "trips") {	
 	$result = array();
 	
 	$query = $db->query("SELECT * FROM Trip");
@@ -54,7 +53,6 @@ else if (count($urlparts) == 4 && $urlparts[1] == "ctdservice" && $urlparts[2] =
 	$result['EndTime'] = date(DATE_RFC850, $result['EndTime']);
 	$result['URI'] = "http://" . $host . "/ctdservice/trips/" . $tripid;
 	
-	$sensors = array("gsm"=>"GsmReport", "gps"=>"GpsReport");
 	foreach ($sensors as $sensor=>$tablename) {
 		$report = array("URI" => $result['URI'] . "/" . $sensor);
 		$query = $db->query("SELECT MIN(TimeStamp) AS min, MAX(TimeStamp) AS max FROM ".$tablename." WHERE Trip_ID = " . sqlite_escape_string($tripid));		
@@ -77,12 +75,9 @@ else if (count($urlparts) == 5 && $urlparts[1] == "ctdservice" && $urlparts[2] =
 	
 	$result = array();
 	
-	if ($sensor == "gps") {
-		$query = $db->query("SELECT MIN(TimeStamp) AS min, MAX(TimeStamp) AS max FROM GpsReport WHERE Trip_ID = " . sqlite_escape_string($tripid));
-	}
-	else if ($sensor == "gsm") {
-		$query = $db->query("SELECT MIN(TimeStamp) AS min, MAX(TimeStamp) AS max FROM GsmReport WHERE Trip_ID = " . sqlite_escape_string($tripid));		
-	}
+	if (in_array($sensor, array_keys($sensors))) {
+		$query = $db->query("SELECT MIN(TimeStamp) AS min, MAX(TimeStamp) AS max FROM " . $sensors[$sensor] . " WHERE Trip_ID = " . sqlite_escape_string($tripid));
+	} 
 	
 	if ($query) {
 		$timestamps = $query->fetchArray(SQLITE3_ASSOC);
@@ -104,11 +99,8 @@ else if (count($urlparts) == 6 && $urlparts[1] == "ctdservice" && $urlparts[2] =
 	
 	$result = array();
 	
-	if ($sensor == "gps") {
-		$query = $db->query("SELECT * FROM GpsReport WHERE Trip_ID = ".sqlite_escape_string($tripid)." AND (TimeStamp + (TimeStampSub / 10.0)) = " . sqlite_escape_string($timestamp));
-	}
-	else if ($sensor == "gsm") {
-		$query = $db->query("SELECT * FROM GsmReport WHERE Trip_ID = ".sqlite_escape_string($tripid)." AND (TimeStamp + (TimeStampSub / 10.0)) = " . sqlite_escape_string($timestamp));		
+	if (in_array($sensor, array_keys($sensors))) {
+		$query = $db->query("SELECT * FROM " . $sensors[$sensor] . " WHERE Trip_ID = ".sqlite_escape_string($tripid)." AND (TimeStamp + (TimeStampSub / 10.0)) = " . sqlite_escape_string($timestamp));
 	}
 	
 	if ($query) {
