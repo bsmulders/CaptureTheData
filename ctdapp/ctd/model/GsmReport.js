@@ -13,6 +13,5 @@ This file may be used under the terms of the GNU General Public License version 
 
 Ext.define('CTD.model.GsmReport', {
 	extend : 'Ext.data.Model',
-	fields : [ 'Gsm_ID', 'TimeStamp', 'TimeStampSub', 'SignalStrenght',
-			'NextMeasurement', 'Time' ],
+	fields : [ 'Gsm_ID', 'TimeStamp', 'TimeStampSub', 'SignalStrenght'],
 });

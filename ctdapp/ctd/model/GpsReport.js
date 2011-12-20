@@ -14,6 +14,5 @@ This file may be used under the terms of the GNU General Public License version 
 Ext.define('CTD.model.GpsReport', {
 	extend : 'Ext.data.Model',
 	fields : [ 'Gps_ID', 'TimeStamp', 'TimeStampSub', 'UTC', 'Fix', 'Latitude',
-			'Longitude', 'Speed', 'Direction', 'Declination',
-			'NextMeasurement', 'Time' ],
+			'Longitude', 'Speed', 'Direction', 'Declination' ],
 });
