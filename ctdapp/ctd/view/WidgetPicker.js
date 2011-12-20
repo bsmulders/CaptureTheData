@@ -37,10 +37,10 @@ Ext.define('CTD.view.WidgetPicker', {
 		action : 'gMaps',
 	}, {
 		text : 'OBD<hr />Speed',
-		action : 'obsSpeed',
+		action : 'obdSpeed',
 	}, {
 		text : 'OBD<hr />RPM',
-		action : 'obdRPM',
+		action : 'obdRpm',
 	}, {
 		text : 'OBD<hr />Throttle',
 		action : 'obdThrottle',
