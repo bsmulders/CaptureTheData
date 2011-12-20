@@ -29,9 +29,9 @@ Ext.define('CTD.view.GpsSpeedWindow', {
 		xtype : 'chart',
 		style : 'background:#fff',
 		animate : {
-            duration: 300,
-            easing: 'ease',
-        },
+			duration : 300,
+			easing : 'ease',
+		},
 		store : 'GpsReports',
 		insetPadding : 25,
 		flex : 1,

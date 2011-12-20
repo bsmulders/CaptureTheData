@@ -29,9 +29,9 @@ Ext.define('CTD.view.ObdRpmWindow', {
 		xtype : 'chart',
 		style : 'background:#fff',
 		animate : {
-            duration: 300,
-            easing: 'ease',
-        },
+			duration : 300,
+			easing : 'ease',
+		},
 		store : 'ObdReports',
 		insetPadding : 25,
 		flex : 1,
