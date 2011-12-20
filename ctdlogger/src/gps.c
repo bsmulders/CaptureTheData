@@ -187,11 +187,11 @@ int generate_gps_report(int tripid) {
 		for (int subsecond = 0; subsecond < 10; subsecond++) {
 			// Insert closest measurement in database
 			sprintf(insertquery, "INSERT INTO GpsReport ( 'Trip_ID', 'TimeStamp', 'TimeStampSub', 'UTC', 'Fix', 'Latitude', 'Longitude', 'Speed', 'Direction', 'Declination' )"
-							 	" SELECT Trip_ID, %d, %d, UTC, Fix, Latitude, Longitude, Speed, Direction, Declination"
+							 	" SELECT Trip_ID, %1$d, %2$d, UTC, Fix, Latitude, Longitude, Speed, Direction, Declination"
 							 	" FROM GpsData"
-							 	" WHERE Trip_ID = %d AND TimeStamp < %d+10 AND TimeStamp > %d-10"
-							 	" ORDER BY ABS(TimeStamp - %d.%d) ASC"
-							 	" LIMIT 1", second, subsecond, tripid, second, second, second, subsecond);
+							 	" WHERE Trip_ID = %3$d AND TimeStamp < %1$d+10 AND TimeStamp > %1$d-10"
+							 	" ORDER BY ABS(TimeStamp - %1$d.%3$d) ASC"
+							 	" LIMIT 1", second, subsecond, tripid);
 			retval = sqlite3_exec(handle,insertquery,0,0,0);
 			if(retval) {
 				printf("GPS Report: Inserting data in DB Failed: %d\n", retval);
