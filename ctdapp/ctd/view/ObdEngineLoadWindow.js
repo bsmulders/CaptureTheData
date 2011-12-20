@@ -15,10 +15,10 @@ Ext.define('CTD.view.ObdEngineLoadWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.obdengineloadwindow',
 	requires : 'CTD.store.ObdReports',
-	width : 240,
-	height : 170,
+	width : 220,
+	height : 140,
 	minWidth : 220,
-	minHeight : 170,
+	minHeight : 140,
 	maximizable : true,
 	title : 'OBD Engine Load',
 	layout : {
@@ -33,7 +33,7 @@ Ext.define('CTD.view.ObdEngineLoadWindow', {
 			easing : 'ease',
 		},
 		store : 'ObdReports',
-		insetPadding : 25,
+		insetPadding : 5,
 		flex : 1,
 		axes : [ {
 			type : 'gauge',
@@ -41,12 +41,13 @@ Ext.define('CTD.view.ObdEngineLoadWindow', {
 			minimum : 0,
 			maximum : 100,
 			steps : 10,
-			margin : 7,
+			margin : -7,
+			title: '%',
 		} ],
 		series : [ {
 			type : 'gauge',
 			field : 'CalculatedEngineLoad',
-			donut : 80,
+			donut : 72,
 			colorSet : [ '#F90', '#ddd' ],
 		} ]
 	} ]

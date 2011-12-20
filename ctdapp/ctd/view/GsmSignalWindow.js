@@ -16,9 +16,9 @@ Ext.define('CTD.view.GsmSignalWindow', {
 	alias : 'widget.gsmsignalwindow',
 	requires : 'CTD.store.GsmReports',
 	width : 220,
-	height : 170,
+	height : 140,
 	minWidth : 220,
-	minHeight : 170,
+	minHeight : 140,
 	maximizable : true,
 	title : 'GSM Signal Strength',
 	layout : {
@@ -27,10 +27,13 @@ Ext.define('CTD.view.GsmSignalWindow', {
 	},
 	items : [ {
 		xtype : 'chart',
-		style : 'background: #fff',
-		animate : true,
+		style : 'background : #fff',
+		animate : {
+			duration : 300,
+			easing : 'ease',
+		},
 		store : 'GsmReports',
-		insetPadding : 25,
+		insetPadding : 5,
 		flex : 1,
 		axes : [ {
 			type : 'gauge',
@@ -38,13 +41,14 @@ Ext.define('CTD.view.GsmSignalWindow', {
 			minimum : 0,
 			maximum : 32,
 			steps : 8,
-			margin : 7,
+			margin : -7,
+			title: 'rssi',
 		} ],
 		series : [ {
 			type : 'gauge',
 			field : 'SignalStrenght',
-			donut : 80,
-			colorSet : [ '#F90', '#ddd' ]
+			donut : 72,
+			colorSet : [ '#F90', '#ddd' ],
 		} ]
 	} ]
 });

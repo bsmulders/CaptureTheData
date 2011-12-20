@@ -15,10 +15,10 @@ Ext.define('CTD.view.GpsSpeedWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.gpsspeedwindow',
 	requires : 'CTD.store.GpsReports',
-	width : 240,
-	height : 170,
+	width : 220,
+	height : 140,
 	minWidth : 220,
-	minHeight : 170,
+	minHeight : 140,
 	maximizable : true,
 	title : 'GPS Speed',
 	layout : {
@@ -33,7 +33,7 @@ Ext.define('CTD.view.GpsSpeedWindow', {
 			easing : 'ease',
 		},
 		store : 'GpsReports',
-		insetPadding : 25,
+		insetPadding : 5,
 		flex : 1,
 		axes : [ {
 			type : 'gauge',
@@ -41,12 +41,13 @@ Ext.define('CTD.view.GpsSpeedWindow', {
 			minimum : 0,
 			maximum : 160,
 			steps : 8,
-			margin : 7,
+			margin : -7,
+			title: 'km/h',
 		} ],
 		series : [ {
 			type : 'gauge',
 			field : 'Speed',
-			donut : 80,
+			donut : 72,
 			colorSet : [ '#F90', '#ddd' ],
 		} ]
 	} ]

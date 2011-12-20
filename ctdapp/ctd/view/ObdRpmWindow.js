@@ -15,10 +15,10 @@ Ext.define('CTD.view.ObdRpmWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.obdrpmwindow',
 	requires : 'CTD.store.ObdReports',
-	width : 250,
-	height : 170,
+	width : 220,
+	height : 140,
 	minWidth : 220,
-	minHeight : 170,
+	minHeight : 140,
 	maximizable : true,
 	title : 'OBD RPM',
 	layout : {
@@ -33,7 +33,7 @@ Ext.define('CTD.view.ObdRpmWindow', {
 			easing : 'ease',
 		},
 		store : 'ObdReports',
-		insetPadding : 25,
+		insetPadding : 5,
 		flex : 1,
 		axes : [ {
 			type : 'gauge',
@@ -41,13 +41,28 @@ Ext.define('CTD.view.ObdRpmWindow', {
 			minimum : 0,
 			maximum : 8000,
 			steps : 8,
-			margin : 7,
+			margin : -8,
+			title : 'RPM',
 		} ],
 		series : [ {
 			type : 'gauge',
 			field : 'EngineRPM',
-			donut : 80,
+			donut : 68,
 			colorSet : [ '#F90', '#ddd' ],
+			gradients: [{
+				stops: {
+					0: {
+						color: '#99BBE8',
+					},
+					5000: {
+						color: '#77AECE',
+					},
+					8000: {
+						color: '#9F0',
+					},
+				}
+			}],
+			
 		} ]
 	} ]
 });

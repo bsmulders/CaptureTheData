@@ -15,10 +15,10 @@ Ext.define('CTD.view.ObdThrottleWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.obdthrottlewindow',
 	requires : 'CTD.store.ObdReports',
-	width : 240,
-	height : 170,
+	width : 220,
+	height : 140,
 	minWidth : 220,
-	minHeight : 170,
+	minHeight : 140,
 	maximizable : true,
 	title : 'OBD Throttle',
 	layout : {
@@ -33,7 +33,7 @@ Ext.define('CTD.view.ObdThrottleWindow', {
 			easing : 'ease',
 		},
 		store : 'ObdReports',
-		insetPadding : 25,
+		insetPadding : 5,
 		flex : 1,
 		axes : [ {
 			type : 'gauge',
@@ -41,12 +41,13 @@ Ext.define('CTD.view.ObdThrottleWindow', {
 			minimum : 0,
 			maximum : 100,
 			steps : 10,
-			margin : 7,
+			margin : -7,
+			title: '%',
 		} ],
 		series : [ {
 			type : 'gauge',
 			field : 'ThrottlePosition',
-			donut : 80,
+			donut : 72,
 			colorSet : [ '#F90', '#ddd' ],
 		} ]
 	} ]
