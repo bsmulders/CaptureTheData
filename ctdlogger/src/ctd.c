@@ -53,6 +53,8 @@ int main(int argc, char** args) {
 			return -1;
 		if (generate_gsm_report(atoi(args[2])) < 0) 
 			return -1;
+		if (generate_obd_report(atoi(args[2])) < 0)
+			return -1;
 		
 		return 0;
 	} 

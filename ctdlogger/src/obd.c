@@ -169,7 +169,89 @@ int parse_obd(int tripid) {
 }
 
 int generate_obd_report(int tripid) {
-	return -1;
+	int retval;
+	sqlite3 *handle;
+	sqlite3_stmt *stmt;
+
+	// Open database connection
+	retval = sqlite3_open(DATABASE_PATH,&handle);
+	if(retval) {
+		printf("OBD Report: Database connection failed: %d\n", retval);
+		return -1;
+	}	
+	
+	// Remove old reports
+	char removequery [100];
+	sprintf(removequery, "DELETE FROM ObdReport WHERE Trip_ID = %d", tripid);
+	retval = sqlite3_exec(handle,removequery,0,0,0);
+	if(retval) {
+		printf("OBD Report: Removing data from DB Failed: %d\n", retval);
+		printf("Query: %s\n", removequery);
+		return -1;
+	}
+	
+	// Get starttime / endtime
+	int starttime, endtime;
+	char selectquery [70];
+	sprintf(selectquery, "SELECT MIN(Timestamp), MAX(Timestamp) FROM ObdData WHERE Trip_ID = %d", tripid);
+	retval = sqlite3_prepare_v2(handle,selectquery,-1,&stmt,0);
+	if(retval) {
+		printf("OBD Report: Selecting trip from DB Failed: %d\n", retval);
+		return -1;
+	}
+	retval = sqlite3_step(stmt);
+	if(retval != SQLITE_ROW) {
+		printf("OBD Report: SQL error whilst reading rows: %d\n", retval);
+		return -1;
+	}
+	starttime = (int) sqlite3_column_double(stmt, 0);
+	endtime = (int) sqlite3_column_double(stmt, 1);
+	sqlite3_step(stmt);
+	
+	// Create 10 subrecords for each second between the starttime and endtime
+	char insertquery [2000];
+	for (int second = starttime; second < endtime; second++) {
+		for (int subsecond = 0; subsecond < 10; subsecond++) {
+			// Insert closest measurement in database
+			sprintf(insertquery, "INSERT INTO ObdReport ( 'Trip_ID', 'TimeStamp', 'TimeStampSub', 'CalculatedEngineLoad', 'EngineCoolantTemperature', 'EngineRPM', 'VehicleSpeed', 'ThrottlePosition' )"
+							 	" SELECT %3$d, %1$d, %2$d, (SELECT Value FROM ObdData"
+								" WHERE Trip_ID = %3$d AND PID = %4$d  AND TimeStamp < (%1$d+10) AND TimeStamp > (%1$d-10)"
+								" ORDER BY ABS(TimeStamp - %1$d.%2$d) ASC"
+								" LIMIT 1),"
+								" (SELECT Value FROM ObdData"
+								" WHERE Trip_ID = %3$d AND PID = %5$d  AND TimeStamp < (%1$d+10) AND TimeStamp > (%1$d-10)"
+								" ORDER BY ABS(TimeStamp - %1$d.%2$d) ASC"
+								" LIMIT 1),"
+								" (SELECT Value FROM ObdData"
+								" WHERE Trip_ID = %3$d AND PID = %6$d  AND TimeStamp < (%1$d+10) AND TimeStamp > (%1$d-10)"
+								" ORDER BY ABS(TimeStamp - %1$d.%2$d) ASC"
+								" LIMIT 1),"
+								" (SELECT Value FROM ObdData"
+								" WHERE Trip_ID = %3$d AND PID = %7$d  AND TimeStamp < (%1$d+10) AND TimeStamp > (%1$d-10)"
+								" ORDER BY ABS(TimeStamp - %1$d.%2$d) ASC"
+								" LIMIT 1),"
+								" (SELECT Value FROM ObdData"
+								" WHERE Trip_ID = %3$d AND PID = %8$d  AND TimeStamp < (%1$d+10) AND TimeStamp > (%1$d-10)"
+								" ORDER BY ABS(TimeStamp - %1$d.%2$d) ASC"
+								" LIMIT 1)",
+								second, subsecond, tripid,
+								OBD_CALCULATED_ENGINE_LOAD,
+								OBD_ENGINE_COOLANT_TEMPERATURE,
+								OBD_ENGINE_RPM,
+								OBD_VEHICLE_SPEED,
+								OBD_THROTTLE_POSITION);
+			retval = sqlite3_exec(handle,insertquery,0,0,0);	
+			if(retval) {
+				printf("OBD Report: Inserting data in DB Failed: %d\n", retval);
+				printf("Query: %s\n", insertquery);
+				return -1;
+			}
+		}
+	}
+	
+	// Destroy the evidence!
+	sqlite3_close(handle);
+	return 0;
 }
 
 int calculate_pid_value(int pid, int a, int b, int c, int d) {	
