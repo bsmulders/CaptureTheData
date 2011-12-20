@@ -17,7 +17,10 @@ Ext.define('CTD.controller.Widget', {
 	requires : [ 'CTD.store.Trips', 'CTD.store.GpsReports',
 			'CTD.view.GsmSignalWindow', 'CTD.view.TimeControl',
 			'CTD.view.GsmSignalWindow', 'CTD.view.GpsSpeedWindow',
-			'CTD.view.GpsInfoWindow', 'CTD.view.GmapsWindow' ],
+			'CTD.view.GpsInfoWindow', 'CTD.view.GmapsWindow',
+			'CTD.view.ObdCoolantTemperatureWindow', 'CTD.view.ObdEngineLoadWindow',
+			'CTD.view.ObdRpmWindow', 'CTD.view.ObdSpeedWindow',
+			'CTD.view.ObdThrottleWindow' ],
 	stores : [ 'Trips', 'GpsReports' ],
 	views : [ 'GsmSignalWindow' ],
 

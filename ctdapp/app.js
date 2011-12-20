@@ -20,7 +20,13 @@ Ext.application({
 	controllers: ['Trip','TimeControl','Widget'],
 	models: ['GpsReport','GsmReport','ObdReport','Trip'],
 	stores: ['GpsReports','GsmReports','ObdReports','TimeControl','Trips','TripSummaries'],
-	views: ['GpsSpeedWindow','GsmSignalWindow','Viewport','GpsInfoWindow','GmapsWindow','TimeControl','TripList','WidgetPicker'],
+	views: ['CTD.view.GsmSignalWindow', 'CTD.view.TimeControl',
+			'CTD.view.WidgetPicker', 'CTD.view.GpsSpeedWindow',
+			'CTD.view.GpsInfoWindow', 'CTD.view.GmapsWindow',
+			'CTD.view.ObdCoolantTemperatureWindow', 'CTD.view.ObdEngineLoadWindow',
+			'CTD.view.ObdRpmWindow', 'CTD.view.ObdSpeedWindow',
+			'CTD.view.ObdThrottleWindow', 'CTD.view.TripList',
+			'CTD.view.Viewport'],
 	launch: function() {
 	}
 });
