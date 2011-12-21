@@ -14,7 +14,7 @@ This file may be used under the terms of the GNU General Public License version 
 Ext.define('CTD.view.ObdThrottleWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.obdthrottlewindow',
-	requires : 'CTD.store.ObdReports',
+	requires : 'CTD.store.Measurements',
 	width : 220,
 	height : 140,
 	minWidth : 220,
@@ -32,7 +32,7 @@ Ext.define('CTD.view.ObdThrottleWindow', {
 			duration : 300,
 			easing : 'ease',
 		},
-		store : 'ObdReports',
+		store : 'Measurements',
 		insetPadding : 5,
 		flex : 1,
 		axes : [ {
@@ -42,11 +42,11 @@ Ext.define('CTD.view.ObdThrottleWindow', {
 			maximum : 100,
 			steps : 10,
 			margin : -7,
-			title: '%',
+			title : '%',
 		} ],
 		series : [ {
 			type : 'gauge',
-			field : 'ThrottlePosition',
+			field : 'OBD.ThrottlePosition',
 			donut : 72,
 			colorSet : [ '#F90', '#ddd' ],
 		} ]

@@ -14,7 +14,7 @@ This file may be used under the terms of the GNU General Public License version 
 Ext.define('CTD.view.ObdRpmWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.obdrpmwindow',
-	requires : 'CTD.store.ObdReports',
+	requires : 'CTD.store.Measurements',
 	width : 220,
 	height : 140,
 	minWidth : 220,
@@ -32,7 +32,7 @@ Ext.define('CTD.view.ObdRpmWindow', {
 			duration : 300,
 			easing : 'ease',
 		},
-		store : 'ObdReports',
+		store : 'Measurements',
 		insetPadding : 5,
 		flex : 1,
 		axes : [ {
@@ -46,23 +46,9 @@ Ext.define('CTD.view.ObdRpmWindow', {
 		} ],
 		series : [ {
 			type : 'gauge',
-			field : 'EngineRPM',
+			field : 'OBD.EngineRPM',
 			donut : 68,
 			colorSet : [ '#F90', '#ddd' ],
-			gradients: [{
-				stops: {
-					0: {
-						color: '#99BBE8',
-					},
-					5000: {
-						color: '#77AECE',
-					},
-					8000: {
-						color: '#9F0',
-					},
-				}
-			}],
-			
 		} ]
 	} ]
 });

@@ -16,13 +16,13 @@ var gpsInfoTpl = ''
 	+'	<div class="timeview">'
 	+'		<p>{Time}<p>'
 	+'		<dl>'
-	+'		<dt>UTC:</dt><dd>{UTC}</dd>'
-	+'		<dt>Fix:</dt><dd>{Fix}</dd>'
-	+'		<dt>Lat:</dt><dd>{Latitude}</dd>'
-	+'		<dt>Long:</dt><dd>{Longitude}</dd>'
-	+'		<dt>Speed:</dt><dd>{Speed} km/h</dd>'
-	+'		<dt>Direction:</dt><dd>{Direction}&#176;</dd>'
-	+'		<dt>Declination:</dt><dd>{Declination}&#176;</dd>'
+	+'		<dt>UTC:</dt><dd>{GPS.UTC}</dd>'
+	+'		<dt>Fix:</dt><dd>{GPS.Fix}</dd>'
+	+'		<dt>Lat:</dt><dd>{GPS.Latitude}</dd>'
+	+'		<dt>Long:</dt><dd>{GPS.Longitude}</dd>'
+	+'		<dt>Speed:</dt><dd>{GPS.Speed} km/h</dd>'
+	+'		<dt>Direction:</dt><dd>{GPS.Direction}&#176;</dd>'
+	+'		<dt>Declination:</dt><dd>{GPS.Declination}&#176;</dd>'
 	+'		</dl>'
 	+'	</div>'
 	+'</tpl>';
@@ -30,14 +30,14 @@ var gpsInfoTpl = ''
 Ext.define('CTD.view.GpsInfoWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.gpsinfowindow',
-	requires : 'CTD.store.GpsReports',
+	requires : 'CTD.store.Measurements',
 	width : 250,
 	height : 160,
 	resizable : false,
 	title : 'GPS Info',
 	items : [ {
 		xtype : 'dataview',
-		store : 'GpsReports',
+		store : 'Measurements',
 		tpl : gpsInfoTpl,
 		itemSelector : 'div.timeview',
 		loadMask : false,

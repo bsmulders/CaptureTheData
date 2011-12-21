@@ -14,13 +14,13 @@ This file may be used under the terms of the GNU General Public License version 
 var obdInfoTpl = ''
 	+'<tpl for=".">'
 	+'	<div class="timeview">'
-	+'		<p>{Time}<p>'
+	+'		<p>{OBD.Time}<p>'
 	+'		<dl>'
-	+'		<dt>Speed:</dt><dd>{VehicleSpeed} km/h</dd>'
-	+'		<dt>RPM:</dt><dd>{EngineRPM}</dd>'
-	+'		<dt>Throttle:</dt><dd>{ThrottlePosition} %</dd>'
-	+'		<dt>Engine Load:</dt><dd>{CalculatedEngineLoad}%</dd>'
-	+'		<dt>Coolant temp:</dt><dd>{EngineCoolantTemperature} &#176;</dd>'
+	+'		<dt>Speed:</dt><dd>{OBD.VehicleSpeed} km/h</dd>'
+	+'		<dt>RPM:</dt><dd>{OBD.EngineRPM}</dd>'
+	+'		<dt>Throttle:</dt><dd>{OBD.ThrottlePosition} %</dd>'
+	+'		<dt>Engine Load:</dt><dd>{OBD.CalculatedEngineLoad}%</dd>'
+	+'		<dt>Coolant temp:</dt><dd>{OBD.EngineCoolantTemperature} &#176;</dd>'
 	+'		</dl>'
 	+'	</div>'
 	+'</tpl>';
@@ -28,14 +28,14 @@ var obdInfoTpl = ''
 Ext.define('CTD.view.ObdInfoWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.obdinfowindow',
-	requires : 'CTD.store.ObdReports',
-	width : 250,
-	height : 120,
+	requires : 'CTD.store.Measurements',
+	width : 220,
+	height : 140,
 	resizable : false,
 	title : 'OBD Info',
 	items : [ {
 		xtype : 'dataview',
-		store : 'ObdReports',
+		store : 'Measurements',
 		tpl : obdInfoTpl,
 		itemSelector : 'div.timeview',
 		loadMask : false,

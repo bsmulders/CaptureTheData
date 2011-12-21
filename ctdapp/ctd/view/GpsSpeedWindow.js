@@ -14,7 +14,7 @@ This file may be used under the terms of the GNU General Public License version 
 Ext.define('CTD.view.GpsSpeedWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.gpsspeedwindow',
-	requires : 'CTD.store.GpsReports',
+	requires : 'CTD.store.Measurements',
 	width : 220,
 	height : 140,
 	minWidth : 220,
@@ -32,7 +32,7 @@ Ext.define('CTD.view.GpsSpeedWindow', {
 			duration : 300,
 			easing : 'ease',
 		},
-		store : 'GpsReports',
+		store : 'Measurements',
 		insetPadding : 5,
 		flex : 1,
 		axes : [ {
@@ -42,11 +42,11 @@ Ext.define('CTD.view.GpsSpeedWindow', {
 			maximum : 160,
 			steps : 8,
 			margin : -7,
-			title: 'km/h',
+			title : 'km/h',
 		} ],
 		series : [ {
 			type : 'gauge',
-			field : 'Speed',
+			field : 'GPS.Speed',
 			donut : 72,
 			colorSet : [ '#F90', '#ddd' ],
 		} ]

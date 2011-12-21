@@ -14,7 +14,7 @@ This file may be used under the terms of the GNU General Public License version 
 Ext.define('CTD.view.GsmSignalWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.gsmsignalwindow',
-	requires : 'CTD.store.GsmReports',
+	requires : 'CTD.store.Measurements',
 	width : 220,
 	height : 140,
 	minWidth : 220,
@@ -32,7 +32,7 @@ Ext.define('CTD.view.GsmSignalWindow', {
 			duration : 300,
 			easing : 'ease',
 		},
-		store : 'GsmReports',
+		store : 'Measurements',
 		insetPadding : 5,
 		flex : 1,
 		axes : [ {
@@ -42,11 +42,11 @@ Ext.define('CTD.view.GsmSignalWindow', {
 			maximum : 32,
 			steps : 8,
 			margin : -7,
-			title: 'rssi',
+			title : 'rssi',
 		} ],
 		series : [ {
 			type : 'gauge',
-			field : 'SignalStrenght',
+			field : 'GSM.SignalStrenght',
 			donut : 72,
 			colorSet : [ '#F90', '#ddd' ],
 		} ]
