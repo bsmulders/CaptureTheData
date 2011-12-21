@@ -22,7 +22,7 @@ Ext.define('CTD.view.ObdEngineCoolantTemperatureWindow', {
 	},
 	items : [ {
 		xtype : 'chart',
-		style : 'background:#fff',
+		style : 'background : #4A4A4A',
 		animate : {
 			duration : 300,
 			easing : 'ease',
@@ -43,7 +43,7 @@ Ext.define('CTD.view.ObdEngineCoolantTemperatureWindow', {
 			type : 'gauge',
 			field : 'OBD.EngineCoolantTemperature',
 			donut : 72,
-			colorSet : [ '#F90', '#ddd' ],
+			colorSet : [ '#FB3', '#7A7A7A' ],
 		} ]
 	} ]
 });

@@ -12,7 +12,7 @@ $panel-border-color: #464646;
 $panel-frame-background-color: #7A7A7A;
 
 //window
-$window-body-background-color: #FFF;
+$window-body-background-color: #4A4A4A;
 $window-body-border-color: #464646;
 
 $window-border-color: #464646;
@@ -114,9 +114,8 @@ $tip-base-color: $base-color;
 $grid-header-over-border-color: darken($base-color, 3);
 
 //toolbar
-$toolbar-background-gradient: color-stops(#e6e6e6, #efefef);
+$toolbar-background-gradient: color-stops(#5E5E5E, #4A4A4A);
 $toolbar-separator-color: #aca899;
-$toolbar-text-color: #000;
 
 //btn group
 $btn-group-background-color: #f0f0f0;

@@ -18,7 +18,7 @@ Ext.define('CTD.view.ObdEngineRPMWindow', {
 	title : 'OBD Engine RPM',
 	items : [ {
 		xtype : 'chart',
-		style : 'background:#fff',
+		style : 'background : #4A4A4A',
 		animate : {
 			duration : 300,
 			easing : 'ease',
@@ -39,7 +39,7 @@ Ext.define('CTD.view.ObdEngineRPMWindow', {
 			type : 'gauge',
 			field : 'OBD.EngineRPM',
 			donut : 68,
-			colorSet : [ '#F90', '#ddd' ],
+			colorSet : [ '#FB3', '#7A7A7A' ],
 		} ]
 	} ]
 });

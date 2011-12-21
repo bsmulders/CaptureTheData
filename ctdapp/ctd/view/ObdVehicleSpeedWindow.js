@@ -18,7 +18,7 @@ Ext.define('CTD.view.ObdVehicleSpeedWindow', {
 	title : 'OBD Vehicle Speed',
 	items : [ {
 		xtype : 'chart',
-		style : 'background:#fff',
+		style : 'background : #4A4A4A',
 		animate : {
 			duration : 300,
 			easing : 'ease',
@@ -39,7 +39,7 @@ Ext.define('CTD.view.ObdVehicleSpeedWindow', {
 			type : 'gauge',
 			field : 'OBD.VehicleSpeed',
 			donut : 72,
-			colorSet : [ '#F90', '#ddd' ],
+			colorSet : [ '#FB3', '#7A7A7A' ],
 		} ]
 	} ]
 });
