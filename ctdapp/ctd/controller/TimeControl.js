@@ -37,7 +37,7 @@ Ext.define('CTD.controller.TimeControl', {
 			slider.setMaxValue(timeRecord.get('EndTimeStamp'));
 			slider.setValue(timeRecord.get('TimeStamp'), true);
 			status.setText(new Date(timeRecord.get('TimeStamp') * 1000)
-					.toUTCString());
+					.toLocaleString());
 
 			if (!playButton.hasListener('toggle'))
 				playButton.addListener('toggle', this.onPlayToggle, this);

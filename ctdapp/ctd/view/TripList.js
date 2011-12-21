@@ -22,23 +22,22 @@ Ext.define('CTD.view.TripList', {
 	columns : [ {
 		header : 'ID',
 		dataIndex : 'Trip_ID',
-		width : 30
+		width : 20
 	}, {
 		header : 'Description',
 		dataIndex : 'Name',
-		fit : '1'
 	}, {
 		header : 'Start time',
 		dataIndex : 'StartTimeStamp',
 		renderer : function(date) {
-			return new Date(date * 1000).toUTCString();
+			return new Date(date * 1000).toLocaleString();
 		},
 		width : 60
 	}, {
 		header : 'End time',
 		dataIndex : 'EndTimeStamp',
 		renderer : function(date) {
-			return new Date(date * 1000).toUTCString();
+			return new Date(date * 1000).toLocaleString();
 		},
 		width : 60
 	}, {
