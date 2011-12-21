@@ -21,7 +21,7 @@ $urlparts = explode('/', $uri);
 
 // No request
 if (count($urlparts) == 3 && $urlparts[1] == "ctdservice" && $urlparts[2] == "") {
-	echo "Homepage<br />";
+	echo "Use /trips<br />";
 }
 // Requested all trips
 else if (count($urlparts) == 3 && $urlparts[1] == "ctdservice" && $urlparts[2] == "trips") {	
@@ -52,27 +52,26 @@ else if (count($urlparts) == 4 && $urlparts[1] == "ctdservice" && $urlparts[2] =
 	$result['StartTime'] = date(DATE_RFC850, $result['StartTime']);
 	$result['EndTime'] = date(DATE_RFC850, $result['EndTime']);
 	$result['URI'] = "http://" . $host . "/ctdservice/trips/" . $tripid;
-	$result['FirstMeasurement'] = "http://" . $host . "/ctdservice/trips/" . $tripid . "/measurement/" . $result['StartTimeStamp'];
+	$result['FirstMeasurement'] = "http://" . $host . "/ctdservice/trips/" . $tripid . "/measurement/" . $result['StartTimeStamp'] . "/0";
 	$result['Sensors'] = array_keys($sensors);
 	
 	echo json_encode(array("trip" => $result));
 }
 // Request a certain measurement
-else if (count($urlparts) == 6 && $urlparts[1] == "ctdservice" && $urlparts[2] == "trips" && is_numeric($urlparts[3]) && $urlparts[4] == "measurement" && is_numeric($urlparts[5])) {
+else if (count($urlparts) == 7 && $urlparts[1] == "ctdservice" && $urlparts[2] == "trips" && is_numeric($urlparts[3]) && $urlparts[4] == "measurement" && is_numeric($urlparts[5]) && is_numeric($urlparts[6])) {
 	$tripid = $urlparts[3];
 	$timestamp = $urlparts[5];
+	$timestampsub = $urlparts[6];
 	
 	$result = array();
 	
 	foreach($sensors as $sensor=>$tablename) {
-		$query = $db->query("SELECT * FROM " . $tablename . " WHERE Trip_ID = ".sqlite_escape_string($tripid)." AND (TimeStamp + (TimeStampSub / 10.0)) = " . sqlite_escape_string($timestamp));
+		$query = $db->query("SELECT * FROM " . $tablename . " WHERE Trip_ID = ".sqlite_escape_string($tripid)." AND TimeStamp = " . sqlite_escape_string($timestamp) . " AND TimeStampSub = " . sqlite_escape_string($timestampsub));
 		$result[$sensor] = $query->fetchArray(SQLITE3_ASSOC);
 		unset($result[$sensor]['Trip_ID']);
 		unset($result[$sensor]['TimeStamp']);
 		unset($result[$sensor]['TimeStampSub']);
 	}
-
-	$result['NextMeasurement'] = "http://" . $host . "/ctdservice/trips/" . $tripid . "/measurement/" . ($timestamp + 0.1);
 
 	echo json_encode(array("report" => $result));
 }

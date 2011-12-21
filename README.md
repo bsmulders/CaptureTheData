@@ -118,8 +118,8 @@ Access the web-service by browsing to http://yourserver/ctdservice/trips
 
 Other entry-points are:
 
-* /trips/{tripid}
-* /trips/{tripid}/measurement/{timestamp}.{milliseconds}
+* /trips/[tripid]
+* /trips/[tripid]/measurement/[timestampseconds]/[0-9]
 
 ### ctdapp
 

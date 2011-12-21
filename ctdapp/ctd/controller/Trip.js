@@ -73,7 +73,7 @@ Ext.define('CTD.controller.Trip', {
 			}
 
 			this.getMeasurementsStore().getProxy().url = tripRecord.get('URI')
-					+ "/measurement/" + timeRecord.get('TimeStamp') + "."
+					+ "/measurement/" + timeRecord.get('TimeStamp') + "/"
 					+ timeRecord.get('TimeStampSub');
 			this.getMeasurementsStore().load();
 		}
