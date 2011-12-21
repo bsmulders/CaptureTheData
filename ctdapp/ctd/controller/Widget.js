@@ -15,7 +15,7 @@ var lat, lng;
 Ext.define('CTD.controller.Widget',
 		{
 			extend : 'Ext.app.Controller',
-			requires : [ 'CTD.store.Trips', 'CTD.store.GpsReports',
+			requires : [ 'CTD.store.Trips', 'CTD.store.Measurements',
 					'CTD.view.GsmSignalWindow', 'CTD.view.TimeControl',
 					'CTD.view.GsmSignalWindow', 'CTD.view.GpsSpeedWindow',
 					'CTD.view.GpsInfoWindow', 'CTD.view.GmapsWindow',
@@ -23,7 +23,7 @@ Ext.define('CTD.controller.Widget',
 					'CTD.view.ObdEngineLoadWindow', 'CTD.view.ObdRpmWindow',
 					'CTD.view.ObdSpeedWindow', 'CTD.view.ObdThrottleWindow',
 					'CTD.view.ObdInfoWindow' ],
-			stores : [ 'Trips', 'GpsReports' ],
+			stores : [ 'Trips', 'Measurements' ],
 			views : [ 'GsmSignalWindow' ],
 
 			init : function() {
@@ -63,8 +63,8 @@ Ext.define('CTD.controller.Widget',
 					},
 				});
 
-				this.getGpsReportsStore().addListener('datachanged',
-						this.onGpsReportsChange, this);
+				this.getMeasurementsStore().addListener('datachanged',
+						this.onMeasurementsChange, this);
 			},
 
 			onTimeControlClick : function(button, event) {
@@ -111,13 +111,13 @@ Ext.define('CTD.controller.Widget',
 				Ext.create('CTD.view.ObdEngineLoadWindow').show();
 			},
 
-			onGpsReportsChange : function() {
-				var gpsRecord = this.getGpsReportsStore().first();
+			onMeasurementsChange : function() {
+				var gpsRecord = this.getMeasurementsStore().first();
 
-				if (gpsRecord.get('Latitude') != lat
-						|| gpsRecord.get('Longitude') != lng) {
-					lat = gpsRecord.get('Latitude');
-					lng = gpsRecord.get('Longitude');
+				if (gpsRecord.get('GPS.Latitude') != lat
+						|| gpsRecord.get('GPS.Longitude') != lng) {
+					lat = gpsRecord.get('GPS.Latitude');
+					lng = gpsRecord.get('GPS.Longitude');
 
 					if (lat != '' && lng != '') {
 						var query = Ext.ComponentQuery.query('.gmappanel');
