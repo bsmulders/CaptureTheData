@@ -14,7 +14,7 @@ This file may be used under the terms of the GNU General Public License version 
 #ifndef __CTD_TRIP_H__
 #define __CTD_TRIP_H__
 
-int create_trip();
-int parse_trip(int tripid);
+int create_trip(char * database);
+int parse_trip(char * database, int tripid);
 
 #endif

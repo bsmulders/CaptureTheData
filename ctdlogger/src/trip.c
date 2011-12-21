@@ -14,17 +14,16 @@ This file may be used under the terms of the GNU General Public License version 
 #include "trip.h"
 #include "gsm.h"
 #include "gps.h"
-#include "ctd.h"
 
 #include <sqlite3.h>
 #include <stdio.h>
 
-int create_trip() {
+int create_trip(char * database) {
 	int retval;
 	sqlite3 *handle;
 
 	// Open database connection
-	retval = sqlite3_open(DATABASE_PATH,&handle);
+	retval = sqlite3_open(database,&handle);
 	if(retval) {
 		printf("Creating Trip: Database connection failed\n");
 		return -1;
@@ -60,12 +59,12 @@ int create_trip() {
 	return tripid;
 }
 
-int parse_trip(int tripid) {
+int parse_trip(char * database, int tripid) {
 	int retval;
 	sqlite3 *handle;
 
 	// Open database connection
-	retval = sqlite3_open(DATABASE_PATH,&handle);
+	retval = sqlite3_open(database,&handle);
 	if(retval) {
 		printf("Parse trip: Database connection failed: %d\n", retval);
 		return -1;

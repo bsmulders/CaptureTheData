@@ -13,7 +13,6 @@ This file may be used under the terms of the GNU General Public License version 
 
 #include "gps.h"
 #include "common.h"
-#include "ctd.h"
 
 #include <sqlite3.h>
 #include <stdio.h>
@@ -26,25 +25,23 @@ This file may be used under the terms of the GNU General Public License version 
 #   include <io.h>
 #endif
 
-int log_gps(int tripid) {
-	printf("Start GPS logging\n");
-
+int log_gps(char * device, char * database, int tripid) {
 	int retval;
 	sqlite3 *handle;
 	FILE *file;
 
 	// Open database connection
-	retval = sqlite3_open(DATABASE_PATH,&handle);
+	retval = sqlite3_open(database, &handle);
 	if(retval) {
 		printf("GPS Reading: Database connection failed: %d\n", retval);
 		return -1;
 	}
 
 	// Open serial connection
-	file = fopen(GPS_PORT, "r");
+	file = fopen(device, "r");
 	char line[128];
 	if(file == NULL) {
-		printf("GPS Reading: Serial connection failed: %s\n", GPS_PORT);
+		printf("GPS Reading: Serial connection failed: %s\n", device);
 		return -1;
 	}
 
@@ -66,12 +63,12 @@ int log_gps(int tripid) {
 	return 0;
 }
 
-int parse_gps(int tripid) {
+int parse_gps(char * database, int tripid) {
 	int retval;
 	sqlite3 *handle;
 
 	// Open database connection
-	retval = sqlite3_open(DATABASE_PATH,&handle);
+	retval = sqlite3_open(database,&handle);
 	if(retval) {
 		printf("GPS Parsing: Database connection failed: %d\n", retval);
 		return -1;
@@ -151,13 +148,13 @@ int parse_gps(int tripid) {
 	return 0;
 }
 
-int generate_gps_report(int tripid) {
+int generate_gps_report(char * database, int tripid) {
 	int retval;
 	sqlite3 *handle;
 	sqlite3_stmt *stmt;
 
 	// Open database connection
-	retval = sqlite3_open(DATABASE_PATH,&handle);
+	retval = sqlite3_open(database, &handle);
 	if(retval) {
 		printf("GPS Report: Database connection failed: %d\n", retval);
 		return -1;

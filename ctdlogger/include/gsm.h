@@ -16,8 +16,8 @@ This file may be used under the terms of the GNU General Public License version 
 
 #define GSM_CELL_SIGNAL_QUALITY	"AT+CSQ"
 
-int log_gsm(int tripid);
-int parse_gsm(int tripid);
-int generate_gsm_report(int tripid);
+int log_gsm(char * device, char * database, int tripid);
+int parse_gsm(char * database, int tripid);
+int generate_gsm_report(char * database, int tripid);
 
 #endif

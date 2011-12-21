@@ -11,7 +11,6 @@ This file may be used under the terms of the GNU General Public License version 
 
 */
 
-#include "ctd.h"
 #include "trip.h"
 #include "gps.h"
 #include "gsm.h"
@@ -26,63 +25,79 @@ int main(int argc, char** args) {
 		printf("No arguments given. Use create, log {gps|gsm|obd} {tripid}, parse {tripid}, report {tripid}\n");
 		return -1;
 	}
-	else if (strcmp(args[1], "parse") == 0) {
+	else if (strcmp(args[1], "create") == 0) {
 		if (args[2] == NULL) {
+			printf("Please enter a database\n");
+			return -1;
+		}
+		
+		int tripid = create_trip(args[2]);
+
+		if (tripid > 0)
+			return tripid;
+		
+		return 0;
+	}
+	else if (strcmp(args[1], "log") == 0) {
+		if (args[2] == NULL) {
+			printf("Please enter a sensor type\n");
+			return -1;
+		}
+		else if (args[3] == NULL) {
+			printf("Please enter a device name\n");
+			return -1;
+		} else if (args[4] == NULL) {
+			printf("Please enter a database\n");
+			return -1;
+		} else if (args[5] == NULL) {
 			printf("Please enter a trip id\n");
 			return -1;
 		}
 		
-		if (parse_gps(atoi(args[2])) < 0) 
+		if (strcmp(args[2], "gsm") == 0) 
+			return log_gsm(args[3], args[4], atoi(args[5]));
+		else if (strcmp(args[2], "gps") == 0)
+			return log_gps(args[3], args[4], atoi(args[5]));
+		else if (strcmp(args[2], "obd") == 0)
+			return log_obd(args[3], args[4], atoi(args[5]));
+	}
+	else if (strcmp(args[1], "parse") == 0) {
+		if (args[2] == NULL) {
+			printf("Please enter a database\n");
 			return -1;
-		if (parse_gsm(atoi(args[2])) < 0) 
+		} else if (args[3] == NULL) {
+			printf("Please enter a trip id\n");
 			return -1;
-		if (parse_obd(atoi(args[2])) < 0) 
+		}
+		
+		if (parse_gps(args[2], atoi(args[3])) < 0) 
 			return -1;
-		if (parse_trip(atoi(args[2])) < 0) 
+		if (parse_gsm(args[2], atoi(args[3])) < 0) 
+			return -1;
+		if (parse_obd(args[2], atoi(args[3])) < 0) 
+			return -1;
+		if (parse_trip(args[2], atoi(args[3])) < 0) 
 			return -1;
 
 		return 0;
 	} 
 	else if (strcmp(args[1], "report") == 0) {
 		if (args[2] == NULL) {
+			printf("Please enter a database\n");
+			return -1;
+		} else if (args[3] == NULL) {
 			printf("Please enter a trip id\n");
 			return -1;
 		}
 
-		if (generate_gps_report(atoi(args[2])) < 0) 
+		if (generate_gps_report(args[2], atoi(args[3])) < 0) 
 			return -1;
-		if (generate_gsm_report(atoi(args[2])) < 0) 
+		if (generate_gsm_report(args[2], atoi(args[3])) < 0) 
 			return -1;
-		if (generate_obd_report(atoi(args[2])) < 0)
+		if (generate_obd_report(args[2], atoi(args[3])) < 0)
 			return -1;
 		
 		return 0;
-	} 
-	else if (strcmp(args[1], "create") == 0) {
-		int tripid = create_trip();
-
-		if (tripid > 0) {
-			printf("Created a new trip: %d\n", tripid);
-			return tripid;
-		}
-
-		return -1;
-	} 
-	else if (strcmp(args[1], "log") == 0) {
-		if (args[3] == NULL) {
-			printf("Please enter a trip id\n");
-			return -1;
-		}
-		
-		if (strcmp(args[2], "gsm") == 0) {
-			return log_gsm(atoi(args[3]));
-		} 
-		else if (strcmp(args[2], "gps") == 0) {
-			return log_gps(atoi(args[3]));
-		}
-		else if (strcmp(args[2], "obd") == 0) {
-			return log_obd(atoi(args[3]));
-		}
 	}
 	else {
 		printf("Wrong arguments given. Use create, log {gps|gsm|obd} {tripid}, parse {tripid}, report {tripid}\n");

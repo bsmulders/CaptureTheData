@@ -14,8 +14,8 @@ This file may be used under the terms of the GNU General Public License version 
 #ifndef __CTD_GPS_H__
 #define __CTD_GPS_H__
 
-int log_gps(int tripid);
-int parse_gps(int tripid);
-int generate_gps_report(int tripid);
+int log_gps(char * device, char * database, int tripid);
+int parse_gps(char * database, int tripid);
+int generate_gps_report(char * database, int tripid);
 
 #endif

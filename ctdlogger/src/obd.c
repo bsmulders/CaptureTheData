@@ -12,7 +12,6 @@ This file may be used under the terms of the GNU General Public License version 
 */
 
 #include "obd.h"
-#include "ctd.h"
 #include "common.h"
 
 #include <sqlite3.h>
@@ -21,9 +20,7 @@ This file may be used under the terms of the GNU General Public License version 
 #include <string.h>
 #include <stdlib.h>
 
-int log_obd(int tripid) {
-	printf("Start OBD logging\n");
-
+int log_obd(char * device, char * database, int tripid) {
 	int retval;
 	sqlite3 *handle;
 	FILE *file;
@@ -38,17 +35,17 @@ int log_obd(int tripid) {
 	int pids_count = 5;
 
 	// Open database connection
-	retval = sqlite3_open(DATABASE_PATH,&handle);
+	retval = sqlite3_open(database, &handle);
 	if(retval) {
 		printf("OBD Reading: Database connection failed: %d\n", retval);
 		return -1;
 	}
 
 	// Open serial connection
-	file = fopen(OBD_PORT, "r+");
+	file = fopen(device, "r+");
 	char line[128];
 	if(file == NULL) {
-		printf("OBD Reading: Serial connection failed: %s\n", OBD_PORT);
+		printf("OBD Reading: Serial connection failed: %s\n", device);
 		return -1;
 	}
 
@@ -84,12 +81,12 @@ int log_obd(int tripid) {
 	return 0;
 }
 
-int parse_obd(int tripid) {
+int parse_obd(char * database, int tripid) {
 	int retval;
 	sqlite3 *handle;
 
 	// Open database connection
-	retval = sqlite3_open(DATABASE_PATH,&handle);
+	retval = sqlite3_open(database,&handle);
 	if(retval) {
 		printf("OBD Parsing: Database connection failed: %d\n", retval);
 		return -1;
@@ -168,13 +165,13 @@ int parse_obd(int tripid) {
 	return 0;
 }
 
-int generate_obd_report(int tripid) {
+int generate_obd_report(char * database, int tripid) {
 	int retval;
 	sqlite3 *handle;
 	sqlite3_stmt *stmt;
 
 	// Open database connection
-	retval = sqlite3_open(DATABASE_PATH,&handle);
+	retval = sqlite3_open(database,&handle);
 	if(retval) {
 		printf("OBD Report: Database connection failed: %d\n", retval);
 		return -1;

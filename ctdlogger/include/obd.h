@@ -26,9 +26,9 @@ This file may be used under the terms of the GNU General Public License version 
 #define OBD_MAF_AIR_FLOW_RATE			0x10
 #define OBD_THROTTLE_POSITION			0x11
 
-int log_obd(int tripid);
-int parse_obd(int tripid);
-int generate_obd_report(int tripid);
+int log_obd(char * device, char * database, int tripid);
+int parse_obd(char * database, int tripid);
+int generate_obd_report(char * database, int tripid);
 int calculate_pid_value(int pid, int a, int b, int c, int d);
 
 #endif

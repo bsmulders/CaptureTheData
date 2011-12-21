@@ -70,23 +70,23 @@ Commands to operate the application:
 	</tr>
 	<tr>
 		<td>Create a new trip</td>
-		<td>./ctd create</td>
-		<td>./ctd create</td>
+		<td>./ctd [create] database</td>
+		<td>./ctd create ctd.sqlite</td>
 	</tr>
 	<tr>
 		<td>Start logging</td>
-		<td>./ctd log {gps|gsm|obd} {tripid}</td>
-		<td>./ctd log gsm 1</td>
+		<td>./ctd [log] [gps | gsm | obd] device database tripid</td>
+		<td>./ctd log gsm /dev/tty.GPS ctd.sqlite 1</td>
 	</tr>
 	<tr>
 		<td>Parse raw serial data</td>
-		<td>./ctd parse {tripid}</td>
-		<td>./ctd parse 1</td>
+		<td>./ctd [parse] database tripid</td>
+		<td>./ctd parse ctd.sqlite 1</td>
 	</tr>
 	<tr>
 		<td>Generate reports</td>
-		<td>./ctd reports {tripid}</td>
-		<td>./ctd reports 1</td>
+		<td>./ctd [report] database tripid</td>
+		<td>./ctd report ctd.sqlite 1</td>
 	</tr>
 </table>
 

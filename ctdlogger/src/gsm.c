@@ -12,7 +12,6 @@ This file may be used under the terms of the GNU General Public License version 
 */
 
 #include "gsm.h"
-#include "ctd.h"
 #include "common.h"
 
 #include <sqlite3.h>
@@ -22,9 +21,7 @@ This file may be used under the terms of the GNU General Public License version 
 #include <stdlib.h>
 
 
-int log_gsm(int tripid) {
-	printf("Start GSM logging\n");
-
+int log_gsm(char * device, char * database, int tripid) {
 	int retval;
 	sqlite3 *handle;
 	FILE *file;
@@ -35,17 +32,17 @@ int log_gsm(int tripid) {
 	int atcommands_count = 1;
 
 	// Open database connection
-	retval = sqlite3_open(DATABASE_PATH,&handle);
+	retval = sqlite3_open(database, &handle);
 	if(retval) {
 		printf("GSM Reading: Database connection failed: %d\n", retval);
 		return -1;
 	}
 
 	// Open serial connection
-	file = fopen(GSM_PORT, "r+");
+	file = fopen(device, "r+");
 	char line[128];
 	if(file == NULL) {
-		printf("GSM Reading: Serial connection failed: %s\n", GSM_PORT);
+		printf("GSM Reading: Serial connection failed: %s\n", device);
 		return -1;
 	}
 
@@ -77,12 +74,12 @@ int log_gsm(int tripid) {
 	return 0;
 }
 
-int parse_gsm(int tripid) {
+int parse_gsm(char * database, int tripid) {
 	int retval;
 	sqlite3 *handle;
 
 	// Open database connection
-	retval = sqlite3_open(DATABASE_PATH,&handle);
+	retval = sqlite3_open(database,&handle);
 	if(retval) {
 		printf("GSM Parsing: Database connection failed: %d\n", retval);
 		return -1;
@@ -142,13 +139,13 @@ int parse_gsm(int tripid) {
 	return 0;
 }
 
-int generate_gsm_report(int tripid) {
+int generate_gsm_report(char * database, int tripid) {
 	int retval;
 	sqlite3 *handle;
 	sqlite3_stmt *stmt;
 
 	// Open database connection
-	retval = sqlite3_open(DATABASE_PATH,&handle);
+	retval = sqlite3_open(database,&handle);
 	if(retval) {
 		printf("GSM Report: Database connection failed: %d\n", retval);
 		return -1;
