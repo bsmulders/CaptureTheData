@@ -13,7 +13,7 @@ This file may be used under the terms of the GNU General Public License version 
 
 Ext.define('CTD.model.Measurement', {
 	extend : 'Ext.data.Model',
-	fields : [ 'GSM', 'GPS', 'OBD', 'GSM.Gsm_ID', 'GSM.SignalStrenght',
+	fields : [ 'GSM', 'GPS', 'OBD', 'GSM.Gsm_ID', 'GSM.SignalStrength',
 			'GPS.Gps_ID', 'GPS.UTC', 'GPS.Fix', 'GPS.Latitude',
 			'GPS.Longitude', 'GPS.Speed', 'GPS.Direction', 'GPS.Declination',
 			'OBD.Obd_ID', 'OBD.CalculatedEngineLoad',

@@ -37,7 +37,7 @@ Ext.define('CTD.view.GsmSignalWindow', {
 		} ],
 		series : [ {
 			type : 'gauge',
-			field : 'GSM.SignalStrenght',
+			field : 'GSM.SignalStrength',
 			donut : 72,
 			colorSet : [ '#F90', '#ddd' ],
 		} ]

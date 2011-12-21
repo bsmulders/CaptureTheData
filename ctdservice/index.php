@@ -12,7 +12,7 @@ This file may be used under the terms of the GNU General Public License version 
 
 */
 
-$db = new SQLite3('ctd.sqlite');
+$db = new SQLite3('testset.sqlite');
 $sensors = array("GSM"=>"GsmReport", "GPS"=>"GpsReport", "OBD"=>"ObdReport");
 
 $uri = strtok($HTTP_SERVER_VARS['REQUEST_URI'], '?');

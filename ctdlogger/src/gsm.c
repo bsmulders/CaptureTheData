@@ -184,7 +184,7 @@ int generate_gsm_report(char * database, int tripid) {
 	for (int second = starttime; second < endtime; second++) {
 		for (int subsecond = 0; subsecond < 10; subsecond++) {
 			// Insert closest measurement in database
-			sprintf(insertquery, "INSERT INTO GsmReport ( 'Trip_ID', 'TimeStamp', 'TimeStampSub', 'SignalStrenght' )"
+			sprintf(insertquery, "INSERT INTO GsmReport ( 'Trip_ID', 'TimeStamp', 'TimeStampSub', 'SignalStrength' )"
 							 	" SELECT Trip_ID, %1$d, %2$d, CAST(Value AS INTEGER)"
 							 	" FROM GsmData"
 							 	" WHERE Trip_ID = %3$d AND TimeStamp < %1$d+10 AND TimeStamp > %1$d-10"
