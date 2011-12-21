@@ -11,10 +11,10 @@ This file may be used under the terms of the GNU General Public License version 
 
  */
 
-Ext.define('CTD.store.GsmReports', {
+Ext.define('CTD.store.Measurements', {
 	extend : 'Ext.data.Store',
-	requires : 'CTD.model.GsmReport',
-	model : 'CTD.model.GsmReport',
+	requires : 'CTD.model.Measurement',
+	model : 'CTD.model.Measurement',
 	autoLoad : true,
 	proxy : {
 		type : 'ajax',

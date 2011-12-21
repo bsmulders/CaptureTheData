@@ -11,18 +11,12 @@ This file may be used under the terms of the GNU General Public License version 
 
  */
 
-Ext.define('CTD.store.ObdReports', {
-	extend : 'Ext.data.Store',
-	requires : 'CTD.model.ObdReport',
-	model : 'CTD.model.ObdReport',
-	autoLoad : true,
-	proxy : {
-		type : 'ajax',
-		url : '',
-		method : 'GET',
-		reader : {
-			type : 'json',
-			root : 'report'
-		}
-	},
+Ext.define('CTD.model.Measurement', {
+	extend : 'Ext.data.Model',
+	fields : [ 'GSM', 'GPS', 'OBD', 'GSM.Gsm_ID', 'GSM.SignalStrenght',
+			'GPS.Gps_ID', 'GPS.UTC', 'GPS.Fix', 'GPS.Latitude',
+			'GPS.Longitude', 'GPS.Speed', 'GPS.Direction', 'GPS.Declination',
+			'OBD.Obd_ID', 'OBD.CalculatedEngineLoad',
+			'OBD.EngineCoolantTemperature', 'OBD.EngineRPM',
+			'OBD.VehicleSpeed', 'OBD.ThrottlePosition', 'NextMeasurement' ],
 });
