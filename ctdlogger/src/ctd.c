@@ -23,7 +23,7 @@ This file may be used under the terms of the GNU General Public License version 
 
 int main(int argc, char** args) {
 	if (args[1] == NULL) {
-		printf("No arguments given. Use create, gsm {tripid}, gps {tripid}, obd {tripid}, parse {tripid}, report {tripid}\n");
+		printf("No arguments given. Use create, log {gps|gsm|obd} {tripid}, parse {tripid}, report {tripid}\n");
 		return -1;
 	}
 	else if (strcmp(args[1], "parse") == 0) {
@@ -68,32 +68,24 @@ int main(int argc, char** args) {
 
 		return -1;
 	} 
-	else if (strcmp(args[1], "gsm") == 0) {
-		if (args[2] == NULL) {
-			printf("Please enter a trip id\n");
-			return -1;
-		}
-
-		return log_gsm(atoi(args[2]));
-	} 
-	else if (strcmp(args[1], "gps") == 0) {
-		if (args[2] == NULL) {
+	else if (strcmp(args[1], "log") == 0) {
+		if (args[3] == NULL) {
 			printf("Please enter a trip id\n");
 			return -1;
 		}
 		
-		return log_gps(atoi(args[2]));
-	} 
-	else if (strcmp(args[1], "obd") == 0) {
-		if (args[2] == NULL) {
-			printf("Please enter a trip id\n");
-			return -1;
+		if (strcmp(args[2], "gsm") == 0) {
+			return log_gsm(atoi(args[3]));
+		} 
+		else if (strcmp(args[2], "gps") == 0) {
+			return log_gps(atoi(args[3]));
 		}
-		
-		return log_obd(atoi(args[2]));
-	} 
+		else if (strcmp(args[2], "obd") == 0) {
+			return log_obd(atoi(args[3]));
+		}
+	}
 	else {
-		printf("Wrong arguments given. Use create, gsm {tripid}, gps {tripid}, obd {tripid}, parse {tripid}, report {tripid}\n");
+		printf("Wrong arguments given. Use create, log {gps|gsm|obd} {tripid}, parse {tripid}, report {tripid}\n");
 		return -1;
 	}
 }

@@ -74,19 +74,9 @@ Commands to operate the application:
 		<td>./ctd create</td>
 	</tr>
 	<tr>
-		<td>Start GSM logging</td>
-		<td>./ctd gsm {tripid}</td>
-		<td>./ctd gsm 1</td>
-	</tr>
-	<tr>
-		<td>Start GPS logging</td>
-		<td>./ctd gps {tripid}</td>
-		<td>./ctd gps 1</td>
-	</tr>
-	<tr>
-		<td>Start OBD logging</td>
-		<td>./ctd obd {tripid}</td>
-		<td>./ctd obd 1</td>
+		<td>Start logging</td>
+		<td>./ctd log {gps|gsm|obd} {tripid}</td>
+		<td>./ctd log gsm 1</td>
 	</tr>
 	<tr>
 		<td>Parse raw serial data</td>
