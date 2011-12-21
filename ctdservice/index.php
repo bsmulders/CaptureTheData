@@ -13,7 +13,7 @@ This file may be used under the terms of the GNU General Public License version 
 */
 
 $db = new SQLite3('ctd.sqlite');
-$sensors = array("gsm"=>"GsmReport", "gps"=>"GpsReport", "obd"=>"ObdReport");
+$sensors = array("GSM"=>"GsmReport", "GPS"=>"GpsReport", "OBD"=>"ObdReport");
 
 $uri = strtok($HTTP_SERVER_VARS['REQUEST_URI'], '?');
 $host = $HTTP_SERVER_VARS['HTTP_HOST'];
@@ -52,65 +52,29 @@ else if (count($urlparts) == 4 && $urlparts[1] == "ctdservice" && $urlparts[2] =
 	$result['StartTime'] = date(DATE_RFC850, $result['StartTime']);
 	$result['EndTime'] = date(DATE_RFC850, $result['EndTime']);
 	$result['URI'] = "http://" . $host . "/ctdservice/trips/" . $tripid;
+	$result['FirstMeasurement'] = "http://" . $host . "/ctdservice/trips/" . $tripid . "/measurement/" . $result['StartTimeStamp'];
+	$result['Sensors'] = array_keys($sensors);
 	
-	foreach ($sensors as $sensor=>$tablename) {
-		$report = array("URI" => $result['URI'] . "/" . $sensor);
-		$query = $db->query("SELECT MIN(TimeStamp) AS min, MAX(TimeStamp) AS max FROM ".$tablename." WHERE Trip_ID = " . sqlite_escape_string($tripid));		
-		$timestamps = $query->fetchArray(SQLITE3_ASSOC);
-		$report['FirstReport'] = array(	"Time" => date(DATE_RFC850, $timestamps['min']),
-										"TimeStamp" => $timestamps['min'],
-										"URI" => "http://" . $host . "/ctdservice/trips/" . $tripid . "/" . $sensor . "/" . $timestamps['min'] );
-		$report['LastReport'] = array(	"Time" => date(DATE_RFC850, $timestamps['max']),
-										"TimeStamp" => $timestamps['min'],
-										"URI" => "http://" . $host . "/ctdservice/trips/" . $tripid . "/" . $sensor . "/" . $timestamps['max']);
-		$result['Sensors'][$sensor] = $report;
-	}
-
-	echo json_encode(array("trip" => array($result)));
+	echo json_encode(array("trip" => $result));
 }
-// Requested a certain sensor
-else if (count($urlparts) == 5 && $urlparts[1] == "ctdservice" && $urlparts[2] == "trips" && is_numeric($urlparts[3]) && $urlparts[4] != "") {
+// Request a certain measurement
+else if (count($urlparts) == 6 && $urlparts[1] == "ctdservice" && $urlparts[2] == "trips" && is_numeric($urlparts[3]) && $urlparts[4] == "measurement" && is_numeric($urlparts[5])) {
 	$tripid = $urlparts[3];
-	$sensor = $urlparts[4];
-	
-	$result = array();
-	
-	if (in_array($sensor, array_keys($sensors))) {
-		$query = $db->query("SELECT MIN(TimeStamp) AS min, MAX(TimeStamp) AS max FROM " . $sensors[$sensor] . " WHERE Trip_ID = " . sqlite_escape_string($tripid));
-	} 
-	
-	if ($query) {
-		$timestamps = $query->fetchArray(SQLITE3_ASSOC);
-		$result['FirstReport'] = array(	"Time" => date(DATE_RFC850, $timestamps['min']),
-										"TimeStamp" => $timestamps['min'],
-										"URI" => "http://" . $host . "/ctdservice/trips/" . $tripid . "/" . $sensor . "/" . $timestamps['min']);
-		$result['LastReport'] = array(	"Time" => date(DATE_RFC850, $timestamps['max']),
-										"TimeStamp" => $timestamps['max'],
-										"URI" => "http://" . $host . "/ctdservice/trips/" . $tripid . "/" . $sensor . "/" . $timestamps['max']);
-	}
-	
-	echo json_encode(array("sensor" => array($result)));
-}
-// Request a certain report
-else if (count($urlparts) == 6 && $urlparts[1] == "ctdservice" && $urlparts[2] == "trips" && is_numeric($urlparts[3]) && $urlparts[4] != "" && is_numeric($urlparts[5])) {
-	$tripid = $urlparts[3];
-	$sensor = $urlparts[4];
 	$timestamp = $urlparts[5];
 	
 	$result = array();
 	
-	if (in_array($sensor, array_keys($sensors))) {
-		$query = $db->query("SELECT * FROM " . $sensors[$sensor] . " WHERE Trip_ID = ".sqlite_escape_string($tripid)." AND (TimeStamp + (TimeStampSub / 10.0)) = " . sqlite_escape_string($timestamp));
+	foreach($sensors as $sensor=>$tablename) {
+		$query = $db->query("SELECT * FROM " . $tablename . " WHERE Trip_ID = ".sqlite_escape_string($tripid)." AND (TimeStamp + (TimeStampSub / 10.0)) = " . sqlite_escape_string($timestamp));
+		$result[$sensor] = $query->fetchArray(SQLITE3_ASSOC);
+		unset($result[$sensor]['Trip_ID']);
+		unset($result[$sensor]['TimeStamp']);
+		unset($result[$sensor]['TimeStampSub']);
 	}
-	
-	if ($query) {
-		$result = $query->fetchArray(SQLITE3_ASSOC);
-		//$result['NextMeasurement'] = "http://" . $host . "/ctdservice/trips/" . $tripid . "/" . $sensor . "/" . sprintf("%.1f", $result['TimeStampFull'] + 0.1);
-		//$result['Time'] = date(DATE_RFC850, $result['TimeStamp']);
-		unset($result['Trip_ID']);
-	}
-	
-	echo json_encode(array("report" => array($result)));
+
+	$result['NextMeasurement'] = "http://" . $host . "/ctdservice/trips/" . $tripid . "/measurement/" . ($timestamp + 0.1);
+
+	echo json_encode(array("report" => $result));
 }
 
 $db->close();

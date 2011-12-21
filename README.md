@@ -123,8 +123,7 @@ Access the web-service by browsing to http://yourserver/ctdservice/trips
 Other entry-points are:
 
 * /trips/{tripid}
-* /trips/{tripid}/{sensorname[gsm|gps]}
-* /trips/{tripid}/{sensorname[gsm|gps]}/{timestamp}.{milliseconds}
+* /trips/{tripid}/measurement/{timestamp}.{milliseconds}
 
 ### ctdapp
 
