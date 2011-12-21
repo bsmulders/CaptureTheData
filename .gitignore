@@ -3,3 +3,4 @@ ctdlogger/build/
 ctdlogger/lib/nmealib/lib/libnmea.a
 ctdapp/.project
 ctdapp/.settings
+ctdapp/resources/sass/.sass-cache
