@@ -12,18 +12,16 @@ This file may be used under the terms of the GNU General Public License version 
  */
 
 var obdInfoTpl = ''
-	+'<tpl for=".">'
-	+'	<div class="timeview">'
-	+'		<p>{OBD.Time}<p>'
-	+'		<dl>'
-	+'		<dt>Speed:</dt><dd>{OBD.VehicleSpeed} km/h</dd>'
-	+'		<dt>RPM:</dt><dd>{OBD.EngineRPM}</dd>'
-	+'		<dt>Throttle:</dt><dd>{OBD.ThrottlePosition} %</dd>'
-	+'		<dt>Engine Load:</dt><dd>{OBD.CalculatedEngineLoad}%</dd>'
-	+'		<dt>Coolant temp:</dt><dd>{OBD.EngineCoolantTemperature} &#176;</dd>'
-	+'		</dl>'
-	+'	</div>'
-	+'</tpl>';
+		+ '<tpl for=".">'
+		+ '	<div class="infowindow obdinfo">'
+		+ '		<p>{OBD.Time}<p>'
+		+ '		<dl>'
+		+ '		<dt>Vehicle Speed:</dt><dd>{OBD.VehicleSpeed} km/h</dd>'
+		+ '		<dt>Engine RPM:</dt><dd>{OBD.EngineRPM} RPM</dd>'
+		+ '		<dt>Throttle Position:</dt><dd>{OBD.ThrottlePosition} %</dd>'
+		+ '		<dt>Calculated Engine Load:</dt><dd>{OBD.CalculatedEngineLoad}%</dd>'
+		+ '		<dt>Engine Coolant Temperature:</dt><dd>{OBD.EngineCoolantTemperature} &#176;</dd>'
+		+ '		</dl>' + '	</div>' + '</tpl>';
 
 Ext.define('CTD.view.ObdInfoWindow', {
 	extend : 'CTD.view.WidgetWindow',

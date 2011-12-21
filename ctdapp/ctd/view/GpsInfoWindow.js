@@ -13,7 +13,7 @@ This file may be used under the terms of the GNU General Public License version 
 
 var gpsInfoTpl = ''
 	+'<tpl for=".">'
-	+'	<div class="timeview">'
+	+'	<div class="infowindow gpsinfo">'
 	+'		<p>{Time}<p>'
 	+'		<dl>'
 	+'		<dt>UTC:</dt><dd>{GPS.UTC}</dd>'
@@ -31,8 +31,6 @@ Ext.define('CTD.view.GpsInfoWindow', {
 	extend : 'CTD.view.WidgetWindow',
 	alias : 'widget.gpsinfowindow',
 	requires : 'CTD.store.Measurements',
-	width : 250,
-	height : 150,
 	resizable : false,
 	layout : 'fit',
 	title : 'GPS Info',

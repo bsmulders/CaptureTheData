@@ -39,19 +39,19 @@ Ext.define('CTD.view.WidgetPicker', {
 		text : 'OBD<hr />Info',
 		action : 'obdInfo',
 	}, {
-		text : 'OBD<hr />Speed',
-		action : 'obdSpeed',
+		text : 'OBD<hr />Vehicle Speed',
+		action : 'obdVehicleSpeed',
 	}, {
-		text : 'OBD<hr />RPM',
-		action : 'obdRpm',
+		text : 'OBD<hr />Engine RPM',
+		action : 'obdEngineRPM',
 	}, {
-		text : 'OBD<hr />Throttle',
-		action : 'obdThrottle',
+		text : 'OBD<hr />Throttle Position',
+		action : 'obdThrottlePosition',
 	}, {
-		text : 'OBD<hr />Engine Load',
-		action : 'obdEngineLoad',
+		text : 'OBD<hr />Calculated Engine Load',
+		action : 'obdCalculatedEngineLoad',
 	}, {
-		text : '<br />OBD<hr />Coolant<br />Temperature',
-		action : 'obdCoolantTemperature',
+		text : '<br />OBD<hr />Engine Coolant<br />Temperature',
+		action : 'obdEngineCoolantTemperature',
 	} ],
 });

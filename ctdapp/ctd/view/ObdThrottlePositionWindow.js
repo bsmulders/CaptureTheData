@@ -11,11 +11,11 @@ This file may be used under the terms of the GNU General Public License version 
 
  */
 
-Ext.define('CTD.view.ObdSpeedWindow', {
+Ext.define('CTD.view.ObdThrottlePositionWindow', {
 	extend : 'CTD.view.WidgetWindow',
-	alias : 'widget.obdspeedwindow',
+	alias : 'widget.obdthrottlepositionwindow',
 	requires : 'CTD.store.Measurements',
-	title : 'OBD Speed',
+	title : 'OBD Throttle Position',
 	items : [ {
 		xtype : 'chart',
 		style : 'background:#fff',
@@ -30,14 +30,14 @@ Ext.define('CTD.view.ObdSpeedWindow', {
 			type : 'gauge',
 			position : 'gauge',
 			minimum : 0,
-			maximum : 160,
-			steps : 8,
+			maximum : 100,
+			steps : 10,
 			margin : -7,
-			title : 'km/h',
+			title : '%',
 		} ],
 		series : [ {
 			type : 'gauge',
-			field : 'OBD.VehicleSpeed',
+			field : 'OBD.ThrottlePosition',
 			donut : 72,
 			colorSet : [ '#F90', '#ddd' ],
 		} ]

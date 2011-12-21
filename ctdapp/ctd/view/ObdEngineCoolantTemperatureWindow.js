@@ -11,11 +11,15 @@ This file may be used under the terms of the GNU General Public License version 
 
  */
 
-Ext.define('CTD.view.ObdEngineLoadWindow', {
+Ext.define('CTD.view.ObdEngineCoolantTemperatureWindow', {
 	extend : 'CTD.view.WidgetWindow',
-	alias : 'widget.obdengineloadwindow',
+	alias : 'widget.obdenginecoolanttemperaturewindow',
 	requires : 'CTD.store.Measurements',
-	title : 'OBD Engine Load',
+	title : 'OBD Engine Coolant Temperature',
+	layout : {
+		type : 'hbox',
+		align : 'stretch'
+	},
 	items : [ {
 		xtype : 'chart',
 		style : 'background:#fff',
@@ -30,14 +34,14 @@ Ext.define('CTD.view.ObdEngineLoadWindow', {
 			type : 'gauge',
 			position : 'gauge',
 			minimum : 0,
-			maximum : 100,
+			maximum : 215,
 			steps : 10,
 			margin : -7,
-			title : '%',
+			title : '&#8451;',
 		} ],
 		series : [ {
 			type : 'gauge',
-			field : 'OBD.CalculatedEngineLoad',
+			field : 'OBD.EngineCoolantTemperature',
 			donut : 72,
 			colorSet : [ '#F90', '#ddd' ],
 		} ]

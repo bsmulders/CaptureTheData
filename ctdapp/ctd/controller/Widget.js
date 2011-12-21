@@ -12,122 +12,133 @@ This file may be used under the terms of the GNU General Public License version 
  */
 
 var lat, lng;
-Ext.define('CTD.controller.Widget',
-		{
-			extend : 'Ext.app.Controller',
-			requires : [ 'CTD.store.Trips', 'CTD.store.Measurements',
-					'CTD.view.GsmSignalWindow', 'CTD.view.TimeControl',
-					'CTD.view.GsmSignalWindow', 'CTD.view.GpsSpeedWindow',
-					'CTD.view.GpsInfoWindow', 'CTD.view.GmapsWindow',
-					'CTD.view.ObdCoolantTemperatureWindow',
-					'CTD.view.ObdEngineLoadWindow', 'CTD.view.ObdRpmWindow',
-					'CTD.view.ObdSpeedWindow', 'CTD.view.ObdThrottleWindow',
-					'CTD.view.ObdInfoWindow' ],
-			stores : [ 'Trips', 'Measurements' ],
-			views : [ 'GsmSignalWindow' ],
+Ext
+		.define(
+				'CTD.controller.Widget',
+				{
+					extend : 'Ext.app.Controller',
+					requires : [ 'CTD.store.Trips', 'CTD.store.Measurements',
+							'CTD.view.GsmSignalWindow', 'CTD.view.TimeControl',
+							'CTD.view.GsmSignalWindow',
+							'CTD.view.GpsSpeedWindow',
+							'CTD.view.GpsInfoWindow', 'CTD.view.GmapsWindow',
+							'CTD.view.ObdEngineCoolantTemperatureWindow',
+							'CTD.view.ObdCalculatedEngineLoadWindow',
+							'CTD.view.ObdEngineRPMWindow',
+							'CTD.view.ObdVehicleSpeedWindow',
+							'CTD.view.ObdThrottlePositionWindow',
+							'CTD.view.ObdInfoWindow' ],
+					stores : [ 'Trips', 'Measurements' ],
+					views : [ 'GsmSignalWindow' ],
 
-			init : function() {
-				this.control({
-					'widgetpicker button[action=timeController]' : {
-						click : this.onTimeControlClick
+					init : function() {
+						this
+								.control({
+									'widgetpicker button[action=timeController]' : {
+										click : this.onTimeControlClick
+									},
+									'widgetpicker button[action=gsmSignalStrength]' : {
+										click : this.onGsmSignalStrengthClick
+									},
+									'widgetpicker button[action=gpsSpeed]' : {
+										click : this.onGpsSpeedClick
+									},
+									'widgetpicker button[action=gpsInfo]' : {
+										click : this.onGpsInfoClick
+									},
+									'widgetpicker button[action=gMaps]' : {
+										click : this.onGmapsClick
+									},
+									'widgetpicker button[action=obdInfo]' : {
+										click : this.onObdInfoClick
+									},
+									'widgetpicker button[action=obdVehicleSpeed]' : {
+										click : this.onObdVehicleSpeedClick
+									},
+									'widgetpicker button[action=obdEngineRPM]' : {
+										click : this.onObdEngineRPMClick
+									},
+									'widgetpicker button[action=obdThrottlePosition]' : {
+										click : this.onObdThrottlePositionClick
+									},
+									'widgetpicker button[action=obdEngineCoolantTemperature]' : {
+										click : this.onObdEngineCoolantTemperatureClick
+									},
+									'widgetpicker button[action=obdCalculatedEngineLoad]' : {
+										click : this.onObdCalculatedEngineLoadClick
+									},
+								});
+
+						this.getMeasurementsStore().addListener('datachanged',
+								this.onMeasurementsChange, this);
 					},
-					'widgetpicker button[action=gsmSignalStrength]' : {
-						click : this.onGsmSignalStrengthClick
+
+					onTimeControlClick : function(button, event) {
+						Ext.create('CTD.view.TimeControl').show();
 					},
-					'widgetpicker button[action=gpsSpeed]' : {
-						click : this.onGpsSpeedClick
+
+					onGsmSignalStrengthClick : function(button, event) {
+						Ext.create('CTD.view.GsmSignalWindow').show();
 					},
-					'widgetpicker button[action=gpsInfo]' : {
-						click : this.onGpsInfoClick
+
+					onGpsSpeedClick : function(button, event) {
+						Ext.create('CTD.view.GpsSpeedWindow').show();
 					},
-					'widgetpicker button[action=gMaps]' : {
-						click : this.onGmapsClick
+
+					onGpsInfoClick : function(button, event) {
+						Ext.create('CTD.view.GpsInfoWindow').show();
 					},
-					'widgetpicker button[action=obdInfo]' : {
-						click : this.onObdInfoClick
+
+					onGmapsClick : function(button, event) {
+						Ext.create('CTD.view.GmapsWindow').show();
 					},
-					'widgetpicker button[action=obdSpeed]' : {
-						click : this.onObdSpeedClick
+
+					onObdInfoClick : function(button, event) {
+						Ext.create('CTD.view.ObdInfoWindow').show();
 					},
-					'widgetpicker button[action=obdRpm]' : {
-						click : this.onObdRpmClick
+
+					onObdVehicleSpeedClick : function(button, event) {
+						Ext.create('CTD.view.ObdVehicleSpeedWindow').show();
 					},
-					'widgetpicker button[action=obdThrottle]' : {
-						click : this.onObdThrottleClick
+
+					onObdEngineRPMClick : function(button, event) {
+						Ext.create('CTD.view.ObdEngineRPMWindow').show();
 					},
-					'widgetpicker button[action=obdCoolantTemperature]' : {
-						click : this.onObdCoolantTemperatureClick
+
+					onObdThrottlePositionClick : function(button, event) {
+						Ext.create('CTD.view.ObdThrottlePositionWindow').show();
 					},
-					'widgetpicker button[action=obdEngineLoad]' : {
-						click : this.onObdEngineLoadClick
+
+					onObdEngineCoolantTemperatureClick : function(button, event) {
+						Ext
+								.create(
+										'CTD.view.ObdEngineCoolantTemperatureWindow')
+								.show();
+					},
+
+					onObdCalculatedEngineLoadClick : function(button, event) {
+						Ext.create('CTD.view.ObdCalculatedEngineLoadWindow')
+								.show();
+					},
+
+					onMeasurementsChange : function() {
+						var gpsRecord = this.getMeasurementsStore().first();
+
+						if (gpsRecord.get('GPS.Latitude') != lat
+								|| gpsRecord.get('GPS.Longitude') != lng) {
+							lat = gpsRecord.get('GPS.Latitude');
+							lng = gpsRecord.get('GPS.Longitude');
+
+							if (lat != '' && lng != '') {
+								var query = Ext.ComponentQuery
+										.query('.gmappanel');
+								for ( var i in query) {
+									var item = query[i];
+									item.addMarker(new google.maps.LatLng(lat,
+											lng), new google.maps.Marker(lat,
+											lng), true, true, null);
+								}
+							}
+						}
 					},
 				});
-
-				this.getMeasurementsStore().addListener('datachanged',
-						this.onMeasurementsChange, this);
-			},
-
-			onTimeControlClick : function(button, event) {
-				Ext.create('CTD.view.TimeControl').show();
-			},
-
-			onGsmSignalStrengthClick : function(button, event) {
-				Ext.create('CTD.view.GsmSignalWindow').show();
-			},
-
-			onGpsSpeedClick : function(button, event) {
-				Ext.create('CTD.view.GpsSpeedWindow').show();
-			},
-
-			onGpsInfoClick : function(button, event) {
-				Ext.create('CTD.view.GpsInfoWindow').show();
-			},
-
-			onGmapsClick : function(button, event) {
-				Ext.create('CTD.view.GmapsWindow').show();
-			},
-
-			onObdInfoClick : function(button, event) {
-				Ext.create('CTD.view.ObdInfoWindow').show();
-			},
-
-			onObdSpeedClick : function(button, event) {
-				Ext.create('CTD.view.ObdSpeedWindow').show();
-			},
-
-			onObdRpmClick : function(button, event) {
-				Ext.create('CTD.view.ObdRpmWindow').show();
-			},
-
-			onObdThrottleClick : function(button, event) {
-				Ext.create('CTD.view.ObdThrottleWindow').show();
-			},
-
-			onObdCoolantTemperatureClick : function(button, event) {
-				Ext.create('CTD.view.ObdCoolantTemperatureWindow').show();
-			},
-
-			onObdEngineLoadClick : function(button, event) {
-				Ext.create('CTD.view.ObdEngineLoadWindow').show();
-			},
-
-			onMeasurementsChange : function() {
-				var gpsRecord = this.getMeasurementsStore().first();
-
-				if (gpsRecord.get('GPS.Latitude') != lat
-						|| gpsRecord.get('GPS.Longitude') != lng) {
-					lat = gpsRecord.get('GPS.Latitude');
-					lng = gpsRecord.get('GPS.Longitude');
-
-					if (lat != '' && lng != '') {
-						var query = Ext.ComponentQuery.query('.gmappanel');
-						for ( var i in query) {
-							var item = query[i];
-							item.addMarker(new google.maps.LatLng(lat, lng),
-									new google.maps.Marker(lat, lng), true,
-									true, null);
-						}
-					}
-				}
-			},
-		});

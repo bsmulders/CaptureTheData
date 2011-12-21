@@ -14,7 +14,7 @@ This file may be used under the terms of the GNU General Public License version 
 Ext.define('CTD.view.WidgetWindow', {
 	extend : 'Ext.Window',
 	alias : 'widget.widgetwindow',
-	width : 220,
+	width : 235,
 	height : 140,
 	minWidth : 220,
 	minHeight : 140,

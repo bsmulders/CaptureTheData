@@ -11,11 +11,11 @@ This file may be used under the terms of the GNU General Public License version 
 
  */
 
-Ext.define('CTD.view.ObdRpmWindow', {
+Ext.define('CTD.view.ObdCalculatedEngineLoadWindow', {
 	extend : 'CTD.view.WidgetWindow',
-	alias : 'widget.obdrpmwindow',
+	alias : 'widget.obdcalculatedengineloadwindow',
 	requires : 'CTD.store.Measurements',
-	title : 'OBD RPM',
+	title : 'OBD Calculated Engine Load',
 	items : [ {
 		xtype : 'chart',
 		style : 'background:#fff',
@@ -30,15 +30,15 @@ Ext.define('CTD.view.ObdRpmWindow', {
 			type : 'gauge',
 			position : 'gauge',
 			minimum : 0,
-			maximum : 8000,
-			steps : 8,
-			margin : -8,
-			title : 'RPM',
+			maximum : 100,
+			steps : 10,
+			margin : -7,
+			title : '%',
 		} ],
 		series : [ {
 			type : 'gauge',
-			field : 'OBD.EngineRPM',
-			donut : 68,
+			field : 'OBD.CalculatedEngineLoad',
+			donut : 72,
 			colorSet : [ '#F90', '#ddd' ],
 		} ]
 	} ]

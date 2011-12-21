@@ -11,15 +11,11 @@ This file may be used under the terms of the GNU General Public License version 
 
  */
 
-Ext.define('CTD.view.ObdCoolantTemperatureWindow', {
+Ext.define('CTD.view.ObdEngineRPMWindow', {
 	extend : 'CTD.view.WidgetWindow',
-	alias : 'widget.obdcoolanttemperaturewindow',
+	alias : 'widget.obdenginerpmwindow',
 	requires : 'CTD.store.Measurements',
-	title : 'OBD Coolant Temperature',
-	layout : {
-		type : 'hbox',
-		align : 'stretch'
-	},
+	title : 'OBD Engine RPM',
 	items : [ {
 		xtype : 'chart',
 		style : 'background:#fff',
@@ -34,15 +30,15 @@ Ext.define('CTD.view.ObdCoolantTemperatureWindow', {
 			type : 'gauge',
 			position : 'gauge',
 			minimum : 0,
-			maximum : 215,
-			steps : 10,
-			margin : -7,
-			title : '&#8451;',
+			maximum : 8000,
+			steps : 8,
+			margin : -8,
+			title : 'RPM',
 		} ],
 		series : [ {
 			type : 'gauge',
-			field : 'OBD.EngineCoolantTemperature',
-			donut : 72,
+			field : 'OBD.EngineRPM',
+			donut : 68,
 			colorSet : [ '#F90', '#ddd' ],
 		} ]
 	} ]

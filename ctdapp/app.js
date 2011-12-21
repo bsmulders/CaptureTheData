@@ -13,23 +13,21 @@ This file may be used under the terms of the GNU General Public License version 
 
 Ext.require('Ext.chart.*');
 
-Ext
-		.application({
-			name : 'CTD',
-			appFolder : 'ctd',
-			autoCreateViewport : true,
-			controllers : [ 'Trip', 'TimeControl', 'Widget' ],
-			models : [ 'Measurement', 'Trip' ],
-			stores : [ 'Measurements', 'TimeControl', 'Trips', 
-					'TripSummaries' ],
-			views : [ 'CTD.view.GsmSignalWindow', 'CTD.view.TimeControl',
-					'CTD.view.WidgetPicker', 'CTD.view.GpsSpeedWindow',
-					'CTD.view.GpsInfoWindow', 'CTD.view.GmapsWindow',
-					'CTD.view.ObdCoolantTemperatureWindow',
-					'CTD.view.ObdEngineLoadWindow', 'CTD.view.ObdRpmWindow',
-					'CTD.view.ObdSpeedWindow', 'CTD.view.ObdThrottleWindow',
-					'CTD.view.TripList', 'CTD.view.Viewport',
-					'CTD.view.ObdInfoWindow' ],
-			launch : function() {
-			}
-		});
+Ext.application({
+	name : 'CTD',
+	appFolder : 'ctd',
+	autoCreateViewport : true,
+	controllers : [ 'Trip', 'TimeControl', 'Widget' ],
+	models : [ 'Measurement', 'Trip' ],
+	stores : [ 'Measurements', 'TimeControl', 'Trips', 'TripSummaries' ],
+	views : [ 'CTD.view.GsmSignalWindow', 'CTD.view.TimeControl',
+			'CTD.view.WidgetPicker', 'CTD.view.GpsSpeedWindow',
+			'CTD.view.GpsInfoWindow', 'CTD.view.GmapsWindow',
+			'CTD.view.ObdEngineCoolantTemperatureWindow',
+			'CTD.view.ObdCalculatedEngineLoadWindow',
+			'CTD.view.ObdEngineRPMWindow', 'CTD.view.ObdVehicleSpeedWindow',
+			'CTD.view.ObdThrottlePositionWindow', 'CTD.view.TripList',
+			'CTD.view.Viewport', 'CTD.view.ObdInfoWindow' ],
+	launch : function() {
+	}
+});
