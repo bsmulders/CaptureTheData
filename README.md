@@ -23,9 +23,6 @@ Currently supported devices and features:
    * Declination
 * Bluetooth/Serial Cellphone *(Hayes command set based)*
    * Cell-tower signal strength
-
-Planned devices for the future:
-
 * Bluetooth/Serial OBD-II device *(ELM327 based)*
    * Battery voltage
    * Speed
@@ -33,6 +30,9 @@ Planned devices for the future:
    * Engine load
    * Coolant temperature
    * Throttle position
+
+Planned devices for the future:
+
 * Nintendo Wiimote
    * Three-axis accelerometer
 
@@ -84,6 +84,11 @@ Commands to operate the application:
 		<td>./ctd gps 1</td>
 	</tr>
 	<tr>
+		<td>Start OBD logging</td>
+		<td>./ctd obd {tripid}</td>
+		<td>./ctd obd 1</td>
+	</tr>
+	<tr>
 		<td>Parse raw serial data</td>
 		<td>./ctd parse {tripid}</td>
 		<td>./ctd parse 1</td>
@@ -99,7 +104,7 @@ Commands to operate the application:
 In a normal application flow you would:
 
 1. Create a trip, save the returned ID somewhere
-2. Start both the GSM and GPS logging in two separate processes
+2. Start the GSM, GPS and OBD logging in separate processes
 3. Cancel the logging when you are finished (CTRL+C)
 4. Parse the raw serial data to human understandable data
 5. Generate trip reports with all logging values for every 1/10th of a second in this trip
