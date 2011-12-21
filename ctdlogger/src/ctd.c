@@ -22,7 +22,7 @@ This file may be used under the terms of the GNU General Public License version 
 
 int main(int argc, char** args) {
 	if (args[1] == NULL) {
-		printf("No arguments given. Use create, log {gps|gsm|obd} {tripid}, parse {tripid}, report {tripid}\n");
+		printf("No arguments given. Use: [create] database; [log] [gps | gsm | obd] device database tripid; [parse] database tripid; [report] database tripid\n");
 		return -1;
 	}
 	else if (strcmp(args[1], "create") == 0) {
@@ -100,7 +100,7 @@ int main(int argc, char** args) {
 		return 0;
 	}
 	else {
-		printf("Wrong arguments given. Use create, log {gps|gsm|obd} {tripid}, parse {tripid}, report {tripid}\n");
+		printf("Wrong arguments given. Use: [create] database; [log] [gps | gsm | obd] device database tripid; [parse] database tripid; [report] database tripid\n");
 		return -1;
 	}
 }
