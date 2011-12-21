@@ -24,7 +24,6 @@ Currently supported devices and features:
 * Bluetooth/Serial Cellphone *(Hayes command set based)*
    * Cell-tower signal strength
 * Bluetooth/Serial OBD-II device *(ELM327 based)*
-   * Battery voltage
    * Speed
    * RPM
    * Engine load
@@ -47,7 +46,7 @@ This part logs data from several (bluetooth) sensors. It stores the raw data in 
 	
 REST(ish) Web-service (written in PHP).
 	
-The web-service publishes the data from the SQLite3 database. You can get a summary of all trips, get detailed trip information, get information about the sensors used in the trip and get the sensor measurements for every 1/10th of a second in the trip.
+The web-service publishes the data from the SQLite3 database. You can get a summary of all trips, get detailed trip information and get the sensor measurements for every 1/10th of a second in the trip.
 	
 ### ctdapp
 	
@@ -55,6 +54,12 @@ Web-application (written in JavaScript, using Ext JS 4).
 	
 The web-application access the web-service and displays all recorded trips. After selecting a trip, it displays the trip in realtime. It is possible to enable and disable various gauges and information panels. A trip can be played in realtime, 10x speed or manually controlled.
 	
+### ctdhardware
+
+Automated scripts as a supplement to ctdlogger (Shell script).
+
+These scripts can automate the process of logging data, parsing data and generating reports. They operate on ctdlogger. Scripts for specific hardware platforms or configurations will be added later.
+
 ## Usage
 ### ctdlogger
 	
@@ -99,7 +104,8 @@ In a normal application flow you would:
 4. Parse the raw serial data to human understandable data
 5. Generate trip reports with all logging values for every 1/10th of a second in this trip
 
-Bash scripts to automate this process may be available in the future.  
+Shell scripts to automate this process are available in the ctdhardware component.
+
 Please note that generating the reports can take a while. Generating reports for 30 minutes of recorded data can take up to a few minutes.
 
 ### ctdservice
@@ -119,4 +125,8 @@ Other entry-points are:
 
 Put the ctdapp directory on a web-server or open the index.html file in your browser. Don't forget to enable [CORS](http://www.w3.org/TR/cors) on your web-server if you want to run the application locally or on a different server that the web-service is running on. Access the web-application by browsing to http://yourserver/ctdapp/
 
-Select the trip you want to analyze and enable widgets by clicking the buttons on the widgets field. You can move, resize, maximize (most) widgets to your liking.
+Select the trip you want to analyze and enable widgets by clicking the buttons in the widgets field. You can move, resize, maximize (most) widgets to your liking.
+
+### ctdhardware
+
+For logging data, the script 'ctd_desktop' is available. Call the script without arguments. The script will create a new trip in the database, start logging on all devices and wait until this process is finished. Parsing and reporting is not yet supported.

@@ -1,0 +1,33 @@
+#
+# Shell script to automate datalogging
+#
+
+database="ctd.sqlite"
+gsm="/dev/tty.T610-SerialPort1"
+gps="/dev/tty.BTGPS-BluetoothSerialPo"
+obd="/dev/tty.CHX-DevB"
+
+echo "CaptureTheData! Automated Shell Script"
+echo -e "\tDatabase:\t$database"
+echo -e "\tGSM device:\t$gsm"
+echo -e "\tGPS device:\t$gps"
+echo -e "\tOBD device:\t$obd\n"
+
+
+./ctd create $database
+result=$?
+echo "Database created with ID $result"
+
+if [ $result != 0 ] ; then
+	echo "Log GSM"
+	./ctd log gsm $gsm $database $result &
+
+	echo "Log GPS"
+	./ctd log gps $gps $database $result &
+	
+	echo "Log OBD"
+	./ctd log obd $obd $database $result &
+	wait
+	
+	echo "Script finished"
+fi
