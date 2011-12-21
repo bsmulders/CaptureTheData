@@ -12,19 +12,10 @@ This file may be used under the terms of the GNU General Public License version 
  */
 
 Ext.define('CTD.view.GpsSpeedWindow', {
-	extend : 'Ext.Window',
+	extend : 'CTD.view.WidgetWindow',
 	alias : 'widget.gpsspeedwindow',
 	requires : 'CTD.store.Measurements',
-	width : 220,
-	height : 140,
-	minWidth : 220,
-	minHeight : 140,
-	maximizable : true,
 	title : 'GPS Speed',
-	layout : {
-		type : 'hbox',
-		align : 'stretch'
-	},
 	items : [ {
 		xtype : 'chart',
 		style : 'background:#fff',

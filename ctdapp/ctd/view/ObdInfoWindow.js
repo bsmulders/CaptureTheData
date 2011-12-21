@@ -26,12 +26,12 @@ var obdInfoTpl = ''
 	+'</tpl>';
 
 Ext.define('CTD.view.ObdInfoWindow', {
-	extend : 'Ext.Window',
+	extend : 'CTD.view.WidgetWindow',
 	alias : 'widget.obdinfowindow',
 	requires : 'CTD.store.Measurements',
-	width : 220,
-	height : 140,
+	maximizable : true,
 	resizable : false,
+	layout : 'fit',
 	title : 'OBD Info',
 	items : [ {
 		xtype : 'dataview',

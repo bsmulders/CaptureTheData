@@ -12,13 +12,12 @@ This file may be used under the terms of the GNU General Public License version 
  */
 
 Ext.define('CTD.view.GmapsWindow', {
-	extend : 'Ext.Window',
+	extend : 'CTD.view.WidgetWindow',
 	alias : 'widget.gmapswindow',
-	layout : 'fit',
 	width : 450,
 	height : 450,
+	layout : 'fit',
 	title : 'Google Maps',
-	maximizable : true,
 	items : {
 		xtype : 'gmappanel',
 		zoomLevel : 2,

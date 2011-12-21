@@ -28,12 +28,13 @@ var gpsInfoTpl = ''
 	+'</tpl>';
 
 Ext.define('CTD.view.GpsInfoWindow', {
-	extend : 'Ext.Window',
+	extend : 'CTD.view.WidgetWindow',
 	alias : 'widget.gpsinfowindow',
 	requires : 'CTD.store.Measurements',
 	width : 250,
-	height : 160,
+	height : 150,
 	resizable : false,
+	layout : 'fit',
 	title : 'GPS Info',
 	items : [ {
 		xtype : 'dataview',
