@@ -45,7 +45,7 @@ Ext.define('CTD.view.TripList', {
 		header : 'Distance',
 		dataIndex : 'CalculatedKilometers',
 		renderer : function(kmh) {
-			return kmh.toFixed(2) + " km";
+			return (kmh == null) ? 0 : kmh.toFixed(2) + " km";
 		},
 		width : 30
 	}, {
