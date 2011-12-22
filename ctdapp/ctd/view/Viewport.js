@@ -47,7 +47,7 @@ Ext.define('CTD.view.Viewport', {
 				region : 'west',
 				collapsible : true,
 				title : 'Trips',
-				minWidth : 600,
+				minWidth : 790,
 				items : [ {
 					xtype : 'triplist',
 				} ]

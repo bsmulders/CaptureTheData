@@ -18,38 +18,42 @@ Ext.define('CTD.view.TripList', {
 	store : 'TripSummaries',
 	height : '100%',
 	width : '100%',
-	forceFit : true,
 	columns : [ {
 		header : 'ID',
 		dataIndex : 'Trip_ID',
-		width : 20
+		width : 30,
 	}, {
 		header : 'Description',
 		dataIndex : 'Name',
+		field : {
+			xtype : 'textfield',
+		},
+		width : 215,
 	}, {
 		header : 'Start time',
 		dataIndex : 'StartTime',
 		renderer : function(date) {
 			return new Date(date * 1000).toLocaleString();
 		},
-		width : 60
+		width : 210,
 	}, {
 		header : 'End time',
 		dataIndex : 'EndTime',
 		renderer : function(date) {
 			return new Date(date * 1000).toLocaleString();
 		},
-		width : 60
+		width : 210,
 	}, {
 		header : 'Distance',
 		dataIndex : 'CalculatedKilometers',
 		renderer : function(kmh) {
 			return (kmh == null) ? 0 : kmh.toFixed(2) + " km";
 		},
-		width : 30
+		width : 60,
 	}, {
 		header : 'Fuel',
 		dataIndex : 'CalculatedFuel',
-		width : 30
+		width : 60,
 	}, ],
+	plugins : [Ext.create('Ext.grid.plugin.RowEditing')]
 });

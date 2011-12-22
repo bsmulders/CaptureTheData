@@ -16,13 +16,18 @@ Ext.define('CTD.store.TripSummaries', {
 	requires : 'CTD.model.Trip',
 	model : 'CTD.model.Trip',
 	autoLoad : true,
+	autoSync : true,
 	proxy : {
-		type : 'ajax',
+		type : 'rest',
 		url : 'http://localhost:8888/ctdservice/trips',
-		method : 'GET',
 		reader : {
 			type : 'json',
 			root : 'trips'
+		},
+		writer : {
+			type : 'json',
+			root : 'trips',
+			writeAllFields : true,
 		}
 	},
 });

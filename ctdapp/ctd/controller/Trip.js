@@ -46,7 +46,7 @@ Ext.define('CTD.controller.Trip', {
 			timeRecord.set('StartTime', tripRecord.get('StartTime'));
 			timeRecord.set('EndTime', tripRecord.get('EndTime'));
 			timeRecord.set('TimeStamp', tripRecord.get('StartTime'));
-			timeRecord.set('Running', true);
+			timeRecord.set('Running', false);
 			timeRecord.set('Speed', false);
 		}
 	},
