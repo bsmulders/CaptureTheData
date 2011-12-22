@@ -18,7 +18,7 @@ Ext.define('CTD.view.WidgetWindow', {
 	height : 140,
 	minWidth : 220,
 	minHeight : 140,
-	maximizable : true,
+	maximizable : false,
 	title : 'Widget',
 	layout : {
 		type : 'hbox',

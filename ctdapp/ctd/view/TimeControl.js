@@ -12,9 +12,8 @@ This file may be used under the terms of the GNU General Public License version 
  */
 
 Ext.define('CTD.view.TimeControl', {
-	extend : 'Ext.Window',
+	extend : 'CTD.view.WidgetWindow',
 	alias : 'widget.timecontrol',
-	width : 230,
 	height : 85,
 	minHeight : 85,
 	resizable : false,
@@ -25,6 +24,7 @@ Ext.define('CTD.view.TimeControl', {
 		x : 5,
 		y : 35,
 		text : 'Ready',
+		style : 'color : #FFF',
 	} ],
 	items : [ {
 		xtype : 'button',

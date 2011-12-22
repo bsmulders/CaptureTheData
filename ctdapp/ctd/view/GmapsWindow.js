@@ -18,6 +18,7 @@ Ext.define('CTD.view.GmapsWindow', {
 	height : 450,
 	layout : 'fit',
 	title : 'Google Maps',
+	maximizable : true,
 	items : {
 		xtype : 'gmappanel',
 		zoomLevel : 2,

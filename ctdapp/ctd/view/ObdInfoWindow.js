@@ -27,7 +27,6 @@ Ext.define('CTD.view.ObdInfoWindow', {
 	extend : 'CTD.view.WidgetWindow',
 	alias : 'widget.obdinfowindow',
 	requires : 'CTD.store.Measurements',
-	maximizable : true,
 	resizable : false,
 	layout : 'fit',
 	title : 'OBD Info',
