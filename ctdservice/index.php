@@ -24,7 +24,21 @@ if (count($urlparts) == 3 && $urlparts[1] == "ctdservice" && $urlparts[2] == "")
 	echo "Use /trips<br />";
 }
 // Requested all trips
-else if (count($urlparts) == 3 && $urlparts[1] == "ctdservice" && $urlparts[2] == "trips") {	
+else if (count($urlparts) == 3 && $urlparts[1] == "ctdservice" && $urlparts[2] == "trips") {
+	if ($HTTP_SERVER_VARS['REQUEST_METHOD'] == "POST") {
+		$input = json_decode(file_get_contents('php://input'), true);
+		$data = $input['trips'];
+		unset($data['URI']);
+		unset($data['Sensors']);		
+		foreach ($data as $field=>$value) {
+			$fields[] = "'" . $field . "'";
+			$values[] = "'" . sqlite_escape_string($value) . "'";
+		}
+		$field_list = join(",", $fields);
+		$value_list = join(",", $values);
+		$db->query("REPLACE INTO Trip (" . $field_list . ") VALUES (" . $value_list . ")");
+	} 
+
 	$result = array();
 	
 	$query = $db->query("SELECT * FROM Trip");
