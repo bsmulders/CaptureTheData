@@ -17,7 +17,6 @@ Ext.define('CTD.view.TripList', {
 	requires : 'CTD.store.TripSummaries',
 	store : 'TripSummaries',
 	height : '100%',
-	width : '100%',
 	columns : [ {
 		header : 'ID',
 		dataIndex : 'Trip_ID',

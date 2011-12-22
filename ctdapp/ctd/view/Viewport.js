@@ -39,6 +39,7 @@ Ext.define('CTD.view.Viewport', {
 			items : [ {
 				region : 'center',
 				title : 'Widgets',
+				minWidth : 170,
 				autoScroll : true,
 				items : [ {
 					xtype : 'widgetpicker',
@@ -47,7 +48,8 @@ Ext.define('CTD.view.Viewport', {
 				region : 'west',
 				collapsible : true,
 				title : 'Trips',
-				minWidth : 790,
+				minWidth : 200,
+				width : 790,
 				items : [ {
 					xtype : 'triplist',
 				} ]
