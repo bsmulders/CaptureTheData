@@ -21,7 +21,7 @@ Ext.define('CTD.controller.Trip', {
 	init : function() {
 		this.control({
 			'triplist' : {
-				itemclick : this.onTripClick
+				itemdblclick : this.onTripDblClick
 			},
 		});
 		this.getTripsStore().addListener('load', this.onTripLoad, this);
@@ -33,9 +33,12 @@ Ext.define('CTD.controller.Trip', {
 		});
 	},
 
-	onTripClick : function(dataview, record, item, index, e) {
+	onTripDblClick : function(dataview, record, item, index, e) {
 		this.getTripsStore().proxy.url = record.get('URI');
 		this.getTripsStore().load();
+		
+		if (!Ext.ComponentQuery.query('.timecontrol').length)
+			Ext.create('CTD.view.TimeControl').show();
 	},
 
 	onTripLoad : function() {
