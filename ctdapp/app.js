@@ -29,5 +29,23 @@ Ext.application({
 			'CTD.view.ObdThrottlePositionWindow', 'CTD.view.TripList',
 			'CTD.view.Viewport', 'CTD.view.ObdInfoWindow' ],
 	launch : function() {
+		if (!self.document.location.hash) {
+			var tc = Ext.create('CTD.view.TimeControl');
+			var gmaps = Ext.create('CTD.view.GmapsWindow');
+			var speed = Ext.create('CTD.view.GpsSpeedWindow');
+			var rpm = Ext.create('CTD.view.ObdEngineRPMWindow');
+			var duration = 500;
+		
+			gmaps.show();
+			tc.show();
+			speed.show();
+			rpm.show();
+			gmaps.setSize(450, 375);
+
+			tc.setPosition(10, 10, { duration: duration });
+			speed.setPosition(10, 100, { duration: duration });
+			gmaps.setPosition(250, 10, { duration: duration });
+			rpm.setPosition(10, 245, { duration: duration });
+		}		
 	}
 });
