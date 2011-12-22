@@ -15,8 +15,8 @@ Ext.define('CTD.store.TimeControl', {
 	extend : 'Ext.data.Store',
 	fields : [ 'TimeStamp', 'TimeStampSub', 'Running', 'Speed' ],
 	data : [ {
-		StartTimeStamp : 0,
-		EndTimeStamp : 0,
+		StartTime : 0,
+		EndTime : 0,
 		TimeStamp : 0,
 		TimeStampSub : 0,
 		Running : false,

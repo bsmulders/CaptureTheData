@@ -33,8 +33,8 @@ Ext.define('CTD.controller.TimeControl', {
 
 			playButton.toggle(timeRecord.get('Running'), true);
 			speedButton.toggle(timeRecord.get('Speed'), true);
-			slider.setMinValue(timeRecord.get('StartTimeStamp'));
-			slider.setMaxValue(timeRecord.get('EndTimeStamp'));
+			slider.setMinValue(timeRecord.get('StartTime'));
+			slider.setMaxValue(timeRecord.get('EndTime'));
 			slider.setValue(timeRecord.get('TimeStamp'), true);
 			status.setText(new Date(timeRecord.get('TimeStamp') * 1000)
 					.toLocaleString());

@@ -29,10 +29,6 @@ else if (count($urlparts) == 3 && $urlparts[1] == "ctdservice" && $urlparts[2] =
 	
 	$query = $db->query("SELECT * FROM Trip");
 	while ($row = $query->fetchArray(SQLITE3_ASSOC)) {
-		$row['StartTimeStamp'] = (int) $row['StartTime'];
-		$row['EndTimeStamp'] = (int) $row['EndTime'];
-		$row['StartTime'] = date(DATE_RFC850, $row['StartTime']);
-		$row['EndTime'] = date(DATE_RFC850, $row['EndTime']);
 		$row['URI'] = "http://" . $host . "/ctdservice/trips/" . $row['Trip_ID'];
 		$result[] = $row;
 	}
@@ -47,12 +43,8 @@ else if (count($urlparts) == 4 && $urlparts[1] == "ctdservice" && $urlparts[2] =
 	
 	$query = $db->query("SELECT * FROM Trip WHERE Trip_ID = " . sqlite_escape_string($tripid));
 	$result = $query->fetchArray(SQLITE3_ASSOC);
-	$result['StartTimeStamp'] = (int) $result['StartTime'];
-	$result['EndTimeStamp'] = (int) $result['EndTime'];
-	$result['StartTime'] = date(DATE_RFC850, $result['StartTime']);
-	$result['EndTime'] = date(DATE_RFC850, $result['EndTime']);
 	$result['URI'] = "http://" . $host . "/ctdservice/trips/" . $tripid;
-	$result['FirstMeasurement'] = "http://" . $host . "/ctdservice/trips/" . $tripid . "/measurement/" . $result['StartTimeStamp'] . "/0";
+	$result['FirstMeasurement'] = "http://" . $host . "/ctdservice/trips/" . $tripid . "/measurement/" . $result['StartTime'] . "/0";
 	$result['Sensors'] = array_keys($sensors);
 	
 	echo json_encode(array("trip" => $result));
