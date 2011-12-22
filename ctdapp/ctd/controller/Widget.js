@@ -28,7 +28,7 @@ Ext
 							'CTD.view.ObdVehicleSpeedWindow',
 							'CTD.view.ObdThrottlePositionWindow',
 							'CTD.view.ObdInfoWindow' ],
-					stores : [ 'Trips', 'Measurements' ],
+					stores : [ 'Trips', 'Measurements', 'TimeControl' ],
 					views : [ 'GsmSignalWindow' ],
 
 					init : function() {
@@ -75,6 +75,7 @@ Ext
 
 					onTimeControlClick : function(button, event) {
 						Ext.create('CTD.view.TimeControl').show();
+						this.getTimeControlStore().fireEvent('update');
 					},
 
 					onGsmSignalStrengthClick : function(button, event) {
