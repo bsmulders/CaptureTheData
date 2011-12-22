@@ -25,10 +25,16 @@ Ext.define('CTD.controller.Trip', {
 			},
 		});
 		this.getTripsStore().addListener('load', this.onTripLoad, this);
+		
+		new Ext.util.TaskRunner().start({
+			run : this.onTick,
+			interval : 100,
+			scope : this,
+		});
 	},
 
 	onTripClick : function(dataview, record, item, index, e) {
-		this.getTripsStore().proxy.url = record.data.URI;
+		this.getTripsStore().proxy.url = record.get('URI');
 		this.getTripsStore().load();
 	},
 
@@ -42,15 +48,6 @@ Ext.define('CTD.controller.Trip', {
 			timeRecord.set('TimeStamp', tripRecord.get('StartTimeStamp'));
 			timeRecord.set('Running', true);
 			timeRecord.set('Speed', false);
-
-			var task = {
-				run : this.onTick,
-				interval : 100,
-				scope : this,
-			};
-
-			var runner = new Ext.util.TaskRunner();
-			runner.start(task);
 		}
 	},
 
