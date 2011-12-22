@@ -25,4 +25,6 @@ Ext.define('CTD.store.Measurements', {
 			root : 'report'
 		}
 	},
+	data : [{}],
 });
+
