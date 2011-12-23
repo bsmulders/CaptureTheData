@@ -21,15 +21,12 @@ Ext.define('CTD.view.GmapsWindow', {
 	maximizable : true,
 	items : {
 		xtype : 'gmappanel',
-		zoomLevel : 2,
+		zoomLevel : 16,
 		gmapType : 'map',
 		mapConfOpts : [ 'enableScrollWheelZoom', 'enableDoubleClickZoom',
 				'enableDragging' ],
 		mapControls : [ 'GSmallMapControl', 'GMapTypeControl',
 				'NonExistantControl' ],
-		setCenter : {
-			geoCodeAddr : '4 Yawkey Way, Boston, MA, 02215-3409, USA',
-		},
 		listeners : {
 			resize : function(p, w, h) {
 				this.onResize(w, h);
