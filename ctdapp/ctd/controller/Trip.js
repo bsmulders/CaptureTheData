@@ -25,7 +25,7 @@ Ext.define('CTD.controller.Trip', {
 			},
 		});
 		this.getTripsStore().addListener('load', this.onTripLoad, this);
-		
+
 		new Ext.util.TaskRunner().start({
 			run : this.onTick,
 			interval : 100,
@@ -60,8 +60,7 @@ Ext.define('CTD.controller.Trip', {
 				timeRecord.set('TimeStamp', timeRecord.get('TimeStamp') + 1);
 				timeRecord.set('TimeStampSub', 0);
 
-				if (timeRecord.get('TimeStamp') >= tripRecord
-						.get('EndTime')) {
+				if (timeRecord.get('TimeStamp') >= tripRecord.get('EndTime')) {
 					timeRecord.set('Running', false);
 				}
 			} else {

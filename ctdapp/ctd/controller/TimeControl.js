@@ -36,7 +36,7 @@ Ext.define('CTD.controller.TimeControl', {
 			slider.setMinValue(timeRecord.get('StartTime'));
 			slider.setMaxValue(timeRecord.get('EndTime'));
 			slider.setValue(timeRecord.get('TimeStamp'), true);
-			
+
 			if (timeRecord.get('TimeStamp') > 0)
 				status.setText(new Date(timeRecord.get('TimeStamp') * 1000)
 						.toLocaleString());

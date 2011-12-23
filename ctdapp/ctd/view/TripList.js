@@ -54,5 +54,5 @@ Ext.define('CTD.view.TripList', {
 		dataIndex : 'CalculatedFuel',
 		width : 60,
 	}, ],
-	plugins : [Ext.create('Ext.grid.plugin.RowEditing')]
+	plugins : [ Ext.create('Ext.grid.plugin.RowEditing') ]
 });
