@@ -20,14 +20,13 @@ Ext
 					requires : [ 'CTD.store.Trips', 'CTD.store.Measurements',
 							'CTD.view.GsmSignalWindow', 'CTD.view.TimeControl',
 							'CTD.view.GsmSignalWindow',
-							'CTD.view.GpsSpeedWindow',
-							'CTD.view.GpsInfoWindow', 'CTD.view.GmapsWindow',
+							'CTD.view.MeasurementInfoWindow',
+							'CTD.view.GpsSpeedWindow', 'CTD.view.GmapsWindow',
 							'CTD.view.ObdEngineCoolantTemperatureWindow',
 							'CTD.view.ObdCalculatedEngineLoadWindow',
 							'CTD.view.ObdEngineRPMWindow',
 							'CTD.view.ObdVehicleSpeedWindow',
-							'CTD.view.ObdThrottlePositionWindow',
-							'CTD.view.ObdInfoWindow' ],
+							'CTD.view.ObdThrottlePositionWindow' ],
 					stores : [ 'Trips', 'Measurements', 'TimeControl' ],
 					views : [ 'GsmSignalWindow' ],
 
@@ -37,20 +36,17 @@ Ext
 									'widgetpicker button[action=timeController]' : {
 										click : this.onTimeControlClick
 									},
+									'widgetpicker button[action=measurementInfo]' : {
+										click : this.onMeasurementInfoClick
+									},
 									'widgetpicker button[action=gsmSignalStrength]' : {
 										click : this.onGsmSignalStrengthClick
 									},
 									'widgetpicker button[action=gpsSpeed]' : {
 										click : this.onGpsSpeedClick
 									},
-									'widgetpicker button[action=gpsInfo]' : {
-										click : this.onGpsInfoClick
-									},
 									'widgetpicker button[action=gMaps]' : {
 										click : this.onGmapsClick
-									},
-									'widgetpicker button[action=obdInfo]' : {
-										click : this.onObdInfoClick
 									},
 									'widgetpicker button[action=obdVehicleSpeed]' : {
 										click : this.onObdVehicleSpeedClick
@@ -78,6 +74,10 @@ Ext
 						this.getTimeControlStore().fireEvent('update');
 					},
 
+					onMeasurementInfoClick : function(button, event) {
+						Ext.create('CTD.view.MeasurementInfoWindow').show();
+					},
+
 					onGsmSignalStrengthClick : function(button, event) {
 						Ext.create('CTD.view.GsmSignalWindow').show();
 					},
@@ -86,16 +86,8 @@ Ext
 						Ext.create('CTD.view.GpsSpeedWindow').show();
 					},
 
-					onGpsInfoClick : function(button, event) {
-						Ext.create('CTD.view.GpsInfoWindow').show();
-					},
-
 					onGmapsClick : function(button, event) {
 						Ext.create('CTD.view.GmapsWindow').show();
-					},
-
-					onObdInfoClick : function(button, event) {
-						Ext.create('CTD.view.ObdInfoWindow').show();
 					},
 
 					onObdVehicleSpeedClick : function(button, event) {

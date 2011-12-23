@@ -11,10 +11,24 @@ This file may be used under the terms of the GNU General Public License version 
 
  */
 
-var obdInfoTpl = ''
+var measurementInfoTpl = ''
 		+ '<tpl for=".">'
-		+ '	<div class="infowindow obdinfo">'
-		+ '		<p>{OBD.Time}<p>'
+		+ '	<div class="infowindow">'
+		+ '		<p>GSM</p>'
+		+ '		<dl>'
+		+ '		<dt>Signal Strength:</dt><dd>{GSM.SignalStrength}</dd>'
+		+ '		</dl>'
+		+ '		<p>GPS<p>'
+		+ '		<dl>'
+		+ '		<dt>UTC:</dt><dd>{GPS.UTC}</dd>'
+		+ '		<dt>Fix:</dt><dd>{GPS.Fix}</dd>'
+		+ '		<dt>Latitude:</dt><dd>{GPS.Latitude}</dd>'
+		+ '		<dt>Longitude:</dt><dd>{GPS.Longitude}</dd>'
+		+ '		<dt>Speed:</dt><dd>{GPS.Speed} km/h</dd>'
+		+ '		<dt>Direction:</dt><dd>{GPS.Direction}&#176;</dd>'
+		+ '		<dt>Declination:</dt><dd>{GPS.Declination}&#176;</dd>'
+		+ '		</dl>'
+		+ '		<p>OBD</p>'
 		+ '		<dl>'
 		+ '		<dt>Vehicle Speed:</dt><dd>{OBD.VehicleSpeed} km/h</dd>'
 		+ '		<dt>Engine RPM:</dt><dd>{OBD.EngineRPM} RPM</dd>'
@@ -23,17 +37,18 @@ var obdInfoTpl = ''
 		+ '		<dt>Engine Coolant Temperature:</dt><dd>{OBD.EngineCoolantTemperature} &#176;</dd>'
 		+ '		</dl>' + '	</div>' + '</tpl>';
 
-Ext.define('CTD.view.ObdInfoWindow', {
+Ext.define('CTD.view.MeasurementInfoWindow', {
 	extend : 'CTD.view.WidgetWindow',
-	alias : 'widget.obdinfowindow',
+	alias : 'widget.measurementinfowindow',
 	requires : 'CTD.store.Measurements',
 	resizable : false,
 	layout : 'fit',
-	title : 'OBD Info',
+	title : 'Measurement info',
+	height : '260',
 	items : [ {
 		xtype : 'dataview',
 		store : 'Measurements',
-		tpl : obdInfoTpl,
+		tpl : measurementInfoTpl,
 		itemSelector : 'div.timeview',
 		loadMask : false,
 	} ]

@@ -24,20 +24,17 @@ Ext.define('CTD.view.WidgetPicker', {
 		text : 'Time controller',
 		action : 'timeController',
 	}, {
+		text : 'Measurement info',
+		action : 'measurementInfo',
+	}, {
 		text : 'GSM<hr />Signal Strength',
 		action : 'gsmSignalStrength',
-	}, {
-		text : 'GPS<hr/>Info',
-		action : 'gpsInfo',
 	}, {
 		text : 'GPS<hr/>Speed',
 		action : 'gpsSpeed',
 	}, {
 		text : 'GPS<hr />Google Maps',
 		action : 'gMaps',
-	}, {
-		text : 'OBD<hr />Info',
-		action : 'obdInfo',
 	}, {
 		text : 'OBD<hr />Vehicle Speed',
 		action : 'obdVehicleSpeed',
