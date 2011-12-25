@@ -12,8 +12,15 @@ This file may be used under the terms of the GNU General Public License version 
 
 */
 
+include('Sensor.php');
+
 $db = new SQLite3('testset.sqlite');
-$sensors = array("GSM"=>"GsmReport", "GPS"=>"GpsReport", "OBD"=>"ObdReport");
+
+$config = parse_ini_file("settings.ini", true);
+$sensors = array();
+foreach($config['sensors'] as $sensorName=>$tableName) {	
+	$sensors[] = new Sensor($sensorName, $tableName);
+}
 
 $uri = strtok($HTTP_SERVER_VARS['REQUEST_URI'], '?');
 $host = $HTTP_SERVER_VARS['HTTP_HOST'];
@@ -58,7 +65,7 @@ else if (count($urlparts) == 4 && $urlparts[1] == "ctdservice" && $urlparts[2] =
 	$query = $db->query("SELECT * FROM Trip WHERE Trip_ID = " . sqlite_escape_string($tripid));
 	$result = $query->fetchArray(SQLITE3_ASSOC);
 	$result['URI'] = "http://" . $host . "/ctdservice/trips/" . $tripid;
-	$result['FirstMeasurement'] = "http://" . $host . "/ctdservice/trips/" . $tripid . "/measurement/" . $result['StartTime'] . "/0";
+	$result['FirstMeasurement'] = "http://" . $host . "/ctdservice/trips/" . $tripid . "/measurement/" . (int) $result['StartTime'] . "/0";
 	$result['Sensors'] = array_keys($sensors);
 	
 	echo json_encode(array("trip" => $result));
@@ -71,9 +78,9 @@ else if (count($urlparts) == 7 && $urlparts[1] == "ctdservice" && $urlparts[2] =
 	
 	$result = array();
 	
-	foreach($sensors as $sensor=>$tablename) {
-		$query = $db->query("SELECT * FROM " . $tablename . " WHERE Trip_ID = ".sqlite_escape_string($tripid)." AND TimeStamp = " . sqlite_escape_string($timestamp) . " AND TimeStampSub = " . sqlite_escape_string($timestampsub));
-		$result[$sensor] = $query->fetchArray(SQLITE3_ASSOC);
+	foreach($sensors as $sensor) {
+		$query = $db->query("SELECT * FROM " . $sensor->getTableName() . " WHERE Trip_ID = ".sqlite_escape_string($tripid)." AND TimeStamp = " . sqlite_escape_string($timestamp) . " AND TimeStampSub = " . sqlite_escape_string($timestampsub));
+		$result[$sensor->getSensorName()] = $query->fetchArray(SQLITE3_ASSOC);
 		unset($result[$sensor]['Trip_ID']);
 		unset($result[$sensor]['TimeStamp']);
 		unset($result[$sensor]['TimeStampSub']);
