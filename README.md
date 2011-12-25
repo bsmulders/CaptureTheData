@@ -129,4 +129,4 @@ Select the trip you want to analyze and enable widgets by clicking the buttons i
 
 ### ctdhardware
 
-For logging data, the script 'ctd_desktop' is available. Call the script without arguments. The script will create a new trip in the database, start logging on all devices and wait until this process is finished. Parsing and reporting is not yet supported.
+For logging data, parsing and generating reports the script 'ctd_desktop' is available. Call the script without arguments. The script will create a new trip in the database and start logging on all devices. After a user presses a key, the logging process will stop, the data will be parsed and the reports will be generated.

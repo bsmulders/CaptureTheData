@@ -15,19 +15,28 @@ echo -e "\tOBD device:\t$obd\n"
 
 
 ./ctd create $database
-result=$?
-echo "Database created with ID $result"
+tripid=$?
+echo "Database created with ID $tripid"
 
-if [ $result != 0 ] ; then
+if [ $tripid != 0 ] ; then
 	echo "Log GSM"
-	./ctd log gsm $gsm $database $result &
+	./ctd log gsm $gsm $database $tripid &
 
 	echo "Log GPS"
-	./ctd log gps $gps $database $result &
+	./ctd log gps $gps $database $tripid &
 	
 	echo "Log OBD"
-	./ctd log obd $obd $database $result &
-	wait
+	./ctd log obd $obd $database $tripid &
+
+	read -p "Press any key to stop logging and start post-processing...\n"
+	
+	killall ctd
+	
+	echo "Parse data"
+	./ctd parse $database $tripid
+	
+	echo "Generate reports"
+	./ctd report $database $tripid
 	
 	echo "Script finished"
 fi
