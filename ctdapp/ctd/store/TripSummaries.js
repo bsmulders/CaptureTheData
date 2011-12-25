@@ -19,7 +19,7 @@ Ext.define('CTD.store.TripSummaries', {
 	autoSync : true,
 	proxy : {
 		type : 'rest',
-		url : 'http://localhost:8888/ctdservice/trips',
+		url : '../ctdservice/trips',
 		reader : {
 			type : 'json',
 			root : 'trips'
