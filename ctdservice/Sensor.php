@@ -13,31 +13,31 @@ This file may be used under the terms of the GNU General Public License version 
 */
 
 class Sensor {
-	
+
 	public $sensorName;
 	public $tableName;
-	
+
 	public function __construct($sensorName, $tableName) {
 		$this->setSensorName($sensorName);
 		$this->setTableName($tableName);
 	}
-	
+
 	public function getSensorName() {
 		return $this->sensorName;
 	}
-	
+
 	public function setSensorname($sensorName) {
 		$this->sensorName = $sensorName;
 	}
-	
+
 	public function getTableName() {
 		return $this->tableName;
 	}
-	
+
 	public function setTableName($tableName) {
 		$this->tableName = $tableName;
 	}
-	
+
 }
 
 ?>
