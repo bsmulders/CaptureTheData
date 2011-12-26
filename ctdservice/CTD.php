@@ -34,7 +34,13 @@ class CTD {
 	public function __construct($config) {
 		$this->config = parse_ini_file($config, TRUE);
 
-		$this->db = new SQLite3($this->config['database']['file']);
+		try {
+			$this->db = new PDO($this->config['database']['pdo'], $this->config['database']['username'], $this->config['database']['password']);
+		}
+		catch(PDOException $e) {
+			echo $e->getMessage();
+			exit(-1);
+		}
 
 		foreach($this->config['sensors'] as $sensorName=>$tableName) {
 			$this->sensors[] = new Sensor($sensorName, $tableName);
@@ -65,7 +71,7 @@ class CTD {
 			if ($this->method == "POST") {
 				$this->handleTripPutRequest();
 			}
-				
+
 			$this->handleTripsGetRequest();
 		}
 		else if (count($urlparts) == 4
@@ -97,7 +103,7 @@ class CTD {
 			case "text/html":
 				return "<h1>" . $this->rootElement . "</h1><pre>" . print_r($this->outputData, true) . "</pre>";
 			case "application/json":
-				return json_encode(array($this->rootElement => $this->outputData));
+				return json_encode(array($this->rootElement => $this->outputData), JSON_NUMERIC_CHECK);
 			default:
 				return $this->rootElement . "\n" . print_r($this->outputData, true);
 		}
@@ -108,7 +114,7 @@ class CTD {
 	}
 
 	public function finalize() {
-		$this->db->close();
+		$this->db = null;
 	}
 
 	private function handleNoRequest() {
@@ -124,16 +130,15 @@ class CTD {
 	}
 
 	private function handleTripsGetRequest() {
-		$result = array();
+		$sql = "SELECT * FROM Trip";
+		$results = $row = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-		$query = $this->db->query("SELECT * FROM Trip");
-		while ($row = $query->fetchArray(SQLITE3_ASSOC)) {
-			$row['URI'] = "http://" . $this->host . "/ctdservice/trips/" . $row['Trip_ID'];
-			$result[] = $row;
+		foreach ($results as &$result) {
+			$result['URI'] = "http://" . $this->host . "/ctdservice/trips/" . $result['Trip_ID'];
 		}
 
 		$this->rootElement = "trips";
-		$this->outputData = $result;
+		$this->outputData = $results;
 	}
 
 	private function handleTripPutRequest() {
@@ -143,23 +148,24 @@ class CTD {
 		unset($data['Sensors']);
 		foreach ($data as $field=>$value) {
 			$fields[] = "'" . $field . "'";
-			$values[] = "'" . sqlite_escape_string($value) . "'";
+			$values[] = "'" . $this->db->quote($value) . "'";
 		}
 		$field_list = join(",", $fields);
 		$value_list = join(",", $values);
-		$this->db->query("REPLACE INTO Trip (" . $field_list . ") VALUES (" . $value_list . ")");
+		$this->db->exec("REPLACE INTO Trip (" . $field_list . ") VALUES (" . $value_list . ")");
 
 		$this->returnHeaders[] = "HTTP/1.0 200 OK";
 	}
 
 	private function handleTripGetRequest($tripid) {
-		$result = array();
-
-		$query = $this->db->query("SELECT * FROM Trip WHERE Trip_ID = " . sqlite_escape_string($tripid));
-		$result = $query->fetchArray(SQLITE3_ASSOC);
+		$sql = "SELECT * FROM Trip WHERE Trip_ID = " . $this->db->quote($tripid);
+		$result = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
 		$result['URI'] = "http://" . $this->host . "/ctdservice/trips/" . $tripid;
 		$result['FirstMeasurement'] = "http://" . $this->host . "/ctdservice/trips/" . $tripid . "/measurement/" . (int) $result['StartTime'] . "/0";
-		$result['Sensors'] = array_keys($this->sensors);
+
+		foreach($this->sensors as $sensor) {
+			$result['Sensor'][]  = $sensor->getSensorName();
+		}
 
 		$this->rootElement = "trip";
 		$this->outputData = $result;
@@ -169,8 +175,8 @@ class CTD {
 		$result = array();
 
 		foreach($this->sensors as $sensor) {
-			$query = $this->db->query("SELECT * FROM " . $sensor->getTableName() . " WHERE Trip_ID = ".sqlite_escape_string($tripid)." AND TimeStamp = " . sqlite_escape_string($timestamp) . " AND TimeStampSub = " . sqlite_escape_string($timestampsub));
-			$result[$sensor->getSensorName()] = $query->fetchArray(SQLITE3_ASSOC);
+			$sql = "SELECT * FROM " . $sensor->getTableName() . " WHERE Trip_ID = " . $this->db->quote($tripid) . " AND TimeStamp = " . $this->db->quote($timestamp) . " AND TimeStampSub = " . $this->db->quote($timestampsub);
+			$result[$sensor->getSensorName()] = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
 			unset($result[$sensor->getSensorName()]['Trip_ID']);
 			unset($result[$sensor->getSensorName()]['TimeStamp']);
 			unset($result[$sensor->getSensorName()]['TimeStampSub']);
