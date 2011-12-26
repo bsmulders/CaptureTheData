@@ -43,9 +43,9 @@ Ext.define('CTD.controller.Trip', {
 		var tripRecord = this.getTripsStore().first();
 
 		if (tripRecord.data) {
-			timeRecord.set('StartTime', tripRecord.get('StartTime'));
-			timeRecord.set('EndTime', tripRecord.get('EndTime'));
-			timeRecord.set('TimeStamp', tripRecord.get('StartTime'));
+			timeRecord.set('StartTime', parseInt(tripRecord.get('StartTime')));
+			timeRecord.set('EndTime', parseInt(tripRecord.get('EndTime')));
+			timeRecord.set('TimeStamp', parseInt(tripRecord.get('StartTime')));
 			timeRecord.set('Running', true);
 			timeRecord.set('Speed', false);
 		}
