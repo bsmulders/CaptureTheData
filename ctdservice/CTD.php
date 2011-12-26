@@ -65,8 +65,9 @@ class CTD {
 			if ($this->method == "POST") {
 				$this->handleTripPutRequest();
 			}
-
-			$this->handleTripsGetRequest();
+			else {
+				$this->handleTripsGetRequest();
+			}
 		}
 		else if (count($urlparts) == 4
 		&& $urlparts[1] == "ctdservice"
@@ -147,12 +148,12 @@ class CTD {
 
 		foreach ($data as $field=>$value) {
 			$fields[] = sprintf("'%s'", $field);
-			$values[] = sprintf("'%s'", $this->db->quote($value));
+			$values[] = sprintf("%s", $this->db->quote($value));
 		}
 		
 		$sql = sprintf("REPLACE INTO Trip (%s) VALUES (%s)", join(",", $fields), join(",", $values));
 		$result = $this->db->exec($sql);
-
+		
 		if ($result) {
 			$this->returnHeaders[] = "HTTP/1.0 200 OK";	
 		}
