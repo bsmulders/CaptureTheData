@@ -57,7 +57,7 @@ class CTD {
 
 		if (sizeof($this->httpAccepts) > 0) {
 			$this->outputType = $this->httpAccepts[0];
-			$this->returnHeaders[] = "Content-type: " . $this->httpAccepts[0];
+			$this->returnHeaders[] = sprintf("Content-type: %s", $this->httpAccepts[0]);
 		}
 
 		if (count($urlparts) == 3
@@ -101,11 +101,11 @@ class CTD {
 	public function getOutput() {
 		switch($this->outputType) {
 			case "text/html":
-				return "<h1>" . $this->rootElement . "</h1><pre>" . print_r($this->outputData, true) . "</pre>";
+				return sprintf("<h2>%s</h1><pre>%s</pre>", $this->rootElement, print_r($this->outputData, true));
 			case "application/json":
 				return json_encode(array($this->rootElement => $this->outputData), JSON_NUMERIC_CHECK);
 			default:
-				return $this->rootElement . "\n" . print_r($this->outputData, true);
+				return sprintf("%s\n%s", $this->rootElement, print_r($this->outputData, true));
 		}
 	}
 
@@ -134,7 +134,7 @@ class CTD {
 		$results = $row = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 		foreach ($results as &$result) {
-			$result['URI'] = "http://" . $this->host . "/ctdservice/trips/" . $result['Trip_ID'];
+			$result['URI'] = sprintf("http://%s/ctdservice/trips/%d", $this->host, $result['Trip_ID']);
 		}
 
 		$this->rootElement = "trips";
@@ -146,25 +146,29 @@ class CTD {
 		$data = $input['trips'];
 		unset($data['URI']);
 		unset($data['Sensors']);
+
 		foreach ($data as $field=>$value) {
-			$fields[] = "'" . $field . "'";
-			$values[] = "'" . $this->db->quote($value) . "'";
+			$fields[] = sprintf("'%s'", $field);
+			$values[] = sprintf("'%s'", $this->db->quote($value));
 		}
-		$field_list = join(",", $fields);
-		$value_list = join(",", $values);
-		$this->db->exec("REPLACE INTO Trip (" . $field_list . ") VALUES (" . $value_list . ")");
+		
+		$sql = sprintf("REPLACE INTO Trip (%s) VALUES (%s)", join(",", $fields), join(",", $values));
+		$this->db->exec($sql);
 
 		$this->returnHeaders[] = "HTTP/1.0 200 OK";
 	}
 
 	private function handleTripGetRequest($tripid) {
-		$sql = "SELECT * FROM Trip WHERE Trip_ID = " . $this->db->quote($tripid);
+		$sql = sprintf("SELECT * FROM Trip WHERE Trip_ID = %s", $this->db->quote($tripid));
 		$result = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
-		$result['URI'] = "http://" . $this->host . "/ctdservice/trips/" . $tripid;
-		$result['FirstMeasurement'] = "http://" . $this->host . "/ctdservice/trips/" . $tripid . "/measurement/" . (int) $result['StartTime'] . "/0";
-
-		foreach($this->sensors as $sensor) {
-			$result['Sensor'][]  = $sensor->getSensorName();
+		
+		if ($result) {
+			$result['URI'] = sprintf("http://%s/ctdservice/trips/%d", $this->host, $tripid);
+			$result['FirstMeasurement'] = sprintf("http://%s/ctdservice/trips/%d/measurement/%d/0", $this->host, $tripid, $result['StartTime']);
+	
+			foreach($this->sensors as $sensor) {
+				$result['Sensor'][]  = $sensor->getSensorName();
+			}
 		}
 
 		$this->rootElement = "trip";
@@ -175,7 +179,7 @@ class CTD {
 		$result = array();
 
 		foreach($this->sensors as $sensor) {
-			$sql = "SELECT * FROM " . $sensor->getTableName() . " WHERE Trip_ID = " . $this->db->quote($tripid) . " AND TimeStamp = " . $this->db->quote($timestamp) . " AND TimeStampSub = " . $this->db->quote($timestampsub);
+			$sql = sprintf("SELECT * FROM %s WHERE Trip_ID = %s AND TimeStamp = %s AND TimeStampSub = %s", $sensor->getTableName(), $this->db->quote($tripid), $this->db->quote($timestamp), $this->db->quote($timestampsub));
 			$result[$sensor->getSensorName()] = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
 			unset($result[$sensor->getSensorName()]['Trip_ID']);
 			unset($result[$sensor->getSensorName()]['TimeStamp']);
