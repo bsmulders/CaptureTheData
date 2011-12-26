@@ -44,7 +44,7 @@ This part logs data from several (bluetooth) sensors. It stores the raw data in 
 	
 ### ctdservice
 	
-REST(ish) Web-service (written in PHP).
+REST Web-service (written in PHP).
 	
 The web-service publishes the data from the SQLite3 database. You can get a summary of all trips, get detailed trip information and get the sensor measurements for every 1/10th of a second in the trip.
 	
