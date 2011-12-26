@@ -17,12 +17,15 @@ Ext.define('CTD.store.Trips', {
 	model : 'CTD.model.Trip',
 	autoLoad : true,
 	proxy : {
-		type : 'ajax',
+		type : 'rest',
 		url : '',
-		method : 'GET',
 		reader : {
 			type : 'json',
 			root : 'trip'
+		},
+		headers : {
+  		    'Content-type' : 'application/json',
+		    'accept': 'application/json'		    
 		}
 	},
 });

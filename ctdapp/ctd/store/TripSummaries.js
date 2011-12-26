@@ -28,6 +28,10 @@ Ext.define('CTD.store.TripSummaries', {
 			type : 'json',
 			root : 'trips',
 			writeAllFields : true,
+		},
+		headers : {
+  		    'Content-type' : 'application/json',
+		    'accept': 'application/json'		    
 		}
 	},
 });

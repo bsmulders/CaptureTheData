@@ -17,12 +17,15 @@ Ext.define('CTD.store.Measurements', {
 	model : 'CTD.model.Measurement',
 	autoLoad : true,
 	proxy : {
-		type : 'ajax',
+		type : 'rest',
 		url : '',
-		method : 'GET',
 		reader : {
 			type : 'json',
 			root : 'report'
+		},
+		headers : {
+  		    'Content-type' : 'application/json',
+		    'accept': 'application/json'		    
 		}
 	},
 	data : [ {} ],
