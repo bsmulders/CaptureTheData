@@ -34,14 +34,8 @@ class CTD {
 	public function __construct($config) {
 		$this->config = parse_ini_file($config, TRUE);
 
-		try {
-			$this->db = new PDO($this->config['database']['pdo'], $this->config['database']['username'], $this->config['database']['password']);
-		}
-		catch(PDOException $e) {
-			echo $e->getMessage();
-			exit(-1);
-		}
-
+		$this->db = new PDO($this->config['database']['pdo'], $this->config['database']['username'], $this->config['database']['password']);
+		
 		foreach($this->config['sensors'] as $sensorName=>$tableName) {
 			$this->sensors[] = new Sensor($sensorName, $tableName);
 		}
@@ -53,13 +47,13 @@ class CTD {
 	}
 
 	public function run() {
-		$urlparts = explode('/', $this->uri);
-
 		if (sizeof($this->httpAccepts) > 0) {
 			$this->outputType = $this->httpAccepts[0];
 			$this->returnHeaders[] = sprintf("Content-type: %s", $this->httpAccepts[0]);
 		}
-
+		
+		$urlparts = explode('/', $this->uri);
+		
 		if (count($urlparts) == 3
 		&& $urlparts[1] == "ctdservice"
 		&& $urlparts[2] == "") {
@@ -124,21 +118,25 @@ class CTD {
 	}
 
 	private function handleWrongRequest() {
-		$this->rootElement = "Error";
-		$this->outputData = "Wrong request";
 		$this->returnHeaders[] = "HTTP/1.0 400 Bad Request";
 	}
 
 	private function handleTripsGetRequest() {
 		$sql = "SELECT * FROM Trip";
-		$results = $row = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+		$results = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-		foreach ($results as &$result) {
-			$result['URI'] = sprintf("http://%s/ctdservice/trips/%d", $this->host, $result['Trip_ID']);
+		if ($results) {
+			foreach ($results as &$result) {
+				$result['URI'] = sprintf("http://%s/ctdservice/trips/%d", $this->host, $result['Trip_ID']);
+			}
+
+			$this->returnHeaders[] = "HTTP/1.0 200 OK";
+			$this->rootElement = "trips";
+			$this->outputData = $results;
 		}
-
-		$this->rootElement = "trips";
-		$this->outputData = $results;
+		else {
+			$this->returnHeaders[] = "HTTP/1.0 204 No Content";
+		}
 	}
 
 	private function handleTripPutRequest() {
@@ -153,9 +151,14 @@ class CTD {
 		}
 		
 		$sql = sprintf("REPLACE INTO Trip (%s) VALUES (%s)", join(",", $fields), join(",", $values));
-		$this->db->exec($sql);
+		$result = $this->db->exec($sql);
 
-		$this->returnHeaders[] = "HTTP/1.0 200 OK";
+		if ($result) {
+			$this->returnHeaders[] = "HTTP/1.0 200 OK";	
+		}
+		else {
+			$this->returnHeaders[] = "HTTP/1.0 500 Internal Server Error";
+		}
 	}
 
 	private function handleTripGetRequest($tripid) {
@@ -169,25 +172,40 @@ class CTD {
 			foreach($this->sensors as $sensor) {
 				$result['Sensor'][]  = $sensor->getSensorName();
 			}
+			
+			$this->returnHeaders[] = "HTTP/1.0 200 OK";
+			$this->rootElement = "trip";
+			$this->outputData = $result;
+		}
+		else {
+			$this->returnHeaders[] = "HTTP/1.0 404 Not Found";
 		}
 
-		$this->rootElement = "trip";
-		$this->outputData = $result;
 	}
 
 	private function handleMeasurementGetRequest($tripid, $timestamp, $timestampsub) {
-		$result = array();
+		$results = array();
 
 		foreach($this->sensors as $sensor) {
 			$sql = sprintf("SELECT * FROM %s WHERE Trip_ID = %s AND TimeStamp = %s AND TimeStampSub = %s", $sensor->getTableName(), $this->db->quote($tripid), $this->db->quote($timestamp), $this->db->quote($timestampsub));
-			$result[$sensor->getSensorName()] = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
-			unset($result[$sensor->getSensorName()]['Trip_ID']);
-			unset($result[$sensor->getSensorName()]['TimeStamp']);
-			unset($result[$sensor->getSensorName()]['TimeStampSub']);
+			$result = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
+			
+			if ($result) {
+				$results[$sensor->getSensorName()] = $result;
+				unset($results[$sensor->getSensorName()]['Trip_ID']);
+				unset($results[$sensor->getSensorName()]['TimeStamp']);
+				unset($results[$sensor->getSensorName()]['TimeStampSub']);
+			}
 		}
 
-		$this->rootElement = "report";
-		$this->outputData = $result;
+		if (sizeof($results) > 0) {
+			$this->returnHeaders[] = "HTTP/1.0 200 OK";
+			$this->rootElement = "report";
+			$this->outputData = $results;
+		}
+		else {
+			$this->returnHeaders[] = "HTTP/1.0 404 Not Found";
+		}
 	}
 }
 
