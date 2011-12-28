@@ -68,13 +68,10 @@ int main(int argc, char** args) {
 			return -1;
 		}
 
-		if (parse_gps(args[2], atoi(args[3])) < 0)
-			return -1;
-		if (parse_gsm(args[2], atoi(args[3])) < 0)
-			return -1;
-		if (parse_obd(args[2], atoi(args[3])) < 0)
-			return -1;
-		if (parse_trip(args[2], atoi(args[3])) < 0)
+		if (parse_gps(args[2], atoi(args[3])) < 0
+				|| parse_gsm(args[2], atoi(args[3])) < 0
+				|| parse_obd(args[2], atoi(args[3])) < 0
+				|| parse_trip(args[2], atoi(args[3])) < 0)
 			return -1;
 
 		return 0;
@@ -87,11 +84,9 @@ int main(int argc, char** args) {
 			return -1;
 		}
 
-		if (generate_gps_report(args[2], atoi(args[3])) < 0)
-			return -1;
-		if (generate_gsm_report(args[2], atoi(args[3])) < 0)
-			return -1;
-		if (generate_obd_report(args[2], atoi(args[3])) < 0)
+		if (generate_gps_report(args[2], atoi(args[3])) < 0
+				|| generate_gsm_report(args[2], atoi(args[3])) < 0
+				|| generate_obd_report(args[2], atoi(args[3])) < 0)
 			return -1;
 
 		return 0;
