@@ -204,7 +204,7 @@ int generate_gps_report(char * database, int tripid) {
 	sqlite3_exec(handle, "BEGIN TRANSACTION", 0, 0, 0);
 
 	// Create 10 subrecords for each second between the starttime and endtime
-	char insertquery[500];
+	char insertquery[450];
 	for (int second = starttime; second < endtime; second++) {
 		for (int subsecond = 0; subsecond < 10; subsecond++) {
 			// Insert closest measurement in database
@@ -213,9 +213,7 @@ int generate_gps_report(char * database, int tripid) {
 					"INSERT INTO GpsReport ( 'Trip_ID', 'TimeStamp', 'TimeStampSub', 'UTC', 'Fix', 'Latitude', 'Longitude', 'Speed', 'Direction', 'Declination' )"
 					" SELECT Trip_ID, %1$d, %2$d, UTC, Fix, Latitude, Longitude, Speed, Direction, Declination"
 					" FROM GpsData"
-					" WHERE Trip_ID = %3$d AND TimeStamp < %1$d+10 AND TimeStamp > %1$d-10"
-					" ORDER BY ABS(TimeStamp - %1$d.%3$d) ASC"
-					" LIMIT 1", second, subsecond, tripid);
+					" WHERE Trip_ID = %3$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 5 ORDER BY TimeStamp DESC LIMIT 1", second, subsecond, tripid);
 			retval = sqlite3_exec(handle, insertquery, 0, 0, 0);
 			if (retval) {
 				printf("GPS Report: Inserting data in DB Failed: %d\n", retval);

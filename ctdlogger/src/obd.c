@@ -224,33 +224,25 @@ int generate_obd_report(char * database, int tripid) {
 	sqlite3_exec(handle, "BEGIN TRANSACTION", 0, 0, 0);
 
 	// Create 10 subrecords for each second between the starttime and endtime
-	char insertquery[2000];
+	char insertquery[1000];
 	for (int second = starttime; second < endtime; second++) {
 		for (int subsecond = 0; subsecond < 10; subsecond++) {
 			// Insert closest measurement in database
 			sprintf(
 					insertquery,
 					"INSERT INTO ObdReport ( 'Trip_ID', 'TimeStamp', 'TimeStampSub', 'CalculatedEngineLoad', 'EngineCoolantTemperature', 'EngineRPM', 'VehicleSpeed', 'ThrottlePosition' )"
-							" SELECT %3$d, %1$d, %2$d, (SELECT Value FROM ObdData"
-							" WHERE Trip_ID = %3$d AND PID = %4$d  AND TimeStamp < (%1$d+10) AND TimeStamp > (%1$d-10)"
-							" ORDER BY ABS(TimeStamp - %1$d.%2$d) ASC"
-							" LIMIT 1),"
+							" SELECT %3$d, %1$d, %2$d, "
 							" (SELECT Value FROM ObdData"
-							" WHERE Trip_ID = %3$d AND PID = %5$d  AND TimeStamp < (%1$d+10) AND TimeStamp > (%1$d-10)"
-							" ORDER BY ABS(TimeStamp - %1$d.%2$d) ASC"
-							" LIMIT 1),"
+							" WHERE Trip_ID = %3$d AND PID = %4$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 5 ORDER BY TimeStamp DESC LIMIT 1),"
 							" (SELECT Value FROM ObdData"
-							" WHERE Trip_ID = %3$d AND PID = %6$d  AND TimeStamp < (%1$d+10) AND TimeStamp > (%1$d-10)"
-							" ORDER BY ABS(TimeStamp - %1$d.%2$d) ASC"
-							" LIMIT 1),"
+							" WHERE Trip_ID = %3$d AND PID = %5$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 5 ORDER BY TimeStamp DESC LIMIT 1),"
 							" (SELECT Value FROM ObdData"
-							" WHERE Trip_ID = %3$d AND PID = %7$d  AND TimeStamp < (%1$d+10) AND TimeStamp > (%1$d-10)"
-							" ORDER BY ABS(TimeStamp - %1$d.%2$d) ASC"
-							" LIMIT 1),"
+							" WHERE Trip_ID = %3$d AND PID = %6$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 5 ORDER BY TimeStamp DESC LIMIT 1),"
 							" (SELECT Value FROM ObdData"
-							" WHERE Trip_ID = %3$d AND PID = %8$d  AND TimeStamp < (%1$d+10) AND TimeStamp > (%1$d-10)"
-							" ORDER BY ABS(TimeStamp - %1$d.%2$d) ASC"
-							" LIMIT 1)", second, subsecond, tripid,
+							" WHERE Trip_ID = %3$d AND PID = %7$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 5 ORDER BY TimeStamp DESC LIMIT 1),"
+							" (SELECT Value FROM ObdData"
+							" WHERE Trip_ID = %3$d AND PID = %8$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 5 ORDER BY TimeStamp DESC LIMIT 1)"
+							, second, subsecond, tripid,
 					OBD_CALCULATED_ENGINE_LOAD, OBD_ENGINE_COOLANT_TEMPERATURE,
 					OBD_ENGINE_RPM, OBD_VEHICLE_SPEED, OBD_THROTTLE_POSITION);
 			retval = sqlite3_exec(handle, insertquery, 0, 0, 0);
