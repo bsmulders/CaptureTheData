@@ -194,6 +194,9 @@ int generate_gsm_report(char * database, int tripid) {
 	endtime = (int) sqlite3_column_double(stmt, 1);
 	sqlite3_step(stmt);
 
+	// Begin SQL transaction
+	sqlite3_exec(handle, "BEGIN TRANSACTION", 0, 0, 0);
+
 	// Create 10 subrecords for each second between the starttime and endtime
 	char insertquery[500];
 	for (int second = starttime; second < endtime; second++) {
@@ -215,6 +218,9 @@ int generate_gsm_report(char * database, int tripid) {
 			}
 		}
 	}
+
+	// End SQL transaction
+	sqlite3_exec(handle, "END TRANSACTION", 0, 0, 0);
 
 	// Destroy the evidence!
 	sqlite3_close(handle);
