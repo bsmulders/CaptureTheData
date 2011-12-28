@@ -55,8 +55,7 @@ int log_gps(char * device, char * database, int tripid) {
 		double timestamp = current_time_with_ms();
 		sprintf(
 				query,
-				"INSERT INTO GpsData ( 'Trip_ID', 'TimeStamp', 'RawData' ) VALUES ( %d, %f, '%s')",
-				tripid, timestamp, line);
+				"INSERT INTO GpsData ( 'Trip_ID', 'TimeStamp', 'RawData' ) VALUES ( %d, %f, '%s')", tripid, timestamp, line);
 		do {
 			retval = sqlite3_exec(handle, query, 0, 0, 0);
 		} while (retval == SQLITE_BUSY);
@@ -96,8 +95,11 @@ int parse_gps(char * database, int tripid) {
 	nmea_zero_INFO(&info);
 	nmea_parser_init(&parser);
 
+	// Begin SQL transaction
+	sqlite3_exec(handle, "BEGIN TRANSACTION", 0, 0, 0);
+
+	// Step through SELECT query
 	while (1) {
-		// Step through SQL data
 		retval = sqlite3_step(stmt);
 
 		if (retval == SQLITE_ROW) {
@@ -122,10 +124,7 @@ int parse_gps(char * database, int tripid) {
 			char query[200];
 			sprintf(
 					query,
-					"UPDATE GpsData SET UTC = %f, Fix = %d, Latitude = %f, Longitude = %f, Speed = %f, Direction = %f, Declination = %f WHERE Gps_ID = %d",
-					(float) mktime(&converttime), info.fix,
-					nmea_ndeg2degree(info.lat), nmea_ndeg2degree(info.lon),
-					info.speed, info.direction, info.declination, gpsid);
+					"UPDATE GpsData SET UTC = %f, Fix = %d, Latitude = %f, Longitude = %f, Speed = %f, Direction = %f, Declination = %f WHERE Gps_ID = %d", (float) mktime(&converttime), info.fix, nmea_ndeg2degree(info.lat), nmea_ndeg2degree(info.lon), info.speed, info.direction, info.declination, gpsid);
 			retval = sqlite3_exec(handle, query, 0, 0, 0);
 			if (retval) {
 				printf("GPS Parsing: Updating data in DB Failed: %d\n", retval);
@@ -138,6 +137,9 @@ int parse_gps(char * database, int tripid) {
 			return -1;
 		}
 	}
+
+	// End SQL transaction
+	sqlite3_exec(handle, "END TRANSACTION", 0, 0, 0);
 
 	// Remove unnecesary data
 	char removequery[100];
@@ -183,8 +185,7 @@ int generate_gps_report(char * database, int tripid) {
 	char selectquery[70];
 	sprintf(
 			selectquery,
-			"SELECT MIN(Timestamp), MAX(Timestamp) FROM GpsData WHERE Trip_ID = %d",
-			tripid);
+			"SELECT MIN(Timestamp), MAX(Timestamp) FROM GpsData WHERE Trip_ID = %d", tripid);
 	retval = sqlite3_prepare_v2(handle, selectquery, -1, &stmt, 0);
 	if (retval) {
 		printf("GPS Report: Selecting trip from DB Failed: %d\n", retval);
@@ -207,11 +208,11 @@ int generate_gps_report(char * database, int tripid) {
 			sprintf(
 					insertquery,
 					"INSERT INTO GpsReport ( 'Trip_ID', 'TimeStamp', 'TimeStampSub', 'UTC', 'Fix', 'Latitude', 'Longitude', 'Speed', 'Direction', 'Declination' )"
-							" SELECT Trip_ID, %1$d, %2$d, UTC, Fix, Latitude, Longitude, Speed, Direction, Declination"
-							" FROM GpsData"
-							" WHERE Trip_ID = %3$d AND TimeStamp < %1$d+10 AND TimeStamp > %1$d-10"
-							" ORDER BY ABS(TimeStamp - %1$d.%3$d) ASC"
-							" LIMIT 1", second, subsecond, tripid);
+					" SELECT Trip_ID, %1$d, %2$d, UTC, Fix, Latitude, Longitude, Speed, Direction, Declination"
+					" FROM GpsData"
+					" WHERE Trip_ID = %3$d AND TimeStamp < %1$d+10 AND TimeStamp > %1$d-10"
+					" ORDER BY ABS(TimeStamp - %1$d.%3$d) ASC"
+					" LIMIT 1", second, subsecond, tripid);
 			retval = sqlite3_exec(handle, insertquery, 0, 0, 0);
 			if (retval) {
 				printf("GPS Report: Inserting data in DB Failed: %d\n", retval);

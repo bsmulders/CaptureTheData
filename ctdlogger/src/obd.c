@@ -108,8 +108,11 @@ int parse_obd(char * database, int tripid) {
 		return -1;
 	}
 
+	// Begin SQL transaction
+	sqlite3_exec(handle, "BEGIN TRANSACTION", 0, 0, 0);
+
+	// Step through SELECT query
 	while (1) {
-		// Step through SQL data
 		retval = sqlite3_step(stmt);
 
 		if (retval == SQLITE_ROW) {
@@ -165,6 +168,9 @@ int parse_obd(char * database, int tripid) {
 			return -1;
 		}
 	}
+
+	// End SQL transaction
+	sqlite3_exec(handle, "END TRANSACTION", 0, 0, 0);
 
 	// Destroy the evidence!
 	sqlite3_close(handle);
