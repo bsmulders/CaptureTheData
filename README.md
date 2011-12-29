@@ -36,7 +36,7 @@ Planned devices for the future:
    * Three-axis G-sensor
    * Roll, pitch, yaw
 
-![Demonstration of capable devices](devices.jpg)
+![Demonstration of capable devices](/CaptureTheData/raw/master/devices.jpg/devices.jpg)
 
 *From left to right: GPS receiver, Cellphone, OBD-II device, Wiimote*
 
