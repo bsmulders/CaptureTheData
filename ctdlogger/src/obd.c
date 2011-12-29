@@ -188,6 +188,8 @@ int generate_obd_report(char * database, int tripid) {
 		printf("OBD Report: Database connection failed: %d\n", retval);
 		return -1;
 	}
+	sqlite3_exec(handle, "PRAGMA synchronous = NORMAL", 0, 0, 0);
+	sqlite3_exec(handle, "PRAGMA journal_mode = MEMORY", 0, 0, 0);
 
 	// Remove old reports
 	char removequery[100];
