@@ -33,7 +33,13 @@ Currently supported devices and features:
 Planned devices for the future:
 
 * Nintendo Wiimote
-   * Three-axis accelerometer
+   * Three-axis G-sensor
+   * Roll, pitch, yaw
+
+![Demonstration of capable devices](devices.jpg)
+
+*From left to right: GPS receiver, Cellphone, OBD-II device, Wiimote*
+
 
 ## Project components
 ### ctdlogger
@@ -105,8 +111,6 @@ In a normal application flow you would:
 5. Generate trip reports with all logging values for every 1/10th of a second in this trip
 
 Shell scripts to automate this process are available in the ctdhardware component.
-
-Please note that generating the reports can take a while. Generating reports for 30 minutes of recorded data can take up to a few minutes.
 
 ### ctdservice
 
