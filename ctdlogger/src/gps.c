@@ -76,6 +76,8 @@ int parse_gps(char * database, int tripid) {
 		printf("GPS Parsing: Database connection failed: %d\n", retval);
 		return -1;
 	}
+	sqlite3_exec(handle, "PRAGMA synchronous = NORMAL", 0, 0, 0);
+	sqlite3_exec(handle, "PRAGMA journal_mode = MEMORY", 0, 0, 0);
 
 	// Select data from database
 	char selectquery[100];
