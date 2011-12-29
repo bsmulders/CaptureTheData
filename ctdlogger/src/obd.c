@@ -233,15 +233,15 @@ int generate_obd_report(char * database, int tripid) {
 					"INSERT INTO ObdReport ( 'Trip_ID', 'TimeStamp', 'TimeStampSub', 'CalculatedEngineLoad', 'EngineCoolantTemperature', 'EngineRPM', 'VehicleSpeed', 'ThrottlePosition' )"
 							" SELECT %3$d, %1$d, %2$d, "
 							" (SELECT Value FROM ObdData"
-							" WHERE Trip_ID = %3$d AND PID = %4$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 5 ORDER BY TimeStamp DESC LIMIT 1),"
+							" WHERE Trip_ID = %3$d AND PID = %4$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 10 ORDER BY TimeStamp DESC LIMIT 1),"
 							" (SELECT Value FROM ObdData"
-							" WHERE Trip_ID = %3$d AND PID = %5$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 5 ORDER BY TimeStamp DESC LIMIT 1),"
+							" WHERE Trip_ID = %3$d AND PID = %5$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 10 ORDER BY TimeStamp DESC LIMIT 1),"
 							" (SELECT Value FROM ObdData"
-							" WHERE Trip_ID = %3$d AND PID = %6$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 5 ORDER BY TimeStamp DESC LIMIT 1),"
+							" WHERE Trip_ID = %3$d AND PID = %6$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 10 ORDER BY TimeStamp DESC LIMIT 1),"
 							" (SELECT Value FROM ObdData"
-							" WHERE Trip_ID = %3$d AND PID = %7$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 5 ORDER BY TimeStamp DESC LIMIT 1),"
+							" WHERE Trip_ID = %3$d AND PID = %7$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 10 ORDER BY TimeStamp DESC LIMIT 1),"
 							" (SELECT Value FROM ObdData"
-							" WHERE Trip_ID = %3$d AND PID = %8$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 5 ORDER BY TimeStamp DESC LIMIT 1)"
+							" WHERE Trip_ID = %3$d AND PID = %8$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 10 ORDER BY TimeStamp DESC LIMIT 1)"
 							, second, subsecond, tripid,
 					OBD_CALCULATED_ENGINE_LOAD, OBD_ENGINE_COOLANT_TEMPERATURE,
 					OBD_ENGINE_RPM, OBD_VEHICLE_SPEED, OBD_THROTTLE_POSITION);
