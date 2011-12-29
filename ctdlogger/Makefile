@@ -6,8 +6,8 @@ SQLDIR = database
 BLDDIR = build
 
 # Link command:
-$(BLDDIR)ctd : $(OBJDIR)/common.o $(OBJDIR)/ctd.o $(OBJDIR)/gps.o $(OBJDIR)/gsm.o $(OBJDIR)/obd.o $(OBJDIR)/trip.o
-	gcc -l sqlite3 $(OBJDIR)/common.o $(OBJDIR)/ctd.o $(OBJDIR)/gps.o $(OBJDIR)/gsm.o $(OBJDIR)/obd.o $(OBJDIR)/trip.o $(LIBDIR)/nmealib/lib/libnmea.a -o $(BLDDIR)/ctd
+$(BLDDIR)ctd : $(OBJDIR)/common.o $(OBJDIR)/ctd.o $(OBJDIR)/gps.o $(OBJDIR)/gsm.o $(OBJDIR)/obd.o $(OBJDIR)/trip.o $(OBJDIR)/wii.o
+	gcc -l sqlite3 $(OBJDIR)/common.o $(OBJDIR)/ctd.o $(OBJDIR)/gps.o $(OBJDIR)/gsm.o $(OBJDIR)/obd.o $(OBJDIR)/trip.o $(OBJDIR)/wii.o $(LIBDIR)/nmealib/lib/libnmea.a $(LIBDIR)/wiiuse/build/src/libwiiuse.dylib -o $(BLDDIR)/ctd
 
 # Compilation commands:
 $(OBJDIR)/common.o : $(SRCDIR)/common.c $(INCDIR)/common.h
@@ -25,11 +25,17 @@ $(OBJDIR)/gsm.o : $(SRCDIR)/gsm.c $(INCDIR)/gsm.h $(INCDIR)/common.h
 $(OBJDIR)/obd.o : $(SRCDIR)/obd.c $(INCDIR)/obd.h
 	gcc -I $(INCDIR) -std=c99 -c $(SRCDIR)/obd.c -o $(OBJDIR)/obd.o
 
+$(OBJDIR)/wii.o : $(SRCDIR)/wii.c $(INCDIR)/wii.h $(LIBDIR)/wiiuse/build/src/libwiiuse.dylib
+	gcc -I $(INCDIR) -I $(LIBDIR)/wiiuse/src -std=c99 -c $(SRCDIR)/wii.c -o $(OBJDIR)/wii.o
+
 $(OBJDIR)/trip.o : $(SRCDIR)/trip.c $(INCDIR)/trip.h $(INCDIR)/gsm.h $(INCDIR)/gps.h
 	gcc -I $(INCDIR) -c $(SRCDIR)/trip.c -o $(OBJDIR)/trip.o
 
 $(LIBDIR)/nmealib/lib/libnmea.a : $(LIBDIR)/nmealib/include/nmea/nmea.h
-	@cd $(LIBDIR)/nmealib ; make
+	@cd $(LIBDIR)/nmealib ; make ; cd ..
+
+$(LIBDIR)/wiiuse/build/src/libwiiuse.dylib : $(LIBDIR)/wiiuse/src/wiiuse.h
+	@cd $(LIBDIR)/wiiuse ; mkdir build ; cd build ; cmake .. ; make wiiuse ; cd .. ; cd ..
 
 # Make commands
 clean: 

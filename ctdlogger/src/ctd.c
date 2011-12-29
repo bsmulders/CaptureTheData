@@ -15,6 +15,7 @@
 #include "gps.h"
 #include "gsm.h"
 #include "obd.h"
+#include "wii.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -24,7 +25,7 @@
 int main(int argc, char** args) {
 	if (args[1] == NULL) {
 		printf(
-				"No arguments given. Use: [create] database; [log] [gps | gsm | obd] device database tripid; [parse] database tripid; [report] database tripid\n");
+				"No arguments given. Use: [create] database; [log] [gps | gsm | obd | wii] device database tripid; [parse] database tripid; [report] database tripid\n");
 		return -1;
 	} else if (strcmp(args[1], "create") == 0) {
 		if (args[2] == NULL) {
@@ -59,6 +60,8 @@ int main(int argc, char** args) {
 			return log_gps(args[3], args[4], atoi(args[5]));
 		else if (strcmp(args[2], "obd") == 0)
 			return log_obd(args[3], args[4], atoi(args[5]));
+		else if (strcmp(args[2], "wii") == 0)
+			return log_wii(args[3], args[4], atoi(args[5]));
 	} else if (strcmp(args[1], "parse") == 0) {
 		if (args[2] == NULL) {
 			printf("Please enter a database\n");
@@ -71,6 +74,7 @@ int main(int argc, char** args) {
 		if (parse_gps(args[2], atoi(args[3])) < 0
 				|| parse_gsm(args[2], atoi(args[3])) < 0
 				|| parse_obd(args[2], atoi(args[3])) < 0
+				|| parse_wii(args[2], atoi(args[3])) < 0
 				|| parse_trip(args[2], atoi(args[3])) < 0)
 			return -1;
 
@@ -86,13 +90,14 @@ int main(int argc, char** args) {
 
 		if (generate_gps_report(args[2], atoi(args[3])) < 0
 				|| generate_gsm_report(args[2], atoi(args[3])) < 0
-				|| generate_obd_report(args[2], atoi(args[3])) < 0)
+				|| generate_obd_report(args[2], atoi(args[3])) < 0
+				|| generate_wii_report(args[2], atoi(args[3])) < 0)
 			return -1;
 
 		return 0;
 	} else {
 		printf(
-				"Wrong arguments given. Use: [create] database; [log] [gps | gsm | obd] device database tripid; [parse] database tripid; [report] database tripid\n");
+				"Wrong arguments given. Use: [create] database; [log] [gps | gsm | obd | wii] device database tripid; [parse] database tripid; [report] database tripid\n");
 		return -1;
 	}
 }
