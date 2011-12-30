@@ -29,12 +29,17 @@ Currently supported devices and features:
    * Engine load
    * Coolant temperature
    * Throttle position
-
-Planned devices for the future:
-
 * Nintendo Wiimote
    * Three-axis G-sensor
    * Roll, pitch, yaw
+
+Planned features for the future:
+
+* Bluetooth/Serial OBD-II device
+   * Current gear
+   * Fuel usage (MPG)
+* Nintendo Wiimote
+   * Speed
 
 ![Demonstration of capable devices](CaptureTheData/raw/master/devices.jpg)
 
@@ -86,7 +91,7 @@ Commands to operate the application:
 	</tr>
 	<tr>
 		<td>Start logging</td>
-		<td>./ctd [log] [gps | gsm | obd] device database tripid</td>
+		<td>./ctd [log] [gps | gsm | obd | wii] device database tripid</td>
 		<td>./ctd log gsm /dev/tty.GPS ctd.sqlite 1</td>
 	</tr>
 	<tr>
