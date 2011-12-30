@@ -26,7 +26,7 @@ $(OBJDIR)/obd.o : $(SRCDIR)/obd.c $(INCDIR)/obd.h
 	gcc -I $(INCDIR) -std=c99 -c $(SRCDIR)/obd.c -o $(OBJDIR)/obd.o
 
 $(OBJDIR)/wii.o : $(SRCDIR)/wii.c $(INCDIR)/wii.h $(LIBDIR)/wiiuse/build/src/libwiiuse.dylib
-	gcc -I $(INCDIR) -I $(LIBDIR)/wiiuse/src -std=c99 -c $(SRCDIR)/wii.c -o $(OBJDIR)/wii.o
+	gcc -I $(INCDIR) -I $(LIBDIR)/wiiuse/src -c $(SRCDIR)/wii.c -o $(OBJDIR)/wii.o
 
 $(OBJDIR)/trip.o : $(SRCDIR)/trip.c $(INCDIR)/trip.h $(INCDIR)/gsm.h $(INCDIR)/gps.h
 	gcc -I $(INCDIR) -c $(SRCDIR)/trip.c -o $(OBJDIR)/trip.o
