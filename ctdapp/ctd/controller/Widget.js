@@ -119,7 +119,6 @@ Ext
 					},
 
 					onWiiTestWindowClick : function(button, event) {
-						console.log('Clicketyclick!');
 						Ext.create('CTD.view.WiiTestWindow').show();
 					},
 
