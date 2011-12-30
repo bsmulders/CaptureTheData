@@ -130,7 +130,7 @@ int generate_wii_report(char * database, int tripid) {
 	// Create 10 subrecords for each second between the starttime and endtime
 	char insertquery[450];
 	int second, subsecond;
-	for (second = starttime; second < endtime; second++) {
+	for (second = starttime; second <= endtime; second++) {
 		for (subsecond = 0; subsecond < 10; subsecond++) {
 			// Insert closest measurement in database
 			sprintf(

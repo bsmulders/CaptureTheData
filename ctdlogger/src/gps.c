@@ -209,7 +209,7 @@ int generate_gps_report(char * database, int tripid) {
 
 	// Create 10 subrecords for each second between the starttime and endtime
 	char insertquery[450];
-	for (int second = starttime; second < endtime; second++) {
+	for (int second = starttime; second <= endtime; second++) {
 		for (int subsecond = 0; subsecond < 10; subsecond++) {
 			// Insert closest measurement in database
 			sprintf(
