@@ -34,8 +34,19 @@ var measurementInfoTpl = ''
 		+ '		<dt>Engine RPM:</dt><dd>{OBD.EngineRPM} RPM</dd>'
 		+ '		<dt>Throttle Position:</dt><dd>{OBD.ThrottlePosition} %</dd>'
 		+ '		<dt>Calculated Engine Load:</dt><dd>{OBD.CalculatedEngineLoad}%</dd>'
-		+ '		<dt>Engine Coolant Temperature:</dt><dd>{OBD.EngineCoolantTemperature} &#176;</dd>'
-		+ '		</dl>' + '	</div>' + '</tpl>';
+		+ '		<dt>Engine Coolant Temperature:</dt><dd>{OBD.EngineCoolantTemperature} &#176;</dd>'		
+		+ '		</dl>'
+		+ '		<p>Wii<p>'
+		+ '		<dl>'
+		+ '		<dt>G-force X:</dt><dd>{Wii.GforceX} g</dd>'
+		+ '		<dt>G-force Y:</dt><dd>{Wii.GforceY} g</dd>'
+		+ '		<dt>G-force Z:</dt><dd>{Wii.GforceZ} g</dd>'
+		+ '		<dt>Roll:</dt><dd>{Wii.Roll} &deg;</dd>'
+		+ '		<dt>Pitch:</dt><dd>{Wii.Pitch} &deg;</dd>'
+		+ '		<dt>Yaw:</dt><dd>{Wii.Yaw} &deg;</dd>'
+		+ '		<dt>Speed:</dt><dd>{Wii.Speed} km/h</dd>'
+		+ '		</dl>'
+		+ '	</div>' + '</tpl>';
 
 Ext.define('CTD.view.MeasurementInfoWindow', {
 	extend : 'CTD.view.WidgetWindow',
@@ -44,7 +55,7 @@ Ext.define('CTD.view.MeasurementInfoWindow', {
 	resizable : false,
 	layout : 'fit',
 	title : 'Measurement info',
-	height : '260',
+	height : '370',
 	items : [ {
 		xtype : 'dataview',
 		store : 'Measurements',
