@@ -33,9 +33,9 @@ Ext.define('CTD.view.ObdEngineCoolantTemperatureWindow', {
 		axes : [ {
 			type : 'gauge',
 			position : 'gauge',
-			minimum : 0,
+			minimum : -40,
 			maximum : 215,
-			steps : 10,
+			steps : 6,
 			margin : -7,
 			title : '&#8451;',
 		} ],
