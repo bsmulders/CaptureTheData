@@ -45,10 +45,10 @@ Ext.application({
 			rpm.show();
 
 			tc.setPosition(10, 10, { duration: duration });
-			info.setPosition(10, 100, { duration: duration });
+			info.setPosition(705, 10, { duration: duration });
 			gmaps.setPosition(250, 10, { duration: duration });
-			speed.setPosition(705, 10, { duration: duration });
-			rpm.setPosition(705, 155, { duration: duration });
+			speed.setPosition(10, 100, { duration: duration });
+			rpm.setPosition(10, 245, { duration: duration });
 		}		
 	}
 });

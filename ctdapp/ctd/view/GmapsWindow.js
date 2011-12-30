@@ -15,7 +15,7 @@ Ext.define('CTD.view.GmapsWindow', {
 	extend : 'CTD.view.WidgetWindow',
 	alias : 'widget.gmapswindow',
 	width : 450,
-	height : 350,
+	height : 370,
 	layout : 'fit',
 	title : 'Google Maps',
 	maximizable : true,
