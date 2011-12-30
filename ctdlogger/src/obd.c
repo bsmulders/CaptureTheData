@@ -224,6 +224,11 @@ int generate_obd_report(char * database, int tripid) {
 	endtime = (int) sqlite3_column_double(stmt, 1);
 	sqlite3_step(stmt);
 
+	if (starttime == 0 || endtime == 0) {
+		sqlite3_close(handle);
+		return 0;
+	}
+
 	// Begin SQL transaction
 	sqlite3_exec(handle, "BEGIN TRANSACTION", 0, 0, 0);
 
