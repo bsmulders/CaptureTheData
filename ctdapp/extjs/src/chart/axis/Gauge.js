@@ -169,6 +169,7 @@ Ext.define('Ext.chart.axis.Gauge', {
             rho = Math.min(bbox.width, 2 * bbox.height) /2 + 2 * margin,
             round = Math.round,
             labelArray = [], label,
+			minValue = this.minimum || 0,
             maxValue = this.maximum || 0,
             steps = this.steps, i = 0,
             adjY,
@@ -206,7 +207,7 @@ Ext.define('Ext.chart.axis.Gauge', {
                 // TODO Adjust for height of text / 2 instead
                 adjY = (i === 0 || i === steps) ? 7 : 0;
                 labelArray[i].setAttributes({
-                    text: renderer(round(i / steps * maxValue)),
+					text: renderer(round((minValue)+(i *((-maxValue+minValue)/-steps)))),
                     x: centerX + rho * cos(i / steps * pi - pi),
                     y: centerY + rho * sin(i / steps * pi - pi) - adjY
                 }, true);
