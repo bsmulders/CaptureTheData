@@ -168,7 +168,7 @@ class CTD {
 		
 		if ($result) {
 			$result['URI'] = sprintf("http://%s/ctdservice/trips/%d", $this->host, $tripid);
-			$result['FirstMeasurement'] = sprintf("http://%s/ctdservice/trips/%d/measurement/%d/0", $this->host, $tripid, ceil($result['StartTime']));
+			$result['FirstMeasurement'] = sprintf("http://%s/ctdservice/trips/%d/measurement/%d/%d", $this->host, $tripid, $result['FirstReport'], $result['FirstReportSub']);
 	
 			foreach($this->sensors as $sensor) {
 				$result['Sensor'][]  = $sensor->getSensorName();

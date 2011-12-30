@@ -75,7 +75,7 @@ int main(int argc, char** args) {
 				|| parse_gsm(args[2], atoi(args[3])) < 0
 				|| parse_obd(args[2], atoi(args[3])) < 0
 				|| parse_wii(args[2], atoi(args[3])) < 0
-				|| parse_trip(args[2], atoi(args[3])) < 0)
+				|| update_trip_data(args[2], atoi(args[3])) < 0)
 			return -1;
 
 		return 0;
@@ -91,7 +91,8 @@ int main(int argc, char** args) {
 		if (generate_gps_report(args[2], atoi(args[3])) < 0
 				|| generate_gsm_report(args[2], atoi(args[3])) < 0
 				|| generate_obd_report(args[2], atoi(args[3])) < 0
-				|| generate_wii_report(args[2], atoi(args[3])) < 0)
+				|| generate_wii_report(args[2], atoi(args[3])) < 0
+				|| update_trip_report(args[2], atoi(args[3])) < 0)
 			return -1;
 
 		return 0;

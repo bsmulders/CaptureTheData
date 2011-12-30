@@ -11,8 +11,11 @@ This file may be used under the terms of the GNU General Public License version 
 
  */
 
-Ext.define('CTD.model.Trip', {
-	extend : 'Ext.data.Model',
-	fields : [ 'Trip_ID', 'Name', 'StartTime', 'EndTime',
-			'CalculatedKilometers', 'CalculatedFuel', 'URI', 'Sensors' ],
-});
+Ext.define('CTD.model.Trip',
+		{
+			extend : 'Ext.data.Model',
+			fields : [ 'Trip_ID', 'Name', 'FirstData', 'LastData',
+					'CalculatedKilometers', 'CalculatedFuel', 'FirstReport',
+					'FirstReportSub', 'LastReport', 'LastReportSub', 'URI',
+					'Sensors' ],
+		});

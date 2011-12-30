@@ -30,14 +30,14 @@ Ext.define('CTD.view.TripList', {
 		width : 215,
 	}, {
 		header : 'Start time',
-		dataIndex : 'StartTime',
+		dataIndex : 'FirstReport',
 		renderer : function(date) {
 			return new Date(date * 1000).toLocaleString();
 		},
 		width : 210,
 	}, {
 		header : 'End time',
-		dataIndex : 'EndTime',
+		dataIndex : 'LastReport',
 		renderer : function(date) {
 			return new Date(date * 1000).toLocaleString();
 		},

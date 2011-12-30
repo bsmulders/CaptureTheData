@@ -43,9 +43,12 @@ Ext.define('CTD.controller.Trip', {
 		var tripRecord = this.getTripsStore().first();
 
 		if (tripRecord.data) {
-			timeRecord.set('StartTime', Math.ceil(tripRecord.get('StartTime')));
-			timeRecord.set('EndTime', Math.floor(tripRecord.get('EndTime')));
-			timeRecord.set('TimeStamp', Math.ceil(tripRecord.get('StartTime')));
+			timeRecord.set('StartTime', tripRecord.get('FirstReport')
+					+ (0.1 * tripRecord.get('FirstReportSub')));
+			timeRecord.set('EndTime', tripRecord.get('LastReport')
+					+ (0.1 * tripRecord.get('LastReportSub')));
+			timeRecord.set('TimeStamp', tripRecord.get('FirstReport'));
+			timeRecord.set('TimeStampSub', tripRecord.get('FirstReportSub'));
 			timeRecord.set('Running', true);
 			timeRecord.set('Speed', false);
 		}
@@ -55,23 +58,29 @@ Ext.define('CTD.controller.Trip', {
 		var timeRecord = this.getTimeControlStore().first();
 		var tripRecord = this.getTripsStore().first();
 
+		// When the TimeRecord is running and trip data is loaded
 		if (timeRecord.get('Running') == true && tripRecord.data) {
+			// Load measurement
+			this.getMeasurementsStore().getProxy().url = tripRecord.get('URI')
+					+ "/measurement/" + timeRecord.get('TimeStamp') + "/"
+					+ timeRecord.get('TimeStampSub');
+			this.getMeasurementsStore().load();
+
+			// Increment internal measurement timestamp
 			if (timeRecord.get('TimeStampSub') >= 9) {
 				timeRecord.set('TimeStamp', timeRecord.get('TimeStamp') + 1);
 				timeRecord.set('TimeStampSub', 0);
-
-				if (timeRecord.get('TimeStamp') >= tripRecord.get('EndTime')) {
-					timeRecord.set('Running', false);
-				}
 			} else {
 				timeRecord.set('TimeStampSub', timeRecord.get('TimeStampSub')
 						+ (timeRecord.get('Speed') ? 9 : 1));
 			}
 
-			this.getMeasurementsStore().getProxy().url = tripRecord.get('URI')
-					+ "/measurement/" + timeRecord.get('TimeStamp') + "/"
-					+ timeRecord.get('TimeStampSub');
-			this.getMeasurementsStore().load();
+			// Stop playing when the last measurement is reached
+			if (timeRecord.get('TimeStamp') >= tripRecord.get('LastReport')
+					&& timeRecord.get('TimeStampSub') >= tripRecord
+							.get('LastReportSub')) {
+				timeRecord.set('Running', false);
+			}
 		}
 	},
 });

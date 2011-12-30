@@ -60,14 +60,14 @@ int create_trip(char * database) {
 	return tripid;
 }
 
-int parse_trip(char * database, int tripid) {
+int update_trip_data(char * database, int tripid) {
 	int retval;
 	sqlite3 *handle;
 
 	// Open database connection
 	retval = sqlite3_open(database, &handle);
 	if (retval) {
-		printf("Parse trip: Database connection failed: %d\n", retval);
+		printf("Update trip data: Database connection failed: %d\n", retval);
 		return -1;
 	}
 
@@ -76,25 +76,87 @@ int parse_trip(char * database, int tripid) {
 	sprintf(
 			query,
 			"UPDATE Trip SET"
-					" StartTime = (SELECT MIN(TimeStamp) FROM ("
-					" SELECT Timestamp FROM GpsData WHERE GpsData.Trip_ID = Trip.Trip_ID"
-					" UNION SELECT Timestamp FROM GsmData WHERE GsmData.Trip_ID = Trip.Trip_ID"
-					" UNION SELECT Timestamp FROM ObdData WHERE ObdData.Trip_ID = Trip.Trip_ID"
-					" UNION SELECT Timestamp FROM WiiData WHERE WiiData.Trip_ID = Trip.Trip_ID"
-					" )),"
-					" EndTime = (SELECT MAX(TimeStamp) FROM ("
-					" SELECT Timestamp FROM GpsData WHERE GpsData.Trip_ID = Trip.Trip_ID"
-					" UNION SELECT Timestamp FROM GsmData WHERE GsmData.Trip_ID = Trip.Trip_ID"
-					" UNION SELECT Timestamp FROM ObdData WHERE ObdData.Trip_ID = Trip.Trip_ID"
-					" UNION SELECT Timestamp FROM WiiData WHERE WiiData.Trip_ID = Trip.Trip_ID"
-					" )),"
-					" CalculatedKilometers = (SELECT SUM(((Speed*1000)/60)/60)/1000 FROM GpsData"
-					" WHERE GpsData.Trip_ID = Trip.Trip_ID)"
-					" WHERE Trip_ID = %d", tripid);
+			" FirstData = (SELECT MIN(TimeStamp) FROM ("
+			" SELECT Timestamp FROM GpsData WHERE GpsData.Trip_ID = Trip.Trip_ID"
+			" UNION SELECT Timestamp FROM GsmData WHERE GsmData.Trip_ID = Trip.Trip_ID"
+			" UNION SELECT Timestamp FROM ObdData WHERE ObdData.Trip_ID = Trip.Trip_ID"
+			" UNION SELECT Timestamp FROM WiiData WHERE WiiData.Trip_ID = Trip.Trip_ID"
+			" )),"
+			" LastData = (SELECT MAX(TimeStamp) FROM ("
+			" SELECT Timestamp FROM GpsData WHERE GpsData.Trip_ID = Trip.Trip_ID"
+			" UNION SELECT Timestamp FROM GsmData WHERE GsmData.Trip_ID = Trip.Trip_ID"
+			" UNION SELECT Timestamp FROM ObdData WHERE ObdData.Trip_ID = Trip.Trip_ID"
+			" UNION SELECT Timestamp FROM WiiData WHERE WiiData.Trip_ID = Trip.Trip_ID"
+			" )),"
+			" CalculatedKilometers = (SELECT SUM(((Speed*1000)/60)/60)/1000 FROM GpsData"
+			" WHERE GpsData.Trip_ID = Trip.Trip_ID)"
+			" WHERE Trip_ID = %d", tripid);
 
 	retval = sqlite3_exec(handle, query, 0, 0, 0);
 	if (retval) {
-		printf("Parse trip: Updating trips in DB Failed: %d\n", retval);
+		printf("Update trip data: Updating trips in DB Failed: %d\n", retval);
+		printf("Query: %s\n", query);
+		return -1;
+	}
+
+	// Destroy the evidence!
+	sqlite3_close(handle);
+	return 0;
+}
+
+int update_trip_report(char * database, int tripid) {
+	int retval;
+	sqlite3 *handle;
+
+	// Open database connection
+	retval = sqlite3_open(database, &handle);
+	if (retval) {
+		printf("Update trip report: Database connection failed: %d\n", retval);
+		return -1;
+	}
+
+	// Update trip columns
+	char query[2000];
+	sprintf(
+			query,
+			" UPDATE Trip SET "
+			" FirstReport = ( "
+			" 	SELECT TimeStamp FROM ( "
+			" 		SELECT TimeStamp, TimeStampSub FROM GpsReport WHERE GpsReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM GsmReport WHERE GsmReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM ObdReport WHERE ObdReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM WiiReport WHERE WiiReport.Trip_ID = Trip.Trip_ID "
+			" 	) ORDER BY TimeStamp ASC, TimeStampSub ASC LIMIT 1 "
+			" ), "
+			" FirstReportSub = ( "
+			" 	SELECT TimeStampSub FROM ( "
+			" 		SELECT TimeStamp, TimeStampSub FROM GpsReport WHERE GpsReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM GsmReport WHERE GsmReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM ObdReport WHERE ObdReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM WiiReport WHERE WiiReport.Trip_ID = Trip.Trip_ID "
+			" 	) ORDER BY TimeStamp ASC, TimeStampSub ASC LIMIT 1 "
+			" ), "
+			" LastReport = ( "
+			" 	SELECT TimeStamp FROM ( "
+			" 		SELECT TimeStamp, TimeStampSub FROM GpsReport WHERE GpsReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM GsmReport WHERE GsmReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM ObdReport WHERE ObdReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM WiiReport WHERE WiiReport.Trip_ID = Trip.Trip_ID "
+			" 	) ORDER BY TimeStamp DESC, TimeStampSub DESC LIMIT 1 "
+			" ), "
+			" LastReportSub = ( "
+			" 	SELECT TimeStampSub FROM ( "
+			" 		SELECT TimeStamp, TimeStampSub FROM GpsReport WHERE GpsReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM GsmReport WHERE GsmReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM ObdReport WHERE ObdReport.Trip_ID = Trip.Trip_ID UNION "
+			" 		SELECT TimeStamp, TimeStampSub FROM WiiReport WHERE WiiReport.Trip_ID = Trip.Trip_ID "
+			" 	) ORDER BY TimeStamp DESC, TimeStampSub DESC LIMIT 1 "
+			" ) "
+			" WHERE Trip_ID = %d", tripid);
+
+	retval = sqlite3_exec(handle, query, 0, 0, 0);
+	if (retval) {
+		printf("Update trip report: Updating trips in DB Failed: %d\n", retval);
 		printf("Query: %s\n", query);
 		return -1;
 	}
