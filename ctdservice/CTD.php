@@ -186,20 +186,22 @@ class CTD {
 
 	private function handleMeasurementGetRequest($tripid, $timestamp, $timestampsub) {
 		$results = array();
+		$empty = true;
 
 		foreach($this->sensors as $sensor) {
 			$sql = sprintf("SELECT * FROM %s WHERE Trip_ID = %s AND TimeStamp = %s AND TimeStampSub = %s", $sensor->getTableName(), $this->db->quote($tripid), $this->db->quote($timestamp), $this->db->quote($timestampsub));
 			$result = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
-			
+			$results[$sensor->getSensorName()] = $result;
+				
 			if ($result) {
-				$results[$sensor->getSensorName()] = $result;
+				$empty = false;
 				unset($results[$sensor->getSensorName()]['Trip_ID']);
 				unset($results[$sensor->getSensorName()]['TimeStamp']);
 				unset($results[$sensor->getSensorName()]['TimeStampSub']);
 			}
 		}
 
-		if (sizeof($results) > 0) {
+		if (!$empty) {
 			$this->returnHeaders[] = "HTTP/1.0 200 OK";
 			$this->rootElement = "report";
 			$this->outputData = $results;
