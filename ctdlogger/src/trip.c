@@ -72,13 +72,24 @@ int parse_trip(char * database, int tripid) {
 	}
 
 	// Update trip columns
-	char query[500];
+	char query[850];
 	sprintf(
 			query,
-			"UPDATE Trip"
-					" SET StartTime = (SELECT Min(Timestamp) FROM GpsData WHERE GpsData.Trip_ID = Trip.Trip_ID GROUP BY Trip_ID),"
-					" EndTime = (SELECT Max(Timestamp) FROM GpsData WHERE GpsData.Trip_ID = Trip.Trip_ID GROUP BY Trip_ID),"
-					" CalculatedKilometers = (SELECT SUM(((Speed*1000)/60)/60)/1000 FROM GpsData WHERE GpsData.Trip_ID = Trip.Trip_ID GROUP BY Trip_ID)"
+			"UPDATE Trip SET"
+					" StartTime = (SELECT MIN(TimeStamp) FROM ("
+					" SELECT Timestamp FROM GpsData WHERE GpsData.Trip_ID = Trip.Trip_ID"
+					" UNION SELECT Timestamp FROM GsmData WHERE GsmData.Trip_ID = Trip.Trip_ID"
+					" UNION SELECT Timestamp FROM ObdData WHERE ObdData.Trip_ID = Trip.Trip_ID"
+					" UNION SELECT Timestamp FROM WiiData WHERE WiiData.Trip_ID = Trip.Trip_ID"
+					" )),"
+					" EndTime = (SELECT MAX(TimeStamp) FROM ("
+					" SELECT Timestamp FROM GpsData WHERE GpsData.Trip_ID = Trip.Trip_ID"
+					" UNION SELECT Timestamp FROM GsmData WHERE GsmData.Trip_ID = Trip.Trip_ID"
+					" UNION SELECT Timestamp FROM ObdData WHERE ObdData.Trip_ID = Trip.Trip_ID"
+					" UNION SELECT Timestamp FROM WiiData WHERE WiiData.Trip_ID = Trip.Trip_ID"
+					" )),"
+					" CalculatedKilometers = (SELECT SUM(((Speed*1000)/60)/60)/1000 FROM GpsData"
+					" WHERE GpsData.Trip_ID = Trip.Trip_ID)"
 					" WHERE Trip_ID = %d", tripid);
 
 	retval = sqlite3_exec(handle, query, 0, 0, 0);
