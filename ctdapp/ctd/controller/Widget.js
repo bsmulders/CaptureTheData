@@ -26,7 +26,8 @@ Ext
 							'CTD.view.ObdCalculatedEngineLoadWindow',
 							'CTD.view.ObdEngineRPMWindow',
 							'CTD.view.ObdVehicleSpeedWindow',
-							'CTD.view.ObdThrottlePositionWindow' ],
+							'CTD.view.ObdThrottlePositionWindow',
+							'CTD.view.WiiTestWindow'],
 					stores : [ 'Trips', 'Measurements', 'TimeControl' ],
 					views : [ 'GsmSignalWindow' ],
 
@@ -62,6 +63,9 @@ Ext
 									},
 									'widgetpicker button[action=obdCalculatedEngineLoad]' : {
 										click : this.onObdCalculatedEngineLoadClick
+									},
+									'widgetpicker button[action=wiiTestWindow]' : {
+										click : this.onWiiTestWindowClick
 									},
 								});
 
@@ -112,6 +116,11 @@ Ext
 					onObdCalculatedEngineLoadClick : function(button, event) {
 						Ext.create('CTD.view.ObdCalculatedEngineLoadWindow')
 								.show();
+					},
+
+					onWiiTestWindowClick : function(button, event) {
+						console.log('Clicketyclick!');
+						Ext.create('CTD.view.WiiTestWindow').show();
 					},
 
 					onMeasurementsChange : function() {

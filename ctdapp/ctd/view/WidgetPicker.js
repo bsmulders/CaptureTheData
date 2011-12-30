@@ -50,5 +50,8 @@ Ext.define('CTD.view.WidgetPicker', {
 	}, {
 		text : '<br />OBD<hr />Engine Coolant<br />Temperature',
 		action : 'obdEngineCoolantTemperature',
+	}, {
+		text : 'Wii<hr />Test Window',
+		action : 'wiiTestWindow',
 	} ],
 });
