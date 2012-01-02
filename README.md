@@ -47,23 +47,28 @@ Planned features for the future:
 
 
 ## Project components
+### ctdstorage
+Database (using SQLite).
+
+The database stores data on the trips, the raw data recorded on each trip, the parsed data derived from the raw data and measurement reports generated from those trips.
+
 ### ctdlogger
 	
 Data logger, parser and report generator (written in C).
 	
-This part logs data from several (bluetooth) sensors. It stores the raw data in a SQLite3 database. It can also parse the information into human readable data and generate measurement reports for a trip.
+This part logs data from several (bluetooth) sensors. It stores the raw data in the ctdstorage database. It can also parse the information into human readable data and generate measurement reports for a trip.
 	
 ### ctdservice
 	
 REST Web-service (written in PHP).
 	
-The web-service publishes the data from the SQLite3 database. You can get a summary of all trips, get detailed trip information and get the sensor measurements for every 1/10th of a second in the trip.
+The web-service publishes the data from the ctdstorage database. You can get a summary of all trips, get detailed trip information and get the sensor measurements for every 1/10th of a second in the trip.
 	
 ### ctdapp
 	
 Web-application (written in JavaScript, using Ext JS 4).
 	
-The web-application access the web-service and displays all recorded trips. After selecting a trip, it displays the trip in realtime. It is possible to enable and disable various gauges and information panels. A trip can be played in realtime, 10x speed or manually controlled.
+The web-application connects to the web-service and displays all recorded trips. After selecting a trip, it displays the trip in realtime. It is possible to enable and disable various gauges and information panels. A trip can be played in realtime, 10x speed or manually controlled.
 	
 ### ctdhardware
 
@@ -72,6 +77,11 @@ Automated scripts as a supplement to ctdlogger (Shell script).
 These scripts can automate the process of logging data, parsing data and generating reports. They operate on ctdlogger. Scripts for specific hardware platforms or configurations will be added later.
 
 ## Usage
+### ctdstorage
+*structure.sql* contains the structure for an empty database. *testset.sql* contains various recorded demo trips. These files are SQLite compatible and encoded in UTF-8.
+
+Pre-made databases are available in the form of *structure.sqlite* and *testset.sqlite*. The *testset.sqlite* file is already parsed and has the reports generated. 
+
 ### ctdlogger
 	
 Call the make-file (/ctdlogger/build/Makefile) to build the project.
