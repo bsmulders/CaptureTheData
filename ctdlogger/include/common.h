@@ -14,9 +14,18 @@
 #ifndef __CTD_COMMON_H__
 #define __CTD_COMMON_H__
 
+/**
+ * Get the current time in milliseconds
+ * @return 			Current time in milliseconds
+ */
 double current_time_with_ms();
-char xtod(char c);
-int hextodec(char *hex);
+
+/**
+ * Convert hex string to integer
+ * Found on http://bytes.com/topic/c/answers/562961-hex-string-integer-convertor
+ * @param hex 		The hex string to convert
+ * @return			The converted integer
+ */
 int xstrtoi(char *hex);
 
 #endif

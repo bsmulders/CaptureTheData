@@ -23,7 +23,6 @@ double current_time_with_ms() {
 	return tim.tv_sec + (tim.tv_usec / 1000000.0);
 }
 
-// http://bytes.com/topic/c/answers/562961-hex-string-integer-convertor
 char xtod(char c) {
 	if (c >= '0' && c <= '9')
 		return c - '0';
