@@ -120,7 +120,7 @@ Commands to operate the application:
 In a normal application flow you would:
 
 1. Create a trip, save the returned ID somewhere
-2. Start the GSM, GPS and OBD logging in separate processes
+2. Start the GSM, GPS, OBD and Wii logging in separate processes
 3. Cancel the logging when you are finished (CTRL+C)
 4. Parse the raw serial data to human understandable data
 5. Generate trip reports with all logging values for every 1/10th of a second in this trip
