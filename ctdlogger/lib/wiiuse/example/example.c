@@ -142,7 +142,7 @@ void handle_event(struct wiimote_t* wm) {
 	/* show events specific to supported expansions */
 	if (wm->exp.type == EXP_NUNCHUK || wm->exp.type == EXP_MOTION_PLUS_NUNCHUK) {
 		/* nunchuk */
-		struct nunchuk_t* nc = (nunchuk_t*)&wm->exp.nunchuk;
+		struct nunchuk_t* nc = (nunchuk_t*)&wm->exp.items.nunchuk;
 
 		if (IS_PRESSED(nc, NUNCHUK_BUTTON_C))		printf("Nunchuk: C pressed\n");
 		if (IS_PRESSED(nc, NUNCHUK_BUTTON_Z))		printf("Nunchuk: Z pressed\n");
@@ -155,7 +155,7 @@ void handle_event(struct wiimote_t* wm) {
 		printf("nunchuk joystick magnitude: %f\n", nc->js.mag);
 	} else if (wm->exp.type == EXP_CLASSIC) {
 		/* classic controller */
-		struct classic_ctrl_t* cc = (classic_ctrl_t*)&wm->exp.classic;
+		struct classic_ctrl_t* cc = (classic_ctrl_t*)&wm->exp.items.classic;
 
 		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_ZL))			printf("Classic: ZL pressed\n");
 		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_B))			printf("Classic: B pressed\n");
@@ -181,7 +181,7 @@ void handle_event(struct wiimote_t* wm) {
 		printf("classic right joystick magnitude: %f\n", cc->rjs.mag);
 	} else if (wm->exp.type == EXP_GUITAR_HERO_3) {
 		/* guitar hero 3 guitar */
-		struct guitar_hero_3_t* gh3 = (guitar_hero_3_t*)&wm->exp.gh3;
+		struct guitar_hero_3_t* gh3 = (guitar_hero_3_t*)&wm->exp.items.gh3;
 
 		if (IS_PRESSED(gh3, GUITAR_HERO_3_BUTTON_STRUM_UP))		printf("Guitar: Strum Up pressed\n");
 		if (IS_PRESSED(gh3, GUITAR_HERO_3_BUTTON_STRUM_DOWN))	printf("Guitar: Strum Down pressed\n");
@@ -198,7 +198,7 @@ void handle_event(struct wiimote_t* wm) {
 		printf("Guitar joystick magnitude:  %f\n", gh3->js.mag);
 	} else if (wm->exp.type == EXP_WII_BOARD) {
 		/* wii balance board */
-		struct wii_board_t* wb = (wii_board_t*)&wm->exp.wb;
+		struct wii_board_t* wb = (wii_board_t*)&wm->exp.items.wb;
 		float total = wb->tl + wb->tr + wb->bl + wb->br;
 		float x = ((wb->tr + wb->br) / total) * 2 - 1;
 		float y = ((wb->tl + wb->tr) / total) * 2 - 1;

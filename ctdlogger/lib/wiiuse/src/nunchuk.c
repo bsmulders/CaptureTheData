@@ -187,7 +187,7 @@ void nunchuk_pressed_buttons(struct nunchuk_t* nc, byte now) {
 void wiiuse_set_nunchuk_orient_threshold(struct wiimote_t* wm, float threshold) {
 	if (!wm)	return;
 
-	wm->exp.nunchuk.orient_threshold = threshold;
+	wm->exp.items.nunchuk.orient_threshold = threshold;
 }
 
 
@@ -202,5 +202,5 @@ void wiiuse_set_nunchuk_orient_threshold(struct wiimote_t* wm, float threshold) 
 void wiiuse_set_nunchuk_accel_threshold(struct wiimote_t* wm, int threshold) {
 	if (!wm)	return;
 
-	wm->exp.nunchuk.accel_threshold = threshold;
+	wm->exp.items.nunchuk.accel_threshold = threshold;
 }

@@ -96,9 +96,9 @@ void wiiuse_motion_plus_handshake(struct wiimote_t *wm,byte *data,unsigned short
 			wm->exp.mp.orient.yaw = 0.0;
 			wm->exp.mp.raw_gyro_threshold = 10;
 
-			wm->exp.mp.nc = &(wm->exp.nunchuk);
-			wm->exp.mp.classic = &(wm->exp.classic);
-			wm->exp.nunchuk.flags = &wm->flags;
+			wm->exp.mp.nc = &(wm->exp.items.nunchuk);
+			wm->exp.mp.classic = &(wm->exp.items.classic);
+			wm->exp.items.nunchuk.flags = &wm->flags;
 
 			wm->exp.mp.ext = 0;
 

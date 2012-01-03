@@ -763,7 +763,7 @@ float wiiuse_set_smooth_alpha(struct wiimote_t* wm, float alpha) {
 
 	/* if there is a nunchuk set that too */
 	if (wm->exp.type == EXP_NUNCHUK)
-		wm->exp.nunchuk.accel_calib.st_alpha = alpha;
+		wm->exp.items.nunchuk.accel_calib.st_alpha = alpha;
 
 	return old;
 }
