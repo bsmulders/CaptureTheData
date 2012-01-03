@@ -12,7 +12,6 @@ No todo items
 * Update "README - Usage" with Wii support.
 
 ### ctdservice
-* Proper PHP documentation
 * Add a HTTPRequest and HTTPResponse class
 
 ### ctdapp

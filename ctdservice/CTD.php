@@ -16,21 +16,76 @@ require_once('Sensor.php');
 
 class CTD {
 
-	// Input
+	/**
+	 * The configuration file generated from the .ini file
+	 * @var object[]
+	 */
 	public $config;
+	
+	/**
+	 * PDO database connection handler
+	 * @var PDO
+	 */
 	public $db;
+	
+	/**
+	 * Array containing the currently supported sensors
+	 * @var Sensor[]
+	 */
 	public $sensors;
+	
+	/**
+	 * Hostname of the incoming HTTP request
+	 * @var string
+	 */
 	public $host;
+	
+	/**
+	 * URI of the incoming HTTP request
+	 * @var string
+	 */
 	public $uri;
+	
+	/**
+	 * Method of the incoming HTTP request
+	 * @var string
+	 */
 	public $method;
+	
+	/**
+	 * HttpAccept header of the incoming HTTP request
+	 * @var string[]
+	 */
 	public $httpAccepts;
 
-	// Output
+	/**
+	 * Title of the outgoing HTTP reponse
+	 * @var string
+	 */
 	public $rootElement;
+	
+	/**
+	 * Output data of the outgoing HTTP response
+	 * @var object
+	 */
 	public $outputData;
+	
+	/**
+	 * Output type of the outgoing HTTP response
+	 * @var string
+	 */
 	public $outputType;
+	
+	/**
+	 * Return headers of the outgoing HTTP response
+	 * @var string[]
+	 */
 	public $returnHeaders;
 
+	/**
+	 * Constructor. Creates a new CTD object using a .ini filepath
+	 * @param string $config
+	 */
 	public function __construct($config) {
 		$this->config = parse_ini_file($config, TRUE);
 
@@ -46,6 +101,9 @@ class CTD {
 		$this->httpAccepts = explode(",", $_SERVER['HTTP_ACCEPT']);
 	}
 
+	/**
+	 * Process the HTTP request
+	 */
 	public function run() {
 		if (sizeof($this->httpAccepts) > 0) {
 			$this->outputType = $this->httpAccepts[0];
@@ -93,6 +151,10 @@ class CTD {
 		}
 	}
 
+	/**
+	 * Get the output for the HTTP response
+	 * @return string
+	 */
 	public function getOutput() {
 		switch($this->outputType) {
 			case "text/html":
@@ -104,24 +166,41 @@ class CTD {
 		}
 	}
 
+	/**
+	 * Get the return headers for the HTTP response
+	 * @return string[]
+	 */
 	public function getReturnHeaders() {
 		return $this->returnHeaders;
 	}
 
+	/**
+	 * Finalize this object
+	 */
 	public function finalize() {
 		$this->db = null;
 	}
 
+	
+	/**
+	 * The user didn't request any data
+	 */
 	private function handleNoRequest() {
 		$this->rootElement = "Error";
 		$this->outputData = "Use /trips<br />";
 		$this->returnHeaders[] = "HTTP/1.0 400 Bad Request";
 	}
 
+	/**
+	 * The user requested data using a bad URI
+	 */
 	private function handleWrongRequest() {
 		$this->returnHeaders[] = "HTTP/1.0 400 Bad Request";
 	}
 
+	/**
+	 * Build a list of all trips
+	 */
 	private function handleTripsGetRequest() {
 		$sql = "SELECT * FROM Trip";
 		$results = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
@@ -140,6 +219,9 @@ class CTD {
 		}
 	}
 
+	/**
+	 * Process a PUT request on a certain trip
+	 */
 	private function handleTripPutRequest() {
 		$input = json_decode(file_get_contents('php://input'), true);
 		$data = $input['trips'];
@@ -162,6 +244,10 @@ class CTD {
 		}
 	}
 
+	/**
+	 * Build list with one specific trip
+	 * @param int $tripid
+	 */
 	private function handleTripGetRequest($tripid) {
 		$sql = sprintf("SELECT * FROM Trip WHERE Trip_ID = %s", $this->db->quote($tripid));
 		$result = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
@@ -184,6 +270,12 @@ class CTD {
 
 	}
 
+	/**
+	 * Build a list with all sensor data
+	 * @param int $tripid
+	 * @param int $timestamp
+	 * @param int $timestampsub
+	 */
 	private function handleMeasurementGetRequest($tripid, $timestamp, $timestampsub) {
 		$results = array();
 		$empty = true;
