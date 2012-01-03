@@ -102,6 +102,18 @@ int parse_obd(char * database, int tripid) {
 	sqlite3_exec(handle, "PRAGMA synchronous = NORMAL", 0, 0, 0);
 	sqlite3_exec(handle, "PRAGMA journal_mode = MEMORY", 0, 0, 0);
 
+	// Remove unnecesary data
+	char removequery[90];
+	sprintf(
+			removequery,
+			"DELETE FROM ObdData WHERE RawData LIKE '%%SEARCHING...UNABLE TO CONNECT'");
+	retval = sqlite3_exec(handle, removequery, 0, 0, 0);
+	if (retval) {
+		printf("OBD Parsing: Removing data from DB Failed: %d\n", retval);
+		printf("Query: %s\n", removequery);
+		return -1;
+	}
+
 	// Select data from database
 	char query[100];
 	sprintf(query, "SELECT Obd_ID, RawData FROM ObdData WHERE Trip_ID = %d",
@@ -253,10 +265,10 @@ int generate_obd_report(char * database, int tripid) {
 							" (SELECT Value FROM ObdData"
 							" WHERE Trip_ID = %3$d AND PID = %7$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 10 ORDER BY TimeStamp DESC LIMIT 1),"
 							" (SELECT Value FROM ObdData"
-							" WHERE Trip_ID = %3$d AND PID = %8$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 10 ORDER BY TimeStamp DESC LIMIT 1)"
-							, second, subsecond, tripid,
-					OBD_CALCULATED_ENGINE_LOAD, OBD_ENGINE_COOLANT_TEMPERATURE,
-					OBD_ENGINE_RPM, OBD_VEHICLE_SPEED, OBD_THROTTLE_POSITION);
+							" WHERE Trip_ID = %3$d AND PID = %8$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 10 ORDER BY TimeStamp DESC LIMIT 1)",
+					second, subsecond, tripid, OBD_CALCULATED_ENGINE_LOAD,
+					OBD_ENGINE_COOLANT_TEMPERATURE, OBD_ENGINE_RPM,
+					OBD_VEHICLE_SPEED, OBD_THROTTLE_POSITION);
 			retval = sqlite3_exec(handle, insertquery, 0, 0, 0);
 			if (retval) {
 				printf("OBD Report: Inserting data in DB Failed: %d\n", retval);
