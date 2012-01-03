@@ -20,11 +20,10 @@ $ctd = new CTD("settings.ini");
 $ctd->run();
 $ctd->finalize();
 
-foreach($ctd->getReturnHeaders() as $header) {
+foreach($ctd->getHTTPResponse()->getReturnHeaders() as $header) {
 	header($header);
 }
 
-echo $ctd->getOutput();
-
+echo $ctd->getHTTPResponse()->getRenderedOutput();
 
 ?>

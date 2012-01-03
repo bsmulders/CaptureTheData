@@ -3,6 +3,7 @@
 ## Todo items
 ### ctd storage
 No todo items
+
 ### ctdlogger
 * Proper C documentation
 * Properly close serial connections when stopping with logging
@@ -12,7 +13,7 @@ No todo items
 * Update "README - Usage" with Wii support.
 
 ### ctdservice
-* Add a HTTPRequest and HTTPResponse class
+No todo items
 
 ### ctdapp
 * Create an Ext JS chart type for displaying g-forces

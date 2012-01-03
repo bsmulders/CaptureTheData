@@ -13,6 +13,8 @@ This file may be used under the terms of the GNU General Public License version 
 */
 
 require_once('Sensor.php');
+require_once('HTTPRequest.php');
+require_once('HTTPResponse.php');
 
 class CTD {
 
@@ -20,67 +22,31 @@ class CTD {
 	 * The configuration file generated from the .ini file
 	 * @var object[]
 	 */
-	public $config;
-	
+	private $config;
+
 	/**
 	 * PDO database connection handler
 	 * @var PDO
 	 */
-	public $db;
-	
+	private $db;
+
 	/**
 	 * Array containing the currently supported sensors
 	 * @var Sensor[]
 	 */
-	public $sensors;
-	
-	/**
-	 * Hostname of the incoming HTTP request
-	 * @var string
-	 */
-	public $host;
-	
-	/**
-	 * URI of the incoming HTTP request
-	 * @var string
-	 */
-	public $uri;
-	
-	/**
-	 * Method of the incoming HTTP request
-	 * @var string
-	 */
-	public $method;
-	
-	/**
-	 * HttpAccept header of the incoming HTTP request
-	 * @var string[]
-	 */
-	public $httpAccepts;
+	private $sensors;
 
 	/**
-	 * Title of the outgoing HTTP reponse
-	 * @var string
+	 * Class containing information about the HTTP request
+	 * @var HTTPRequest
 	 */
-	public $rootElement;
-	
+	private $httpRequest;
+
 	/**
-	 * Output data of the outgoing HTTP response
-	 * @var object
+	 * Class containing information about the HTTP reponse
+	 * @var HTTPResponse
 	 */
-	public $outputData;
-	
-	/**
-	 * Output type of the outgoing HTTP response
-	 * @var string
-	 */
-	public $outputType;
-	
-	/**
-	 * Return headers of the outgoing HTTP response
-	 * @var string[]
-	 */
-	public $returnHeaders;
+	private $httpReponse;
 
 	/**
 	 * Constructor. Creates a new CTD object using a .ini filepath
@@ -90,28 +56,45 @@ class CTD {
 		$this->config = parse_ini_file($config, TRUE);
 
 		$this->db = new PDO($this->config['database']['pdo'], $this->config['database']['username'], $this->config['database']['password']);
-		
+
 		foreach($this->config['sensors'] as $sensorName=>$tableName) {
 			$this->sensors[] = new Sensor($sensorName, $tableName);
 		}
 
-		$this->uri = strtok($_SERVER['REQUEST_URI'], '?');
-		$this->host = $_SERVER['HTTP_HOST'];
-		$this->method = $_SERVER['REQUEST_METHOD'];
-		$this->httpAccepts = explode(",", $_SERVER['HTTP_ACCEPT']);
+		$this->httpRequest = new HTTPRequest($_SERVER);
+		$this->httpReponse = new HTTPResponse();
+	}
+	
+	/**
+	 * Get the HTTP request object associated with this instance
+	 * @return HTTPRequest
+	 */
+	public function getHTTPRequest() {
+		return $this->httpRequest;
+	}
+	
+	/**
+	 * Get the HTTP response object associated with this instance
+	 * @return HTTPResponse
+	 */
+	public function getHTTPResponse() {
+		return $this->httpReponse;
 	}
 
 	/**
 	 * Process the HTTP request
 	 */
 	public function run() {
-		if (sizeof($this->httpAccepts) > 0) {
-			$this->outputType = $this->httpAccepts[0];
-			$this->returnHeaders[] = sprintf("Content-type: %s", $this->httpAccepts[0]);
+		if (sizeof($this->httpRequest->getHttpAccepts()) > 0) {
+			$httpAccepts = array_values($this->config['httpaccept']);
+			$httpAccept = $this->httpRequest->getHttpAccept($httpAccepts);
+				
+			$this->httpReponse->setOutputType($httpAccept);
+			$this->httpReponse->addReturnHeader(sprintf("Content-type: %s", $httpAccept));
 		}
-		
-		$urlparts = explode('/', $this->uri);
-		
+
+		$urlparts = explode('/', $this->httpRequest->getUri());
+
 		if (count($urlparts) == 3
 		&& $urlparts[1] == "ctdservice"
 		&& $urlparts[2] == "") {
@@ -120,7 +103,7 @@ class CTD {
 		else if (count($urlparts) == 3
 		&& $urlparts[1] == "ctdservice"
 		&& $urlparts[2] == "trips") {
-			if ($this->method == "POST") {
+			if ($this->httpRequest->getMethod() == "POST") {
 				$this->handleTripPutRequest();
 			}
 			else {
@@ -152,50 +135,19 @@ class CTD {
 	}
 
 	/**
-	 * Get the output for the HTTP response
-	 * @return string
-	 */
-	public function getOutput() {
-		switch($this->outputType) {
-			case "text/html":
-				return sprintf("<h2>%s</h1><pre>%s</pre>", $this->rootElement, print_r($this->outputData, true));
-			case "application/json":
-				return json_encode(array($this->rootElement => $this->outputData), JSON_NUMERIC_CHECK);
-			default:
-				return sprintf("%s\n%s", $this->rootElement, print_r($this->outputData, true));
-		}
-	}
-
-	/**
-	 * Get the return headers for the HTTP response
-	 * @return string[]
-	 */
-	public function getReturnHeaders() {
-		return $this->returnHeaders;
-	}
-
-	/**
-	 * Finalize this object
-	 */
-	public function finalize() {
-		$this->db = null;
-	}
-
-	
-	/**
 	 * The user didn't request any data
 	 */
 	private function handleNoRequest() {
-		$this->rootElement = "Error";
-		$this->outputData = "Use /trips<br />";
-		$this->returnHeaders[] = "HTTP/1.0 400 Bad Request";
+		$this->httpReponse->setRootElement("Error");
+		$this->httpReponse->setOutputData("Use /trips");
+		$this->httpReponse->addReturnHeader("HTTP/1.0 400 Bad Request");
 	}
 
 	/**
 	 * The user requested data using a bad URI
 	 */
 	private function handleWrongRequest() {
-		$this->returnHeaders[] = "HTTP/1.0 400 Bad Request";
+		$this->httpReponse->addReturnHeader("HTTP/1.0 400 Bad Request");
 	}
 
 	/**
@@ -207,15 +159,15 @@ class CTD {
 
 		if ($results) {
 			foreach ($results as &$result) {
-				$result['URI'] = sprintf("http://%s/ctdservice/trips/%d", $this->host, $result['Trip_ID']);
+				$result['URI'] = sprintf("http://%s/ctdservice/trips/%d", $this->httpRequest->getHost(), $result['Trip_ID']);
 			}
 
-			$this->returnHeaders[] = "HTTP/1.0 200 OK";
-			$this->rootElement = "trips";
-			$this->outputData = $results;
+			$this->httpReponse->addReturnHeader("HTTP/1.0 200 OK");
+			$this->httpReponse->setRootElement("trips");
+			$this->httpReponse->setOutputData($results);
 		}
 		else {
-			$this->returnHeaders[] = "HTTP/1.0 204 No Content";
+			$this->httpReponse->addReturnHeader("HTTP/1.0 204 No Content");
 		}
 	}
 
@@ -232,15 +184,15 @@ class CTD {
 			$fields[] = sprintf("'%s'", $field);
 			$values[] = sprintf("%s", $this->db->quote($value));
 		}
-		
+
 		$sql = sprintf("REPLACE INTO Trip (%s) VALUES (%s)", join(",", $fields), join(",", $values));
 		$result = $this->db->exec($sql);
-		
+
 		if ($result) {
-			$this->returnHeaders[] = "HTTP/1.0 200 OK";	
+			$this->httpReponse->addReturnHeader("HTTP/1.0 200 OK");
 		}
 		else {
-			$this->returnHeaders[] = "HTTP/1.0 500 Internal Server Error";
+			$this->httpReponse->addReturnHeader("HTTP/1.0 500 Internal Server Error");
 		}
 	}
 
@@ -251,23 +203,22 @@ class CTD {
 	private function handleTripGetRequest($tripid) {
 		$sql = sprintf("SELECT * FROM Trip WHERE Trip_ID = %s", $this->db->quote($tripid));
 		$result = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
-		
+
 		if ($result) {
-			$result['URI'] = sprintf("http://%s/ctdservice/trips/%d", $this->host, $tripid);
-			$result['FirstMeasurement'] = sprintf("http://%s/ctdservice/trips/%d/measurement/%d/%d", $this->host, $tripid, $result['FirstReport'], $result['FirstReportSub']);
-	
+			$result['URI'] = sprintf("http://%s/ctdservice/trips/%d", $this->httpRequest->getHost(), $tripid);
+			$result['FirstMeasurement'] = sprintf("http://%s/ctdservice/trips/%d/measurement/%d/%d", $this->httpRequest->getHost(), $tripid, $result['FirstReport'], $result['FirstReportSub']);
+
 			foreach($this->sensors as $sensor) {
 				$result['Sensor'][]  = $sensor->getSensorName();
 			}
-			
-			$this->returnHeaders[] = "HTTP/1.0 200 OK";
-			$this->rootElement = "trip";
-			$this->outputData = $result;
+		
+			$this->httpReponse->addReturnHeader("HTTP/1.0 200 OK");
+			$this->httpReponse->setRootElement("trip");
+			$this->httpReponse->setOutputData($result);
 		}
 		else {
-			$this->returnHeaders[] = "HTTP/1.0 404 Not Found";
+			$this->httpReponse->addReturnHeader("HTTP/1.0 404 Not Found");
 		}
-
 	}
 
 	/**
@@ -284,7 +235,7 @@ class CTD {
 			$sql = sprintf("SELECT * FROM %s WHERE Trip_ID = %s AND TimeStamp = %s AND TimeStampSub = %s", $sensor->getTableName(), $this->db->quote($tripid), $this->db->quote($timestamp), $this->db->quote($timestampsub));
 			$result = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
 			$results[$sensor->getSensorName()] = $result;
-				
+
 			if ($result) {
 				$empty = false;
 				unset($results[$sensor->getSensorName()]['Trip_ID']);
@@ -294,13 +245,20 @@ class CTD {
 		}
 
 		if (!$empty) {
-			$this->returnHeaders[] = "HTTP/1.0 200 OK";
-			$this->rootElement = "report";
-			$this->outputData = $results;
+			$this->httpReponse->addReturnHeader("HTTP/1.0 200 OK");
+			$this->httpReponse->setRootElement("report");
+			$this->httpReponse->setOutputData($results);
 		}
 		else {
-			$this->returnHeaders[] = "HTTP/1.0 404 Not Found";
+			$this->httpReponse->addReturnHeader("HTTP/1.0 404 Not Found");
 		}
+	}
+
+	/**
+	 * Finalize this object
+	 */
+	public function finalize() {
+		$this->db = null;
 	}
 }
 

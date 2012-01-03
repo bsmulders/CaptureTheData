@@ -18,13 +18,13 @@ class Sensor {
 	 * The name of a sensor
 	 * @var string
 	 */
-	public $sensorName;
+	private $sensorName;
 	
 	/**
 	 * The name of the corresponding SQL table
 	 * @var string
 	 */
-	public $tableName;
+	private $tableName;
 
 	/**
 	 * Constructor. Creates a new sensor type using the parameters
