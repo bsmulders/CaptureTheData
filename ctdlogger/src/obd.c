@@ -21,10 +21,18 @@
 #include <string.h>
 #include <stdlib.h>
 
+sqlite3 * handle;
+FILE * file;
+
+void obd_sighandler(int signum) {
+	sqlite3_close(handle);
+	fclose(file);
+	exit(-1);
+}
+
 int log_obd(char * device, char * database, int tripid) {
+	signal(SIGINT, (void*) obd_sighandler);
 	int retval;
-	sqlite3 *handle;
-	FILE *file;
 
 	// PIDs to send to the OBD unit
 	char pids[5][7];
@@ -79,15 +87,11 @@ int log_obd(char * device, char * database, int tripid) {
 		}
 	}
 
-	// Destroy the evidence!
-	fclose(file);
-	sqlite3_close(handle);
 	return 0;
 }
 
 int parse_obd(char * database, int tripid) {
 	int retval;
-	sqlite3 *handle;
 
 	// Open database connection
 	retval = sqlite3_open(database, &handle);
@@ -181,7 +185,6 @@ int parse_obd(char * database, int tripid) {
 
 int generate_obd_report(char * database, int tripid) {
 	int retval;
-	sqlite3 *handle;
 	sqlite3_stmt *stmt;
 
 	// Open database connection

@@ -21,10 +21,18 @@
 #include <string.h>
 #include <stdlib.h>
 
+sqlite3 * handle;
+FILE * file;
+
+void gsm_sighandler(int signum) {
+	sqlite3_close(handle);
+	fclose(file);
+	exit(-1);
+}
+
 int log_gsm(char * device, char * database, int tripid) {
+	signal(SIGINT, (void*) gsm_sighandler);
 	int retval;
-	sqlite3 *handle;
-	FILE *file;
 
 	// AT-Commands to send to the phone
 	char atcommands[1][12];
@@ -64,23 +72,18 @@ int log_gsm(char * device, char * database, int tripid) {
 			double timestamp = current_time_with_ms();
 			sprintf(
 					query,
-					"INSERT INTO GsmData ( 'Trip_ID', 'TimeStamp', 'RawData' ) VALUES ( %d, %f, '%s')",
-					tripid, timestamp, line);
+					"INSERT INTO GsmData ( 'Trip_ID', 'TimeStamp', 'RawData' ) VALUES ( %d, %f, '%s')", tripid, timestamp, line);
 			do {
 				retval = sqlite3_exec(handle, query, 0, 0, 0);
 			} while (retval == SQLITE_BUSY);
 		}
 	}
 
-	// Destroy the evidence!
-	fclose(file);
-	sqlite3_close(handle);
 	return 0;
 }
 
 int parse_gsm(char * database, int tripid) {
 	int retval;
-	sqlite3 *handle;
 
 	// Open database connection
 	retval = sqlite3_open(database, &handle);
@@ -93,8 +96,8 @@ int parse_gsm(char * database, int tripid) {
 
 	// Select data from database
 	char query[100];
-	sprintf(query, "SELECT Gsm_ID, RawData FROM GsmData WHERE Trip_ID = %d",
-			tripid);
+	sprintf(query,
+			"SELECT Gsm_ID, RawData FROM GsmData WHERE Trip_ID = %d", tripid);
 	sqlite3_stmt *stmt;
 	retval = sqlite3_prepare_v2(handle, query, -1, &stmt, 0);
 	if (retval) {
@@ -130,8 +133,7 @@ int parse_gsm(char * database, int tripid) {
 			char query[200];
 			sprintf(
 					query,
-					"UPDATE GsmData SET Command = '%s', Value = '%s' WHERE Gsm_ID = %d",
-					command, value, gsmid);
+					"UPDATE GsmData SET Command = '%s', Value = '%s' WHERE Gsm_ID = %d", command, value, gsmid);
 			retval = sqlite3_exec(handle, query, 0, 0, 0);
 			if (retval) {
 				printf("GSM Parsing: Updating data in DB Failed: %d\n", retval);
@@ -155,7 +157,6 @@ int parse_gsm(char * database, int tripid) {
 
 int generate_gsm_report(char * database, int tripid) {
 	int retval;
-	sqlite3 *handle;
 	sqlite3_stmt *stmt;
 
 	// Open database connection
@@ -182,8 +183,7 @@ int generate_gsm_report(char * database, int tripid) {
 	char selectquery[70];
 	sprintf(
 			selectquery,
-			"SELECT MIN(Timestamp), MAX(Timestamp) FROM GsmData WHERE Trip_ID = %d",
-			tripid);
+			"SELECT MIN(Timestamp), MAX(Timestamp) FROM GsmData WHERE Trip_ID = %d", tripid);
 	retval = sqlite3_prepare_v2(handle, selectquery, -1, &stmt, 0);
 	if (retval) {
 		printf("GSM Report: Selecting trip from DB Failed: %d\n", retval);
@@ -209,10 +209,9 @@ int generate_gsm_report(char * database, int tripid) {
 			sprintf(
 					insertquery,
 					"INSERT INTO GsmReport ( 'Trip_ID', 'TimeStamp', 'TimeStampSub', 'SignalStrength' )"
-							" SELECT Trip_ID, %1$d, %2$d, CAST(Value AS INTEGER)"
-							" FROM GsmData"
-							" WHERE Trip_ID = %3$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 10 ORDER BY TimeStamp DESC LIMIT 1",
-					second, subsecond, tripid);
+					" SELECT Trip_ID, %1$d, %2$d, CAST(Value AS INTEGER)"
+					" FROM GsmData"
+					" WHERE Trip_ID = %3$d AND TimeStamp <= %1$d.%2$d AND TimeStamp > %1$d.%2$d - 10 ORDER BY TimeStamp DESC LIMIT 1", second, subsecond, tripid);
 			retval = sqlite3_exec(handle, insertquery, 0, 0, 0);
 			if (retval) {
 				printf("GSM Report: Inserting data in DB Failed: %d\n", retval);

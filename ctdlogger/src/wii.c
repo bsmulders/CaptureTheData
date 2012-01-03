@@ -16,13 +16,21 @@
 
 #include <sqlite3.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <wiiuse.h>
 
+sqlite3 *handle;
+wiimote** wiimotes;
+
+void wii_sighandler(int signum) {
+	sqlite3_close(handle);
+	wiiuse_cleanup(wiimotes, 1);
+	exit(-1);
+}
+
 int log_wii(char * device, char * database, int tripid) {
+	signal(SIGINT, (void*) wii_sighandler);
 	int retval;
-	sqlite3 *handle;
-	wiimote** wiimotes;
-	int found, connected;
 
 	// Open database connection
 	retval = sqlite3_open(database, &handle);
@@ -32,16 +40,15 @@ int log_wii(char * device, char * database, int tripid) {
 	}
 
 	// Connect to wiimote
+	int found, connected;
 	wiimotes = wiiuse_init(1);
 
-	found = wiiuse_find(wiimotes, 1, 5);
-	if (!found) {
+	if (!wiiuse_find(wiimotes, 1, 5)) {
 		printf("Wii Reading: No wiimote found\n");
 		return -1;
 	}
 
-	connected = wiiuse_connect(wiimotes, 1);
-	if (!connected) {
+	if (!wiiuse_connect(wiimotes, 1)) {
 		printf("Wii Reading: Failed to connect to wiimote\n");
 		return -1;
 	}
@@ -66,10 +73,6 @@ int log_wii(char * device, char * database, int tripid) {
 		}
 	}
 
-	// Destroy the evidence!
-	sqlite3_close(handle);
-	wiiuse_cleanup(wiimotes, 1);
-
 	return 0;
 }
 
@@ -82,7 +85,6 @@ int parse_wii(char * database, int tripid) {
 
 int generate_wii_report(char * database, int tripid) {
 	int retval;
-	sqlite3 *handle;
 	sqlite3_stmt *stmt;
 
 	// Open database connection

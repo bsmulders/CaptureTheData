@@ -21,15 +21,20 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <stdlib.h>
 
-#ifdef NMEA_WIN
-#   include <io.h>
-#endif
+sqlite3 * handle;
+FILE * file;
+
+void gps_sighandler(int signum) {
+	sqlite3_close(handle);
+	fclose(file);
+	exit(-1);
+}
 
 int log_gps(char * device, char * database, int tripid) {
+	signal(SIGINT, (void*) gps_sighandler);
 	int retval;
-	sqlite3 *handle;
-	FILE *file;
 
 	// Open database connection
 	retval = sqlite3_open(database, &handle);
@@ -61,14 +66,11 @@ int log_gps(char * device, char * database, int tripid) {
 		} while (retval == SQLITE_BUSY);
 	}
 
-	// Destroy the evidence!
-	sqlite3_close(handle);
 	return 0;
 }
 
 int parse_gps(char * database, int tripid) {
 	int retval;
-	sqlite3 *handle;
 
 	// Open database connection
 	retval = sqlite3_open(database, &handle);
@@ -162,7 +164,6 @@ int parse_gps(char * database, int tripid) {
 
 int generate_gps_report(char * database, int tripid) {
 	int retval;
-	sqlite3 *handle;
 	sqlite3_stmt *stmt;
 
 	// Open database connection
