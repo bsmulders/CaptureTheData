@@ -2,41 +2,48 @@
 # Shell script to automate datalogging
 #
 
-database="ctd.sqlite"
+database="../ctdstorage/testset.sqlite"
+executable="./../ctdlogger/build/ctd"
 gsm="/dev/tty.T610-SerialPort1"
 gps="/dev/tty.BTGPS-BluetoothSerialPo"
 obd="/dev/tty.CHX-DevB"
+wii="0021BD2E8C06"
 
 echo "CaptureTheData! Automated Shell Script"
 echo -e "\tDatabase:\t$database"
 echo -e "\tGSM device:\t$gsm"
 echo -e "\tGPS device:\t$gps"
 echo -e "\tOBD device:\t$obd\n"
+echo -e "\tWii device:\t$wii\n"
 
 
-./ctd create $database
+$executable create $database
 tripid=$?
-echo "Database created with ID $tripid"
+echo "Trip created with ID $tripid"
 
 if [ $tripid != 0 ] ; then
 	echo "Log GSM"
-	./ctd log gsm $gsm $database $tripid &
+	$executable log gsm $gsm $database $tripid &
 
 	echo "Log GPS"
-	./ctd log gps $gps $database $tripid &
+	$executable log gps $gps $database $tripid &
 	
 	echo "Log OBD"
-	./ctd log obd $obd $database $tripid &
+	$executable log obd $obd $database $tripid &
 
-	read -p "Press any key to stop logging and start post-processing...\n"
+	echo "Log Wii"
+	$executable log wii $wii $database $tripid &
+
+	echo "Press any key to stop logging and start post-processing...\n"
+	read
 	
-	killall ctd
+	killall -SIGINT ctd
 	
 	echo "Parse data"
-	./ctd parse $database $tripid
+	$executable parse $database $tripid
 	
 	echo "Generate reports"
-	./ctd report $database $tripid
+	$executable report $database $tripid
 	
 	echo "Script finished"
 fi

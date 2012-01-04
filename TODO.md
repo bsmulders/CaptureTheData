@@ -17,5 +17,4 @@ No todo items
 * Create an Ext JS chart type for displaying signal reception
 
 ### ctdhardare
-* Avoid zombie processes
 * Proper testing
