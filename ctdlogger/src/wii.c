@@ -44,12 +44,12 @@ int log_wii(char * device, char * database, int tripid) {
 	wiimotes = wiiuse_init(1);
 
 	if (!wiiuse_find(wiimotes, 1, 5)) {
-		printf("Wii Reading: No wiimote found\n");
+		printf("Wii Reading: Wiimote not found: %s\n", device);
 		return -1;
 	}
 
 	if (!wiiuse_connect(wiimotes, 1)) {
-		printf("Wii Reading: Failed to connect to wiimote\n");
+		printf("Wii Reading: Wiimote connection failed: %s\n", device);
 		return -1;
 	}
 

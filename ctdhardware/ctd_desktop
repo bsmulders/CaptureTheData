@@ -2,6 +2,9 @@
 # Shell script to automate datalogging
 #
 
+red="\033[22;31m"
+reset="\033[0m"
+
 database="../ctdstorage/testset.sqlite"
 executable="./../ctdlogger/build/ctd"
 gsm="/dev/tty.T610-SerialPort1"
@@ -13,7 +16,7 @@ echo "CaptureTheData! Automated Shell Script"
 echo -e "\tDatabase:\t$database"
 echo -e "\tGSM device:\t$gsm"
 echo -e "\tGPS device:\t$gps"
-echo -e "\tOBD device:\t$obd\n"
+echo -e "\tOBD device:\t$obd"
 echo -e "\tWii device:\t$wii\n"
 
 
@@ -22,20 +25,24 @@ tripid=$?
 echo "Trip created with ID $tripid"
 
 if [ $tripid != 0 ] ; then
-	echo "Log GSM"
+	echo "GSM logging started"
 	$executable log gsm $gsm $database $tripid &
 
-	echo "Log GPS"
+	echo "GPS logging started"
 	$executable log gps $gps $database $tripid &
 	
-	echo "Log OBD"
+	echo "OBD logging started"
 	$executable log obd $obd $database $tripid &
 
-	echo "Log Wii"
+	echo "Wii logging started\n"
 	$executable log wii $wii $database $tripid &
+	sleep .50
 
-	echo "Press any key to stop logging and start post-processing...\n"
+	echo -e "\nPress any key to stop logging and start post-processing"
+
+	echo -e $red
 	read
+	echo -e $reset
 	
 	killall -SIGINT ctd
 	

@@ -7,7 +7,6 @@ No todo items
 ### ctdlogger
 * Add additional calculated values to OBD data (MPG, current gear)
 * Add additional calculated values to Wii data (speed)
-* Disable Wii debug messages
 
 ### ctdservice
 No todo items

@@ -23,6 +23,9 @@
 #include <stdio.h>
 
 int main(int argc, char** args) {
+	// Disable stderr
+	freopen("/dev/null", "w", stderr);
+
 	if (args[1] == NULL) {
 		printf(
 				"No arguments given. Use: [create] database; [log] [gps | gsm | obd | wii] device database tripid; [parse] database tripid; [report] database tripid\n");
