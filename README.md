@@ -41,7 +41,7 @@ Planned features for the future:
 * Nintendo Wiimote
    * Speed
 
-![Demonstration of capable devices](CaptureTheData/raw/master/devices.jpg)
+![Demonstration of capable devices](devices.jpg)
 
 *From left to right: GPS receiver, Cellphone, OBD-II device, Wiimote*
 
